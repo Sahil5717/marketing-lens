@@ -1,12 +1,9 @@
 /**
- * useMarketContext — fetches GET /api/market-context and returns
- * { data, loading, error } in the shape the two panels expect.
- *
- * Kept tiny on purpose. No library. No retries. No SWR/react-query
- * coupling. When the real data layer lands (plan §4 "API client"), the
- * hook swaps to that without touching the consumers.
+ * useMarketContext — fetches GET /api/market-context via apiRequest,
+ * returns { data, loading, error } in the shape the two panels expect.
  */
 import { useEffect, useState } from "react";
+import { apiRequest } from "../../api.js";
 
 export function useMarketContext({
   asOf,
@@ -15,7 +12,6 @@ export function useMarketContext({
   lookaheadDays = 90,
   lookbackMonths = 4,
   peakLimit = 5,
-  apiBase = "",   // blank when same-origin; set to e.g. "http://localhost:8000" for dev
   engagementId = "default",
 } = {}) {
   const [state, setState] = useState({ data: null, loading: true, error: null });
@@ -33,20 +29,17 @@ export function useMarketContext({
     qs.set("peak_limit", String(peakLimit));
     qs.set("engagement_id", engagementId);
 
-    fetch(`${apiBase}/api/market-context?${qs.toString()}`)
-      .then(r => {
-        if (!r.ok) throw new Error(`Market context request failed: ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        if (!cancelled) setState({ data, loading: false, error: null });
-      })
-      .catch(err => {
-        if (!cancelled) setState({ data: null, loading: false, error: err.message });
-      });
+    apiRequest(`/api/market-context?${qs.toString()}`).then(({ data, error }) => {
+      if (cancelled) return;
+      if (error) {
+        setState({ data: null, loading: false, error: error.message || "Request failed" });
+      } else {
+        setState({ data, loading: false, error: null });
+      }
+    });
 
     return () => { cancelled = true; };
-  }, [asOf, category, regions?.join(","), lookaheadDays, lookbackMonths, peakLimit, apiBase, engagementId]);
+  }, [asOf, category, regions?.join(","), lookaheadDays, lookbackMonths, peakLimit, engagementId]);
 
   return state;
 }

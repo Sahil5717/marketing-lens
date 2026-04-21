@@ -22,10 +22,11 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 
 from currency import format_money, format_rate, format_count
 from engagements import get_engagement, DEFAULT_ENGAGEMENT_ID
+from auth import require_client_or_editor
 
 router = APIRouter(prefix="/api", tags=["channel-performance"])
 
@@ -349,6 +350,7 @@ def get_channel_performance(
         DEFAULT_ENGAGEMENT_ID,
         description="Engagement to report against — drives currency and locale.",
     ),
+    user=Depends(require_client_or_editor),
 ):
     engagement = get_engagement(engagement_id)
     currency = engagement.currency

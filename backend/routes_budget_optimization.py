@@ -27,10 +27,11 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Body, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query, Depends
 
 from currency import format_money, format_delta, format_rate
 from engagements import get_engagement, DEFAULT_ENGAGEMENT_ID
+from auth import require_client_or_editor
 
 router = APIRouter(prefix="/api", tags=["budget-optimization"])
 
@@ -346,6 +347,7 @@ def get_budget_optimization(
         DEFAULT_ENGAGEMENT_ID,
         description="Engagement to report against — drives currency and locale.",
     ),
+    user=Depends(require_client_or_editor),
 ):
     """Full payload for Screen 06."""
     engagement = get_engagement(engagement_id)
@@ -379,6 +381,7 @@ def score_override(
         DEFAULT_ENGAGEMENT_ID,
         description="Engagement to score against — drives display currency.",
     ),
+    user=Depends(require_client_or_editor),
 ):
     """
     Score a user-authored allocation against the Atlas plan.

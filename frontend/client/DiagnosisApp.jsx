@@ -11,6 +11,24 @@ import { MarketContext } from "./screens/MarketContext.jsx";
 const ChannelDetail = lazy(() =>
   import("./screens/ChannelDetail.jsx").then((m) => ({ default: m.ChannelDetail }))
 );
+
+// Yield Intelligence surfaces (v26) — the new product tier's 3 screens.
+// These bring their own AppShell + EngagementSelector, so we render them
+// full-viewport without the AppHeader that wraps the MarketLens screens.
+// Lazy-loaded so users who don't navigate into them don't pay the cost.
+const ExecutiveSummaryScreen = lazy(() =>
+  import("./screens/executive_summary/ExecutiveSummaryScreen.jsx")
+);
+const BudgetOptimizationScreen = lazy(() =>
+  import("./screens/budget_optimization/BudgetOptimizationScreen.jsx")
+);
+const ChannelPerformanceScreen = lazy(() =>
+  import("./screens/channel_performance/ChannelPerformanceScreen.jsx")
+);
+import AppShell from "./design/AppShell.jsx";
+import AtlasRail from "./design/AtlasRail.jsx";
+import { getStoredEngagementId } from "./design/EngagementSelector.jsx";
+
 import { GlobalStyle } from "./globalStyle.js";
 import { AppHeader } from "./ui/AppHeader.jsx";
 
@@ -43,8 +61,14 @@ function getScreenFromUrl() {
   if (s === "scenarios") return "scenarios";
   if (s === "channels" || s === "channel") return "channels";
   if (s === "market" || s === "market-context") return "market";
+  // Yield Intelligence screens (v26+) — each owns its own shell.
+  if (s === "executive-summary" || s === "yi-executive") return "yi-executive";
+  if (s === "budget-optimization" || s === "yi-optimization") return "yi-optimization";
+  if (s === "channel-performance" || s === "yi-channels") return "yi-channels";
   return "diagnosis";
 }
+
+const YI_SCREENS = new Set(["yi-executive", "yi-optimization", "yi-channels"]);
 
 function getChannelFromUrl() {
   if (typeof window === "undefined") return null;
@@ -78,6 +102,11 @@ export default function DiagnosisApp() {
     setUnauthorizedHandler(redirectToLogin);
 
     (async () => {
+      // YI screens self-fetch via their data hooks; no up-front loader.
+      if (YI_SCREENS.has(screen)) {
+        setState({ status: "ready", data: null, error: null });
+        return;
+      }
       let dataResult;
       if (screen === "channels") {
         const channelSlug = getChannelFromUrl();
@@ -103,6 +132,58 @@ export default function DiagnosisApp() {
   // While redirecting, render nothing (avoids a flash of the shell chrome
   // before window.location.href takes effect).
   if (!auth) return null;
+
+  // ─── Yield Intelligence surfaces ─────────────────────────────────────
+  // Full-viewport render: each screen brings its own AppShell (sidebar +
+  // main + Atlas rail + engagement selector). We don't wrap in AppHeader
+  // or the MarketLens canvas — the YI screens are a visually distinct
+  // product tier and own their own chrome.
+  if (YI_SCREENS.has(screen)) {
+    const engagementId = getStoredEngagementId();
+    const activeScreenNum =
+      screen === "yi-executive"    ? 1 :
+      screen === "yi-channels"     ? 3 :
+      screen === "yi-optimization" ? 6 :
+      1;
+    const handleNavigate = (num) => {
+      const param =
+        num === 1 ? "executive-summary" :
+        num === 3 ? "channel-performance" :
+        num === 6 ? "budget-optimization" :
+        null;
+      if (param && typeof window !== "undefined") {
+        window.location.search = `?screen=${param}`;
+      }
+    };
+    return (
+      <>
+        <GlobalStyle />
+        <Suspense fallback={<LoadingView />}>
+          <AppShell
+            activeScreen={activeScreenNum}
+            clientName={auth?.username ? `Signed in · ${auth.username}` : "MarketLens"}
+            clientPeriod={engagementId === "default" ? "Default engagement" : `Engagement · ${engagementId}`}
+            atlas={<AtlasRail narration={{ paragraphs: [], suggested_questions: [] }} />}
+            onNavigate={handleNavigate}
+          >
+            {({ engagementId: selectedId }) => (
+              <>
+                {screen === "yi-executive" && (
+                  <ExecutiveSummaryScreen engagementId={selectedId} onNavigateToScreen={handleNavigate} />
+                )}
+                {screen === "yi-optimization" && (
+                  <BudgetOptimizationScreen engagementId={selectedId} onNavigateToScreen={handleNavigate} />
+                )}
+                {screen === "yi-channels" && (
+                  <ChannelPerformanceScreen engagementId={selectedId} onNavigateToScreen={handleNavigate} />
+                )}
+              </>
+            )}
+          </AppShell>
+        </Suspense>
+      </>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: t.color.canvas, fontFamily: t.font.body }}>

@@ -31,13 +31,14 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import List, Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 
 from datatypes.macro_baseline import (
     DemandTrendPoint,
     PeakWindow,
     get_loader,
 )
+from auth import require_client_or_editor
 
 router = APIRouter(prefix="/api", tags=["macro-baseline"])
 
@@ -57,7 +58,7 @@ def _parse_as_of(raw: Optional[str]) -> date:
 
 
 @router.get("/macro-baseline/freshness")
-def get_freshness():
+def get_freshness(user=Depends(require_client_or_editor)):
     """
     Per-table freshness metadata for the five macro baseline CSVs.
     Consumed by Screen 02's 'Macro baseline freshness' zone.
@@ -86,6 +87,7 @@ def get_market_context(
         description="Engagement to report against. No money is reported here, "
                     "but engagement metadata is returned for frontend consistency.",
     ),
+    user=Depends(require_client_or_editor),
 ):
     """
     Combined macro-context payload for Screen 01's bottom row.

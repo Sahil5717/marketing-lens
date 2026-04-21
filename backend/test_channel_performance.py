@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from conftest import AuthedTestClient
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def client(isolated_db):
     importlib.reload(routes_channel_performance)
     app = FastAPI()
     app.include_router(routes_channel_performance.router)
-    return TestClient(app)
+    return AuthedTestClient(app)
 
 
 @pytest.fixture

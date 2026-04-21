@@ -31,10 +31,11 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 
 from currency import format_money, format_delta, format_rate
 from engagements import EngagementConfig, get_engagement, DEFAULT_ENGAGEMENT_ID
+from auth import require_client_or_editor
 
 router = APIRouter(prefix="/api", tags=["executive-summary"])
 
@@ -420,6 +421,7 @@ def get_executive_summary(
         DEFAULT_ENGAGEMENT_ID,
         description="Engagement to report against — drives currency and locale.",
     ),
+    user=Depends(require_client_or_editor),
 ):
     """
     Full payload for Screen 01. Composed from already-computed engine

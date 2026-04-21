@@ -1,35 +1,32 @@
 /**
- * useExecutiveSummary — fetches GET /api/executive-summary.
- *
- * Same shape as useMarketContext: returns { data, loading, error }.
- * No library, no retries — swap in real query layer later.
+ * useExecutiveSummary — fetches GET /api/executive-summary via the
+ * authenticated apiRequest helper. Returns { data, loading, error }.
  *
  * Pass `engagementId` to target a non-default engagement.
  */
 import { useEffect, useState } from "react";
+import { apiRequest } from "../../api.js";
 
-export function useExecutiveSummary({ apiBase = "", engagementId = "default" } = {}) {
+export function useExecutiveSummary({ engagementId = "default" } = {}) {
   const [state, setState] = useState({ data: null, loading: true, error: null });
 
   useEffect(() => {
     let cancelled = false;
     setState({ data: null, loading: true, error: null });
 
-    const url = `${apiBase}/api/executive-summary?engagement_id=${encodeURIComponent(engagementId)}`;
-    fetch(url)
-      .then(r => {
-        if (!r.ok) throw new Error(`Executive summary request failed: ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        if (!cancelled) setState({ data, loading: false, error: null });
-      })
-      .catch(err => {
-        if (!cancelled) setState({ data: null, loading: false, error: err.message });
-      });
+    apiRequest(
+      `/api/executive-summary?engagement_id=${encodeURIComponent(engagementId)}`
+    ).then(({ data, error }) => {
+      if (cancelled) return;
+      if (error) {
+        setState({ data: null, loading: false, error: error.message || "Request failed" });
+      } else {
+        setState({ data, loading: false, error: null });
+      }
+    });
 
     return () => { cancelled = true; };
-  }, [apiBase, engagementId]);
+  }, [engagementId]);
 
   return state;
 }

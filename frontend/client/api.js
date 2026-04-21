@@ -68,7 +68,7 @@ export function clearStoredAuth() {
   localStorage.removeItem(AUTH_STORAGE_KEY);
 }
 
-async function apiRequest(endpoint, options = {}) {
+export async function apiRequest(endpoint, options = {}) {
   const auth = getStoredAuth();
   const headers = {
     "Content-Type": "application/json",

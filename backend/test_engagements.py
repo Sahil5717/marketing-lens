@@ -33,12 +33,14 @@ def isolated_db(monkeypatch):
 
 @pytest.fixture
 def client(isolated_db):
-    """FastAPI app with just the engagements router and isolated DB."""
+    """FastAPI app with just the engagements router and isolated DB.
+    Uses editor role so CRUD operations are permitted."""
     import importlib, routes_engagements
     importlib.reload(routes_engagements)
     app = FastAPI()
     app.include_router(routes_engagements.router)
-    return TestClient(app)
+    from conftest import AuthedTestClient
+    return AuthedTestClient(app, role="editor")
 
 
 # ─── Module-level functions ──────────────────────────────────────────────

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import { apiRequest } from "../../api.js";
 
 /**
- * useChannelPerformance — fetches GET /api/channel-performance.
- * Pass `engagementId` to target a non-default engagement.
+ * useChannelPerformance — fetches GET /api/channel-performance via the
+ * authenticated apiRequest helper.
  */
 export function useChannelPerformance({
-  apiBase = "",
   lookbackMonths = 24,
   engagementId = "default",
 } = {}) {
@@ -14,18 +14,22 @@ export function useChannelPerformance({
   useEffect(() => {
     let cancelled = false;
     setState({ data: null, loading: true, error: null });
-    const url = `${apiBase}/api/channel-performance`
+
+    const url = `/api/channel-performance`
       + `?lookback_months=${lookbackMonths}`
       + `&engagement_id=${encodeURIComponent(engagementId)}`;
-    fetch(url)
-      .then(r => {
-        if (!r.ok) throw new Error(`Channel performance request failed: ${r.status}`);
-        return r.json();
-      })
-      .then(data => { if (!cancelled) setState({ data, loading: false, error: null }); })
-      .catch(err => { if (!cancelled) setState({ data: null, loading: false, error: err.message }); });
+
+    apiRequest(url).then(({ data, error }) => {
+      if (cancelled) return;
+      if (error) {
+        setState({ data: null, loading: false, error: error.message || "Request failed" });
+      } else {
+        setState({ data, loading: false, error: null });
+      }
+    });
+
     return () => { cancelled = true; };
-  }, [apiBase, lookbackMonths, engagementId]);
+  }, [lookbackMonths, engagementId]);
 
   return state;
 }

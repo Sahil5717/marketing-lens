@@ -247,3 +247,19 @@ frontend/client/screens/market_context/useMarketContext.js
 CHANGES_v26.md                               (this file)
 demos/*.html                                 (regenerated with USD sample data)
 ```
+
+---
+
+## v26.1 hotfix — April 21, 2026
+
+Railway build of v26 failed at Dockerfile step 16 with:
+```
+[16/25] COPY docs/ ./docs/
+Build Failed: failed to calculate checksum of ref ... "/docs": not found
+```
+
+**Cause:** The repo snapshot used to build v26 was missing a `docs/` folder the Dockerfile expected. Investigation confirmed no runtime code references `/app/docs`; the COPY was unused.
+
+**Fix:** Removed `COPY docs/ ./docs/` from Dockerfile. Add back as `COPY docs/ ./docs/` in a future release if you reintroduce a docs folder.
+
+No other changes. All 114 backend tests still pass.

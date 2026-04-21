@@ -45,7 +45,9 @@ WORKDIR /app
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 COPY templates/ ./templates/
-COPY docs/ ./docs/
+# docs/ folder removed in v26.1 — it was missing from the build context
+# on Railway. No runtime code references it; safe to omit. Add back as
+# `COPY docs/ ./docs/` if you reintroduce a docs folder later.
 COPY LICENSE ./
 
 # Build the three frontend entries (analyst, MarketLens client, MarketLens

@@ -1,0 +1,3 @@
+# Root-level requirements.txt for non-Docker platform deploys
+# (Heroku, Railway without Dockerfile). Delegates to backend/.
+-r backend/requirements.txt

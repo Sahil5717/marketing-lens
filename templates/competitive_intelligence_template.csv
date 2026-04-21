@@ -1,0 +1,9 @@
+date,competitor,channel,estimated_spend,traffic_share,impression_share,keyword_overlap,avg_cpc,avg_cpm,new_campaigns,creative_volume
+2025-01,CompetitorA,paid_search,450000,0.23,0.35,0.42,2.85,12.50,3,47
+2025-01,CompetitorA,display,280000,0.18,0.22,0.15,0.00,8.20,2,31
+2025-01,CompetitorA,social_paid,320000,0.20,0.28,0.30,1.45,9.80,4,65
+2025-01,CompetitorB,paid_search,380000,0.19,0.30,0.55,3.10,14.20,2,38
+2025-01,CompetitorB,email,50000,0.05,0.00,0.00,0.00,0.00,1,12
+2025-02,CompetitorA,paid_search,470000,0.24,0.36,0.44,2.95,13.00,2,52
+2025-02,CompetitorA,display,310000,0.20,0.25,0.16,0.00,8.50,3,35
+2025-02,CompetitorB,paid_search,420000,0.21,0.33,0.58,3.25,15.00,3,42

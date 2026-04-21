@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YI · Macro Baseline Panels — Visual Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- React + Babel for standalone JSX execution. Production uses Vite per build plan. -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#F5F6FA;padding:40px;color:#0F1535}
+  .wrap{max-width:1100px;margin:0 auto}
+  h1{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-.02em;font-size:24px;margin-bottom:8px}
+  .sub{color:#5C6280;font-size:13px;margin-bottom:28px}
+  .toolbar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+  .toolbar button{padding:8px 14px;background:#fff;border:1px solid #E5E7EF;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;color:#0F1535}
+  .toolbar button.on{background:#7C5CFF;border-color:#7C5CFF;color:#fff}
+  .toolbar label{display:flex;align-items:center;gap:6px;font-size:12px;color:#5C6280;padding:8px 0}
+  .toolbar input{padding:6px 8px;border:1px solid #E5E7EF;border-radius:6px;font-size:12px;font-family:inherit;width:120px}
+  .atlas-note{background:#FBF3E0;border-left:3px solid #B8893B;border-radius:8px;padding:14px 18px;margin-top:18px;font-size:13px;line-height:1.55}
+  .atlas-note .atlas-name{font-family:'Fraunces',serif;font-weight:600;color:#8C6520;font-style:italic;font-size:12px;margin-bottom:4px}
+  .atlas-note .follow-up{margin-top:8px;color:#5C6280;font-size:12px}
+  #root{min-height:300px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Macro Baseline Panels — visual demo</h1>
+  <div class="sub">
+    Backend: <code>GET /api/market-context</code> from
+    <code>routes_macro_baseline.py</code>.
+    Data: centrally-curated macro baseline (5 CSVs, Jan 2022 – 2026 coverage).
+  </div>
+
+  <div class="toolbar">
+    <strong style="align-self:center;font-size:12px;color:#5C6280">Mode:</strong>
+    <button id="btn-static" class="on">Static sample (no backend)</button>
+    <button id="btn-live">Live (needs backend on :8000)</button>
+    <label>as_of: <input id="asof" value="2024-08-01"></label>
+    <label>category: <input id="category" value="FMCG"></label>
+    <label>regions: <input id="regions" value="Mumbai,Delhi"></label>
+  </div>
+
+  <div id="root"></div>
+</div>
+
+<!-- ───────────────────── tokens ───────────────────── -->
+<script type="text/babel">
+const tok = {
+  card:"#FFFFFF", bg:"#F5F6FA", border:"#E5E7EF", border2:"#D8DCE8",
+  text:"#0F1535", text2:"#5C6280", text3:"#8C92AC",
+  accent:"#7C5CFF", accentSoft:"#EFEAFF", accentDeep:"#5B3FD9",
+  green:"#10B981", greenSoft:"#E6F8F2",
+  red:"#EF4444", redSoft:"#FEE9E9",
+  amber:"#F59E0B", amberSoft:"#FEF3D7",
+  atlas:"#B8893B", atlasSoft:"#FBF3E0", atlasDeep:"#8C6520",
+  fontUi:"'Plus Jakarta Sans', system-ui, sans-serif",
+  fontDisplay:"'Fraunces', serif",
+};
+const panelStyle = {
+  background: tok.card, border: `1px solid ${tok.border}`,
+  borderRadius: 12, padding: "18px 20px",
+  fontFamily: tok.fontUi, color: tok.text, fontSize: 13, lineHeight: 1.5,
+};
+const panelHeadingStyle = { fontSize: 13, fontWeight: 700, marginBottom: 4,
+  display: "flex", alignItems: "center", gap: 8 };
+const panelTagStyle = { fontSize: 10, color: tok.text3, fontWeight: 500,
+  textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 };
+</script>
+
+<!-- ───────────────────── MarketContextPanel ───────────────────── -->
+<script type="text/babel">
+const CHART_W = 400, CHART_H = 140, PAD_TOP = 10, PAD_BOTTOM = 18;
+
+function mapPoints(points){
+  const values = points.map(p=>p.value);
+  const minV = Math.min(...values), maxV = Math.max(...values);
+  const range = maxV - minV || 1;
+  const headroom = range * 0.15;
+  const yMin = minV - headroom, yMax = maxV + headroom;
+  const innerH = CHART_H - PAD_TOP - PAD_BOTTOM;
+  const xStep = points.length > 1 ? CHART_W/(points.length-1) : 0;
+  const xs = points.map((_,i)=>i*xStep);
+  const ys = points.map(p=>{ const t=(p.value-yMin)/(yMax-yMin); return PAD_TOP+(1-t)*innerH; });
+  return {xs,ys};
+}
+function buildLinePath(points){
+  if(!points.length) return "";
+  const {xs,ys} = mapPoints(points);
+  return xs.map((x,i)=> i===0 ? `M${x},${ys[i]}` : `L${x},${ys[i]}`).join(" ");
+}
+function buildAreaPath(points){
+  if(!points.length) return "";
+  const {xs,ys} = mapPoints(points);
+  const line = xs.map((x,i)=> i===0 ? `M${x},${ys[i]}` : `L${x},${ys[i]}`).join(" ");
+  return `${line} L${xs[xs.length-1]},${CHART_H} L${xs[0]},${CHART_H} Z`;
+}
+
+function DemandTrendChart({ points }){
+  if(!points || !points.length){
+    return <div style={{height:CHART_H,display:"flex",alignItems:"center",justifyContent:"center",color:tok.text3,fontSize:12}}>
+      No macro data available for the selected window.
+    </div>;
+  }
+  const {xs,ys} = mapPoints(points);
+  return <div style={{height:CHART_H,marginTop:8}}>
+    <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} preserveAspectRatio="none" style={{width:"100%",height:"100%"}}>
+      <defs>
+        <linearGradient id="mc-grad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor={tok.accent} stopOpacity="0.25"/>
+          <stop offset="100%" stopColor={tok.accent} stopOpacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d={buildAreaPath(points)} fill="url(#mc-grad)"/>
+      <path d={buildLinePath(points)} stroke={tok.accent} strokeWidth="2" fill="none"/>
+      <g fontSize="9" fill={tok.text3} fontFamily={tok.fontUi}>
+        {points.map((p,i)=>(
+          <text key={p.month} x={xs[i]} y={CHART_H-3}
+            textAnchor={i===0?"start":i===points.length-1?"end":"middle"}>{p.label}</text>
+        ))}
+      </g>
+    </svg>
+  </div>;
+}
+
+function MarketContextPanel({ data, loading, error }){
+  if(loading) return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Market Context</div>
+    <div style={panelTagStyle}>Demand trend</div>
+    <div style={{height:CHART_H,display:"flex",alignItems:"center",justifyContent:"center",color:tok.text3}}>Loading…</div>
+  </div>;
+  if(error) return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Market Context</div>
+    <div style={panelTagStyle}>Demand trend</div>
+    <div style={{height:CHART_H,display:"flex",alignItems:"center",justifyContent:"center",color:tok.red,fontSize:12}}>{String(error)}</div>
+  </div>;
+  const points = data?.demand_trend?.points ?? [];
+  const lookback = data?.demand_trend?.lookback_months;
+  const tag = lookback ? `Demand trend — last ${lookback} months` : "Demand trend";
+  return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Market Context</div>
+    <div style={panelTagStyle}>{tag}</div>
+    <DemandTrendChart points={points}/>
+  </div>;
+}
+</script>
+
+<!-- ───────────────────── UpcomingPeakWindowsPanel ───────────────────── -->
+<script type="text/babel">
+const SHORT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function formatDateRange(s,e){
+  const sd = new Date(s), ed = new Date(e);
+  const sStr = `${SHORT_MONTHS[sd.getUTCMonth()]} ${sd.getUTCDate()}`;
+  if(s===e) return sStr;
+  const eStr = `${SHORT_MONTHS[ed.getUTCMonth()]} ${ed.getUTCDate()}`;
+  return `${sStr} – ${eStr}`;
+}
+function badgeStyleFor(sig){
+  if(sig==="High") return { background: tok.redSoft, color:"#B91C1C" };
+  if(sig==="Medium") return { background: tok.amberSoft, color:"#92400E" };
+  return { background: tok.bg, color: tok.text3 };
+}
+function PeakRow({ peak, isLast }){
+  return <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+      padding:"10px 0",borderBottom: isLast?"none":`1px solid ${tok.border}`,fontSize:12}}>
+    <div>
+      <div style={{fontWeight:600}}>{formatDateRange(peak.start_date, peak.end_date)}</div>
+      <div style={{color:tok.text2,fontSize:11,marginTop:2}}>{peak.name}</div>
+    </div>
+    <span style={{padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:600,...badgeStyleFor(peak.significance)}}>
+      {peak.significance}
+    </span>
+  </div>;
+}
+function UpcomingPeakWindowsPanel({ data, loading, error }){
+  if(loading) return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+    <div style={panelTagStyle}>Plan ahead</div>
+    <div style={{color:tok.text3,padding:"20px 0",fontSize:12}}>Loading…</div>
+  </div>;
+  if(error) return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+    <div style={panelTagStyle}>Plan ahead</div>
+    <div style={{color:tok.red,padding:"20px 0",fontSize:12}}>{String(error)}</div>
+  </div>;
+  const peaks = data?.upcoming_peaks ?? [];
+  if(!peaks.length) return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+    <div style={panelTagStyle}>Plan ahead</div>
+    <div style={{color:tok.text3,padding:"24px 0",fontSize:12,fontStyle:"italic"}}>
+      No peak windows in the lookahead range. Macro baseline is sparse during this period — expand the window.
+    </div>
+  </div>;
+  return <div style={panelStyle}>
+    <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+    <div style={panelTagStyle}>Plan ahead</div>
+    {peaks.map((peak,i)=>(
+      <PeakRow key={`${peak.name}-${peak.start_date}`} peak={peak} isLast={i===peaks.length-1}/>
+    ))}
+  </div>;
+}
+</script>
+
+<!-- ───────────────────── App ───────────────────── -->
+<script type="text/babel">
+// Baked-in sample payload (from a real TestClient round-trip)
+const SAMPLE = {
+  "as_of": "2024-08-01",
+  "category": "FMCG",
+  "regions": [
+    "Mumbai",
+    "Delhi"
+  ],
+  "demand_trend": {
+    "lookback_months": 4,
+    "points": [
+      {
+        "month": "2024-05",
+        "value": 99.4,
+        "label": "May"
+      },
+      {
+        "month": "2024-06",
+        "value": 98.9,
+        "label": "Jun"
+      },
+      {
+        "month": "2024-07",
+        "value": 99.6,
+        "label": "Jul"
+      },
+      {
+        "month": "2024-08",
+        "value": 100.9,
+        "label": "Aug"
+      }
+    ]
+  },
+  "upcoming_peaks": [
+    {
+      "start_date": "2024-08-15",
+      "end_date": "2024-08-15",
+      "name": "Independence Day",
+      "kind": "public_holiday",
+      "significance": "Medium",
+      "significance_score": 2,
+      "regions": [
+        "ALL"
+      ],
+      "notes": "Brand campaigns and patriotic retail promotions",
+      "days_away": 14
+    },
+    {
+      "start_date": "2024-08-19",
+      "end_date": "2024-08-19",
+      "name": "Raksha Bandhan",
+      "kind": "festival",
+      "significance": "Medium",
+      "significance_score": 2,
+      "regions": [
+        "ALL"
+      ],
+      "notes": "Gifting, confectionery and quick-commerce uplift",
+      "days_away": 18
+    },
+    {
+      "start_date": "2024-10-03",
+      "end_date": "2024-10-12",
+      "name": "Navratri",
+      "kind": "festival",
+      "significance": "High",
+      "significance_score": 3,
+      "regions": [
+        "ALL"
+      ],
+      "notes": "Pre-Diwali ramp in apparel, beauty and jewelry",
+      "days_away": 63
+    },
+    {
+      "start_date": "2024-10-29",
+      "end_date": "2024-11-03",
+      "name": "Diwali",
+      "kind": "festival",
+      "significance": "High",
+      "significance_score": 3,
+      "regions": [
+        "ALL"
+      ],
+      "notes": "Peak all-India demand period for apparel, jewelry, electronics and gifting",
+      "days_away": 89
+    }
+  ],
+  "atlas_narration": {
+    "headline": "Demand for FMCG has been broadly flat over the last 4 months, per the macro baseline.",
+    "detail": "The next major peak is Navratri in 63 days \u2014 historically a high-impact window.",
+    "follow_up": "Want me to overlay the last three years of this same period?",
+    "source": "macro_baseline",
+    "confidence": "medium"
+  },
+  "source": "macro_baseline (YI-curated, per plan v2 \u00a72A.1)"
+};
+
+function App(){
+  const [mode, setMode] = React.useState("static");
+  const [inputs, setInputs] = React.useState({
+    asOf:"2024-08-01", category:"FMCG", regions:"Mumbai,Delhi",
+  });
+  const [state, setState] = React.useState({ data: SAMPLE, loading:false, error:null });
+
+  // Pick up toolbar inputs
+  React.useEffect(()=>{
+    const asof = document.getElementById("asof");
+    const cat = document.getElementById("category");
+    const reg = document.getElementById("regions");
+    const btnS = document.getElementById("btn-static");
+    const btnL = document.getElementById("btn-live");
+    const sync = ()=> setInputs({
+      asOf: asof.value, category: cat.value, regions: reg.value,
+    });
+    [asof,cat,reg].forEach(el => el.addEventListener("change", sync));
+    btnS.addEventListener("click", ()=>{
+      btnS.classList.add("on"); btnL.classList.remove("on");
+      setMode("static");
+    });
+    btnL.addEventListener("click", ()=>{
+      btnL.classList.add("on"); btnS.classList.remove("on");
+      setMode("live");
+    });
+  }, []);
+
+  React.useEffect(()=>{
+    if(mode === "static"){
+      setState({ data: SAMPLE, loading: false, error: null });
+      return;
+    }
+    setState({ data: null, loading: true, error: null });
+    const qs = new URLSearchParams();
+    if(inputs.asOf) qs.set("as_of", inputs.asOf);
+    if(inputs.category) qs.set("category", inputs.category);
+    if(inputs.regions) qs.set("regions", inputs.regions);
+    qs.set("lookahead_days","120"); qs.set("lookback_months","4"); qs.set("peak_limit","5");
+    fetch(`http://localhost:8000/api/market-context?${qs.toString()}`)
+      .then(r => { if(!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(d => setState({ data: d, loading: false, error: null }))
+      .catch(e => setState({ data: null, loading: false, error: e.message }));
+  }, [mode, inputs.asOf, inputs.category, inputs.regions]);
+
+  return <>
+    <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:14}}>
+      <MarketContextPanel {...state}/>
+      <UpcomingPeakWindowsPanel {...state}/>
+    </div>
+    {state.data?.atlas_narration && (
+      <div className="atlas-note">
+        <div className="atlas-name">Atlas notes</div>
+        <div>{state.data.atlas_narration.headline}</div>
+        <div style={{marginTop:4}}>{state.data.atlas_narration.detail}</div>
+        <div className="follow-up">› {state.data.atlas_narration.follow_up}</div>
+      </div>
+    )}
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

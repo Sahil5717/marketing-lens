@@ -1,0 +1,17 @@
+date,metric_type,channel,region,value,yoy_change_pct,benchmark_source,category,notes
+2025-01,cpc_trend,paid_search,,2.85,12.5,Google Ads,SaaS,Rising due to competition
+2025-02,cpc_trend,paid_search,,2.95,15.2,Google Ads,SaaS,Continued inflation
+2025-03,cpc_trend,paid_search,,3.10,18.0,Google Ads,SaaS,Q1 peak
+2025-01,cpm_trend,display,,8.20,-5.0,Meta Business Suite,SaaS,Declining - opportunity
+2025-02,cpm_trend,display,,7.90,-8.0,Meta Business Suite,SaaS,Further decline
+2025-01,category_growth,,,12.5,,Statista,SaaS,Strong market expansion
+2025-02,category_growth,,,11.8,,Statista,SaaS,Slight slowdown
+2025-01,search_interest,paid_search,,72,8.0,Google Trends,SaaS,Rising search demand
+2025-02,search_interest,paid_search,,75,10.0,Google Trends,SaaS,Continued growth
+2025-01,channel_benchmark_ctr,paid_search,,0.035,,Industry Report,SaaS,
+2025-01,channel_benchmark_cvr,paid_search,,0.028,,Industry Report,SaaS,
+2025-01,channel_benchmark_cac,paid_search,,285,,Industry Report,SaaS,
+2025-01,channel_benchmark_roas,paid_search,,3.2,,Industry Report,SaaS,
+2025-01,channel_benchmark_ctr,display,,0.004,,Industry Report,SaaS,
+2025-01,channel_benchmark_cvr,display,,0.006,,Industry Report,SaaS,
+2025-01,channel_benchmark_cac,display,,420,,Industry Report,SaaS,

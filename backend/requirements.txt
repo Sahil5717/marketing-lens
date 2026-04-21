@@ -1,0 +1,40 @@
+# Yield Intelligence Platform — Python dependencies
+#
+# Versions are pinned to the range actually tested end-to-end.
+# Bayesian MMM (pymc/arviz), Prophet forecasting, and all tests pass at
+# these versions. Update deliberately, not casually.
+#
+# Note: pymc pulls in pytensor, which requires a C compiler and BLAS
+# headers at install time. On Linux this means `apt install build-essential`
+# beforehand. The Dockerfile handles this.
+
+# --- Core numerical stack ---
+numpy>=1.26,<3.0
+pandas>=2.1,<4.0
+scipy>=1.11,<2.0
+scikit-learn>=1.4,<2.0
+statsmodels>=0.14,<1.0
+
+# --- Web framework ---
+fastapi>=0.110,<1.0
+uvicorn>=0.29,<1.0
+python-multipart>=0.0.9,<1.0
+
+# --- File handling ---
+openpyxl>=3.1,<4.0
+
+# --- Auth (JWT + password hashing) ---
+python-jose[cryptography]>=3.3,<4.0
+passlib[bcrypt]>=1.7,<2.0
+bcrypt==4.0.1                  # passlib 1.7.x is incompatible with bcrypt 4.1+
+
+# --- Bayesian MMM (primary fit method in the auto-chain) ---
+# These are the dependencies the pitch deck's "Bayesian PyMC NUTS" claim
+# depends on. Before this pin they were imported in-function but missing
+# from the installed environment, so the code always silently fell back
+# to MLE/OLS. With them pinned here the Bayesian path is genuinely live.
+pymc>=5.10,<6.0
+arviz>=0.17,<1.0
+
+# --- Time-series forecasting (Prophet primary, ARIMA fallback via statsmodels) ---
+prophet>=1.1,<2.0

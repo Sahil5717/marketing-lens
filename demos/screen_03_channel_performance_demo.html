@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><title>YI · Screen 03 Channel Performance — Visual Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}</style>
+</head><body>
+<div id="root"></div>
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect, useMemo, useRef, useCallback, Fragment } = React;
+
+const SAMPLE = {"kpis": [{"label": "Total Spend", "value": "₹68.5 Cr", "delta": "▲ 8.7% vs prior"}, {"label": "Revenue", "value": "₹248 Cr", "delta": "▲ 12.4% vs prior"}, {"label": "ROI", "value": "3.62x", "delta": "▲ 0.46 vs prior"}, {"label": "Conversions", "value": "214K", "delta": "▲ 9.2% vs prior"}, {"label": "CAC", "value": "₹3,201", "delta": "▼ 6.3% vs prior"}], "summary": [{"channel": "Search", "color": "#7C5CFF", "spend": 246000000, "spend_display": "₹24.6 Cr", "revenue": 1208000000, "revenue_display": "₹121 Cr", "roi": 4.91, "roi_display": "4.91x", "conversions": 98300, "conversions_display": "98K", "trend_pct": 12.0, "trend_direction": "up"}, {"channel": "Meta Ads", "color": "#3B82F6", "spend": 182000000, "spend_display": "₹18.2 Cr", "revenue": 754000000, "revenue_display": "₹75.4 Cr", "roi": 4.14, "roi_display": "4.14x", "conversions": 63100, "conversions_display": "63K", "trend_pct": 4.2, "trend_direction": "up"}, {"channel": "LinkedIn", "color": "#10B981", "spend": 96000000, "spend_display": "₹9.6 Cr", "revenue": 224000000, "revenue_display": "₹22.4 Cr", "roi": 2.33, "roi_display": "2.33x", "conversions": 18200, "conversions_display": "18K", "trend_pct": 18.6, "trend_direction": "up"}, {"channel": "YouTube", "color": "#EF4444", "spend": 55000000, "spend_display": "₹5.5 Cr", "revenue": 112000000, "revenue_display": "₹11.2 Cr", "roi": 2.04, "roi_display": "2.04x", "conversions": 9900, "conversions_display": "10K", "trend_pct": 3.1, "trend_direction": "up"}, {"channel": "Display", "color": "#F59E0B", "spend": 68000000, "spend_display": "₹6.8 Cr", "revenue": 110000000, "revenue_display": "₹11.0 Cr", "roi": 1.62, "roi_display": "1.62x", "conversions": 16800, "conversions_display": "17K", "trend_pct": -7.3, "trend_direction": "down"}, {"channel": "Others", "color": "#8C92AC", "spend": 38000000, "spend_display": "₹3.8 Cr", "revenue": 72000000, "revenue_display": "₹7.2 Cr", "roi": 1.89, "roi_display": "1.89x", "conversions": 7700, "conversions_display": "8K", "trend_pct": -2.4, "trend_direction": "down"}], "contribution": {"total": 2480000000, "total_display": "₹248 Cr", "slices": [{"channel": "Search", "color": "#7C5CFF", "percentage": 48.7, "revenue": 1208000000, "revenue_display": "₹121 Cr"}, {"channel": "Meta Ads", "color": "#3B82F6", "percentage": 30.4, "revenue": 754000000, "revenue_display": "₹75.4 Cr"}, {"channel": "LinkedIn", "color": "#10B981", "percentage": 9.0, "revenue": 224000000, "revenue_display": "₹22.4 Cr"}, {"channel": "YouTube", "color": "#EF4444", "percentage": 4.5, "revenue": 112000000, "revenue_display": "₹11.2 Cr"}, {"channel": "Display", "color": "#F59E0B", "percentage": 4.4, "revenue": 110000000, "revenue_display": "₹11.0 Cr"}, {"channel": "Others", "color": "#8C92AC", "percentage": 2.9, "revenue": 72000000, "revenue_display": "₹7.2 Cr"}]}, "top_insight": {"headline": "Search and Meta Ads together contribute 79.1% of total revenue.", "detail": "Concentration risk is high — a meaningful shock to either channel would be felt portfolio-wide."}, "channel_shift": {"lookback_months": 24, "source": "synthetic_from_snapshot", "series": [{"channel": "Search", "color": "#7C5CFF", "points": [{"month": "2024-05", "percentage": 34.9}, {"month": "2024-06", "percentage": 35.7}, {"month": "2024-07", "percentage": 35.6}, {"month": "2024-08", "percentage": 35.0}, {"month": "2024-09", "percentage": 34.4}, {"month": "2024-10", "percentage": 34.6}, {"month": "2024-11", "percentage": 35.2}, {"month": "2024-12", "percentage": 35.9}, {"month": "2025-01", "percentage": 35.9}, {"month": "2025-02", "percentage": 35.3}, {"month": "2025-03", "percentage": 34.7}, {"month": "2025-04", "percentage": 34.8}, {"month": "2025-05", "percentage": 35.4}, {"month": "2025-06", "percentage": 36.2}, {"month": "2025-07", "percentage": 36.2}, {"month": "2025-08", "percentage": 35.5}, {"month": "2025-09", "percentage": 34.9}, {"month": "2025-10", "percentage": 35.1}, {"month": "2025-11", "percentage": 35.8}, {"month": "2025-12", "percentage": 36.4}, {"month": "2026-01", "percentage": 36.4}, {"month": "2026-02", "percentage": 35.8}, {"month": "2026-03", "percentage": 35.2}, {"month": "2026-04", "percentage": 35.3}]}, {"channel": "Meta Ads", "color": "#3B82F6", "points": [{"month": "2024-05", "percentage": 26.7}, {"month": "2024-06", "percentage": 26.5}, {"month": "2024-07", "percentage": 25.8}, {"month": "2024-08", "percentage": 25.2}, {"month": "2024-09", "percentage": 25.3}, {"month": "2024-10", "percentage": 26.1}, {"month": "2024-11", "percentage": 26.8}, {"month": "2024-12", "percentage": 26.8}, {"month": "2025-01", "percentage": 26.0}, {"month": "2025-02", "percentage": 25.4}, {"month": "2025-03", "percentage": 25.5}, {"month": "2025-04", "percentage": 26.3}, {"month": "2025-05", "percentage": 27.0}, {"month": "2025-06", "percentage": 26.9}, {"month": "2025-07", "percentage": 26.2}, {"month": "2025-08", "percentage": 25.6}, {"month": "2025-09", "percentage": 25.7}, {"month": "2025-10", "percentage": 26.5}, {"month": "2025-11", "percentage": 27.2}, {"month": "2025-12", "percentage": 27.1}, {"month": "2026-01", "percentage": 26.3}, {"month": "2026-02", "percentage": 25.8}, {"month": "2026-03", "percentage": 25.9}, {"month": "2026-04", "percentage": 26.7}]}, {"channel": "LinkedIn", "color": "#10B981", "points": [{"month": "2024-05", "percentage": 15.3}, {"month": "2024-06", "percentage": 14.5}, {"month": "2024-07", "percentage": 13.8}, {"month": "2024-08", "percentage": 13.8}, {"month": "2024-09", "percentage": 14.7}, {"month": "2024-10", "percentage": 15.3}, {"month": "2024-11", "percentage": 15.2}, {"month": "2024-12", "percentage": 14.3}, {"month": "2025-01", "percentage": 13.7}, {"month": "2025-02", "percentage": 13.7}, {"month": "2025-03", "percentage": 14.5}, {"month": "2025-04", "percentage": 15.2}, {"month": "2025-05", "percentage": 15.0}, {"month": "2025-06", "percentage": 14.2}, {"month": "2025-07", "percentage": 13.4}, {"month": "2025-08", "percentage": 13.5}, {"month": "2025-09", "percentage": 14.3}, {"month": "2025-10", "percentage": 14.9}, {"month": "2025-11", "percentage": 14.8}, {"month": "2025-12", "percentage": 14.0}, {"month": "2026-01", "percentage": 13.4}, {"month": "2026-02", "percentage": 13.4}, {"month": "2026-03", "percentage": 14.2}, {"month": "2026-04", "percentage": 14.7}]}, {"channel": "YouTube", "color": "#EF4444", "points": [{"month": "2024-05", "percentage": 8.3}, {"month": "2024-06", "percentage": 7.6}, {"month": "2024-07", "percentage": 7.7}, {"month": "2024-08", "percentage": 8.5}, {"month": "2024-09", "percentage": 9.1}, {"month": "2024-10", "percentage": 9.0}, {"month": "2024-11", "percentage": 8.1}, {"month": "2024-12", "percentage": 7.5}, {"month": "2025-01", "percentage": 7.7}, {"month": "2025-02", "percentage": 8.4}, {"month": "2025-03", "percentage": 9.0}, {"month": "2025-04", "percentage": 8.9}, {"month": "2025-05", "percentage": 8.1}, {"month": "2025-06", "percentage": 7.4}, {"month": "2025-07", "percentage": 7.5}, {"month": "2025-08", "percentage": 8.2}, {"month": "2025-09", "percentage": 9.0}, {"month": "2025-10", "percentage": 8.7}, {"month": "2025-11", "percentage": 8.0}, {"month": "2025-12", "percentage": 7.4}, {"month": "2026-01", "percentage": 7.4}, {"month": "2026-02", "percentage": 8.1}, {"month": "2026-03", "percentage": 8.8}, {"month": "2026-04", "percentage": 8.7}]}, {"channel": "Display", "color": "#F59E0B", "points": [{"month": "2024-05", "percentage": 9.6}, {"month": "2024-06", "percentage": 9.7}, {"month": "2024-07", "percentage": 10.5}, {"month": "2024-08", "percentage": 11.1}, {"month": "2024-09", "percentage": 10.9}, {"month": "2024-10", "percentage": 10.2}, {"month": "2024-11", "percentage": 9.5}, {"month": "2024-12", "percentage": 9.6}, {"month": "2025-01", "percentage": 10.3}, {"month": "2025-02", "percentage": 10.9}, {"month": "2025-03", "percentage": 10.8}, {"month": "2025-04", "percentage": 10.0}, {"month": "2025-05", "percentage": 9.3}, {"month": "2025-06", "percentage": 9.5}, {"month": "2025-07", "percentage": 10.3}, {"month": "2025-08", "percentage": 10.9}, {"month": "2025-09", "percentage": 10.7}, {"month": "2025-10", "percentage": 9.9}, {"month": "2025-11", "percentage": 9.2}, {"month": "2025-12", "percentage": 9.4}, {"month": "2026-01", "percentage": 10.2}, {"month": "2026-02", "percentage": 10.7}, {"month": "2026-03", "percentage": 10.5}, {"month": "2026-04", "percentage": 9.8}]}, {"channel": "Others", "color": "#8C92AC", "points": [{"month": "2024-05", "percentage": 5.2}, {"month": "2024-06", "percentage": 6.0}, {"month": "2024-07", "percentage": 6.6}, {"month": "2024-08", "percentage": 6.4}, {"month": "2024-09", "percentage": 5.6}, {"month": "2024-10", "percentage": 4.9}, {"month": "2024-11", "percentage": 5.1}, {"month": "2024-12", "percentage": 5.9}, {"month": "2025-01", "percentage": 6.5}, {"month": "2025-02", "percentage": 6.3}, {"month": "2025-03", "percentage": 5.5}, {"month": "2025-04", "percentage": 4.9}, {"month": "2025-05", "percentage": 5.1}, {"month": "2025-06", "percentage": 5.8}, {"month": "2025-07", "percentage": 6.4}, {"month": "2025-08", "percentage": 6.2}, {"month": "2025-09", "percentage": 5.4}, {"month": "2025-10", "percentage": 4.9}, {"month": "2025-11", "percentage": 5.1}, {"month": "2025-12", "percentage": 5.7}, {"month": "2026-01", "percentage": 6.3}, {"month": "2026-02", "percentage": 6.1}, {"month": "2026-03", "percentage": 5.3}, {"month": "2026-04", "percentage": 4.8}]}], "overlay_events": [{"month": "2024-09", "name": "Onam", "kind": "festival"}, {"month": "2024-10", "name": "Navratri", "kind": "festival"}, {"month": "2024-10", "name": "Durga Puja", "kind": "festival"}, {"month": "2024-10", "name": "Diwali", "kind": "festival"}, {"month": "2025-03", "name": "Eid al-Fitr", "kind": "festival"}, {"month": "2025-09", "name": "Onam", "kind": "festival"}, {"month": "2025-09", "name": "Navratri", "kind": "festival"}, {"month": "2025-09", "name": "Durga Puja", "kind": "festival"}, {"month": "2025-10", "name": "Diwali", "kind": "festival"}, {"month": "2026-03", "name": "Eid al-Fitr", "kind": "festival"}]}, "atlas": {"paragraphs": [{"text": "Search is your revenue engine — ₹121 Cr at a 4.91x ROI. Second place is roughly 30% of revenue if you have two or more channels."}, {"text": "Concentration is the risk. Top two channels account for 79% of revenue — worth noting before the next planning cycle."}, {"text": "The Channel Shift panel is extrapolated from the current snapshot — upload 12+ months of history for a real trend read."}], "suggested_questions": ["What drove the Q2 shift away from Others?", "Is Search saturating?", "Which channel has the widest ROI variance month-to-month?", "Where is the concentration risk most acute?"], "source": "channel_performance_template"}, "has_data": true};
+
+/**
+ * Shared design tokens for the Yield Intelligence frontend.
+ *
+ * Mirrors the `:root` block in the hybrid screen HTMLs. Any new screen
+ * imports from here rather than redefining. When the fresh Vite rebuild
+ * lands, this file moves to `src/design/tokens.ts` with types added.
+ */
+const tok = {
+  // Surface
+  bg:         "#F5F6FA",
+  card:       "#FFFFFF",
+  sidebar:    "#0F1535",
+  sidebarHover: "#1A2150",
+  border:     "#E5E7EF",
+  border2:    "#D8DCE8",
+
+  // Text
+  text:       "#0F1535",
+  text2:      "#5C6280",
+  text3:      "#8C92AC",
+
+  // Brand accent
+  accent:     "#7C5CFF",
+  accentSoft: "#EFEAFF",
+  accentDeep: "#5B3FD9",
+
+  // Semantic
+  green:      "#10B981",
+  greenSoft:  "#E6F8F2",
+  greenDeep:  "#047857",
+  red:        "#EF4444",
+  redSoft:    "#FEE9E9",
+  redDeep:    "#B91C1C",
+  amber:      "#F59E0B",
+  amberSoft:  "#FEF3D7",
+  amberDeep:  "#92400E",
+
+  // Atlas persona
+  atlas:      "#B8893B",
+  atlasSoft:  "#FBF3E0",
+  atlasDeep:  "#8C6520",
+
+  // Hero gradient stops
+  heroFrom:   "#0F1535",
+  heroTo:     "#1E2456",
+  heroNum:    "#FF8B7A",   // loss — coral italic in headline
+  heroGain:   "#7BE0BC",   // gain — mint italic in headline
+  heroEyebrow:"#FFB547",
+
+  // Fonts
+  fontUi:      "'Plus Jakarta Sans', system-ui, sans-serif",
+  fontDisplay: "'Fraunces', serif",
+};
+
+/** Standard card surface used across screens. */
+const panelStyle = {
+  background: tok.card,
+  border: `1px solid ${tok.border}`,
+  borderRadius: 12,
+  padding: "18px 20px",
+  fontFamily: tok.fontUi,
+  color: tok.text,
+  fontSize: 13,
+  lineHeight: 1.5,
+};
+
+const panelHeadingStyle = {
+  fontSize: 13,
+  fontWeight: 700,
+  marginBottom: 4,
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
+const panelTagStyle = {
+  fontSize: 10,
+  color: tok.text3,
+  fontWeight: 500,
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+  marginBottom: 14,
+};
+
+/** Inline "Atlas reasoning" callout — gold-soft box with left border. */
+const atlasCalloutStyle = {
+  background: tok.atlasSoft,
+  borderLeft: `3px solid ${tok.atlas}`,
+  borderRadius: 6,
+  padding: "12px 16px",
+  fontSize: 12,
+  color: tok.text,
+  lineHeight: 1.6,
+};
+
+/** Fonts link tag — consumers render this in their document head. */
+const FONTS_HREF =
+  "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
+
+/**
+ * TopBar — sits at the top of every screen's main column.
+ *
+ * Left:  big muted screen number, then title + subtitle
+ * Right: date range pill and share pill (slots for custom pills)
+ */
+
+
+function Pill({ children, primary, onClick }) {
+  const style = {
+    display: "inline-flex", alignItems: "center", gap: 8,
+    padding: "8px 14px",
+    background: primary ? tok.accent : tok.card,
+    border: `1px solid ${primary ? tok.accent : tok.border}`,
+    borderRadius: 8,
+    fontSize: 12, fontWeight: 500,
+    color: primary ? "#fff" : tok.text,
+    cursor: onClick ? "pointer" : "default",
+    fontFamily: tok.fontUi,
+  };
+  return <div style={style} onClick={onClick}>{children}</div>;
+}
+
+function TopBar({ number, title, subtitle, right }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      marginBottom: 24,
+    }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: tok.text3 }}>{number}</div>
+        <div>
+          <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-.015em" }}>{title}</div>
+          {subtitle && (
+            <div style={{ fontSize: 12, color: tok.text2, marginTop: 2 }}>{subtitle}</div>
+          )}
+        </div>
+      </div>
+      {right && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {right}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * AppShell — the 3-column Yield Intelligence frame.
+ *
+ * Layout:
+ *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
+ *
+ * Usage:
+ *   <AppShell
+ *     activeScreen={1}
+ *     clientName="Acme Consumer Co."
+ *     clientPeriod="Quarterly review · Q2 2024"
+ *     atlas={<AtlasRail narration={...} />}
+ *   >
+ *     <ExecutiveSummaryScreen ... />
+ *   </AppShell>
+ *
+ * The sidebar and atlas rail are separate components in this file so
+ * each can be imported without dragging the whole shell in.
+ */
+
+
+const NAV = [
+  { num: "01", label: "Executive Summary" },
+  { num: "02", label: "Data Foundation" },
+  { num: "03", label: "Channel Performance" },
+  { num: "04", label: "Campaign Deep Dive" },
+  { num: "05", label: "Attribution" },
+  { num: "06", label: "Optimization" },
+  { num: "07", label: "Simulation" },
+  { num: "08", label: "Plan Builder" },
+  { num: "09", label: "Track & Monitor" },
+  { num: "10", label: "Executive Report" },
+];
+
+function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
+  return (
+    <aside style={{
+      background: tok.sidebar,
+      color: "#fff",
+      padding: "24px 14px",
+      position: "sticky",
+      top: 0,
+      height: "100vh",
+      overflowY: "auto",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Logo */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 13,
+        }}>YI</div>
+        Yield Intelligence
+      </div>
+
+      {/* Nav items */}
+      {NAV.map((item, idx) => {
+        const num = idx + 1;
+        const active = num === activeScreen;
+        return (
+          <div
+            key={item.num}
+            onClick={() => onNavigate && onNavigate(num)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8,
+              color: active ? "#fff" : "#A8AEC9",
+              background: active ? tok.accent : "transparent",
+              cursor: "pointer", fontSize: 13,
+              fontWeight: active ? 600 : 500,
+              marginBottom: 2,
+              transition: "all .15s",
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = tok.sidebarHover;
+              if (!active) e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+              if (!active) e.currentTarget.style.color = "#A8AEC9";
+            }}
+          >
+            <span style={{
+              display: "inline-block", width: 22, height: 22, borderRadius: 5,
+              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
+              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
+              flexShrink: 0,
+            }}>{item.num}</span>
+            {item.label}
+          </div>
+        );
+      })}
+
+      {/* Footer */}
+      {clientName && (
+        <div style={{
+          marginTop: 24, padding: 12, borderRadius: 10,
+          background: "rgba(255,255,255,.04)",
+          fontSize: 11, color: "#A8AEC9",
+        }}>
+          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+            {clientName}
+          </strong>
+          {clientPeriod}
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function AppShell({
+  activeScreen,
+  clientName,
+  clientPeriod,
+  atlas,
+  onNavigate,
+  children,
+}) {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh",
+      background: tok.bg,
+      color: tok.text,
+      fontFamily: tok.fontUi,
+      fontSize: 13,
+      lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+      WebkitFontSmoothing: "antialiased",
+    }}>
+      <Sidebar
+        activeScreen={activeScreen}
+        clientName={clientName}
+        clientPeriod={clientPeriod}
+        onNavigate={onNavigate}
+      />
+      <main style={{ padding: "28px 36px 80px" }}>
+        {children}
+      </main>
+      {atlas && React.cloneElement(atlas, {
+        collapsed: atlasCollapsed,
+        onToggle: () => setAtlasCollapsed(c => !c),
+      })}
+    </div>
+  );
+}
+
+/**
+ * AtlasRail — the collapsible right-hand panel that hosts Atlas's
+ * per-screen narration and suggested questions.
+ *
+ * When collapsed, a 56px strip remains showing only the avatar + vertical
+ * label + expand button. The screen's main flow can include an
+ * <AtlasInlineCallout/> so users still see Atlas's headline when the
+ * rail is collapsed.
+ *
+ * Props:
+ *   - narration: { paragraphs: [{text}], suggested_questions: [string] }
+ *   - collapsed + onToggle: controlled by AppShell
+ *   - onAsk: callback(question) for suggested-question clicks
+ */
+
+
+function AtlasAvatar({ size = 40 }) {
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+      fontSize: size * 0.45, position: "relative", flexShrink: 0,
+    }}>
+      A
+      <span style={{
+        content: '""', position: "absolute",
+        bottom: -1, right: -1, width: 10, height: 10, borderRadius: "50%",
+        background: tok.green, border: "2px solid #FAFBFE",
+      }}/>
+    </div>
+  );
+}
+
+function AtlasRailExpanded({ narration, onAsk, onCollapse }) {
+  const paragraphs = narration?.paragraphs || [];
+  const questions = narration?.suggested_questions || [];
+
+  return (
+    <div style={{
+      padding: "24px 22px",
+      display: "flex", flexDirection: "column", height: "100%",
+      overflowY: "auto",
+    }}>
+      {/* Head */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        paddingBottom: 18, borderBottom: `1px solid ${tok.border}`,
+        marginBottom: 20,
+      }}>
+        <AtlasAvatar />
+        <div style={{ flex: 1 }}>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 15, fontWeight: 600,
+            letterSpacing: "-.01em", lineHeight: 1.1,
+          }}>Atlas</div>
+          <div style={{ fontSize: 11, color: tok.text3, marginTop: 2 }}>
+            Your analyst · Online
+          </div>
+        </div>
+        <button
+          onClick={onCollapse}
+          title="Collapse"
+          style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: "transparent", border: `1px solid ${tok.border}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", color: tok.text2, fontSize: 12,
+            fontWeight: 700, fontFamily: tok.fontUi,
+          }}
+        >→</button>
+      </div>
+
+      {/* Narration */}
+      <div style={{ marginBottom: 22, fontSize: 13, lineHeight: 1.6, color: tok.text }}>
+        {paragraphs.map((p, i) => (
+          <p key={i} style={{ marginBottom: 12 }}>{renderNarrationHighlights(p.text)}</p>
+        ))}
+      </div>
+
+      {/* Suggested questions */}
+      {questions.length > 0 && (
+        <>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.18em",
+            marginBottom: 10, fontWeight: 600,
+          }}>Suggested questions</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "auto" }}>
+            {questions.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => onAsk && onAsk(q)}
+                style={{
+                  padding: "11px 14px",
+                  background: tok.card, border: `1px solid ${tok.border}`,
+                  borderRadius: 6, fontSize: 12, color: tok.text2,
+                  cursor: "pointer", lineHeight: 1.4, textAlign: "left",
+                  fontFamily: tok.fontUi,
+                  transition: "all .2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = tok.atlas;
+                  e.currentTarget.style.color = tok.text;
+                  e.currentTarget.style.background = tok.atlasSoft;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = tok.border;
+                  e.currentTarget.style.color = tok.text2;
+                  e.currentTarget.style.background = tok.card;
+                }}
+              >
+                <span style={{ color: tok.atlas, marginRight: 8, fontWeight: 700 }}>›</span>
+                {q}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Input box (non-functional placeholder in v1 — template-driven only) */}
+      <div style={{
+        marginTop: 18, paddingTop: 18,
+        borderTop: `1px solid ${tok.border}`,
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 8,
+          padding: "10px 12px", background: tok.card,
+          border: `1px solid ${tok.border}`, borderRadius: 8,
+        }}>
+          <input
+            type="text"
+            placeholder="Suggested questions only in v1"
+            disabled
+            style={{
+              flex: 1, background: "transparent", border: "none", outline: "none",
+              fontFamily: "inherit", fontSize: 12, color: tok.text3,
+            }}
+          />
+          <span style={{ color: tok.text3, fontWeight: 700, fontSize: 14 }}>↵</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AtlasRailCollapsed({ onExpand }) {
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", gap: 14,
+      padding: "24px 0", height: "100%",
+    }}>
+      <div onClick={onExpand} style={{ cursor: "pointer" }} title="Expand Atlas">
+        <AtlasAvatar size={38} />
+      </div>
+      <div style={{
+        writingMode: "vertical-rl", transform: "rotate(180deg)",
+        fontSize: 10, color: tok.text3, textTransform: "uppercase",
+        letterSpacing: "0.2em", fontWeight: 600, marginTop: 8,
+      }}>Atlas</div>
+      <button
+        onClick={onExpand}
+        title="Expand"
+        style={{
+          marginTop: "auto",
+          width: 32, height: 32, borderRadius: 6,
+          background: tok.card, border: `1px solid ${tok.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", color: tok.text2, fontSize: 14,
+        }}
+      >←</button>
+    </div>
+  );
+}
+
+function AtlasRail({ narration, collapsed, onToggle, onAsk }) {
+  return (
+    <aside style={{
+      background: "#FAFBFE",
+      borderLeft: `1px solid ${tok.border}`,
+      position: "sticky", top: 0, height: "100vh",
+      display: "flex", flexDirection: "column",
+      overflow: "hidden",
+      transition: "all .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      {collapsed
+        ? <AtlasRailCollapsed onExpand={onToggle}/>
+        : <AtlasRailExpanded narration={narration} onAsk={onAsk} onCollapse={onToggle}/>
+      }
+    </aside>
+  );
+}
+
+/** Inline Atlas callout — shown inside the main flow when the rail is collapsed. */
+function AtlasInlineCallout({ narration }) {
+  const first = narration?.paragraphs?.[0];
+  if (!first) return null;
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.atlasSoft}, #FEFAEC)`,
+      border: "1px solid #F2D89A",
+      borderLeft: `3px solid ${tok.atlas}`,
+      borderRadius: 10,
+      padding: "16px 20px",
+      marginBottom: 18,
+      display: "flex", alignItems: "flex-start", gap: 14,
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: "50%",
+        background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+        fontSize: 14, flexShrink: 0,
+      }}>A</div>
+      <div style={{ flex: 1 }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontWeight: 600, fontSize: 13,
+          color: tok.atlasDeep, marginBottom: 4, fontStyle: "italic",
+        }}>Atlas notes</div>
+        <div style={{ fontSize: 13, color: tok.text, lineHeight: 1.55 }}>
+          {renderNarrationHighlights(first.text)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Bold monetary figures in Atlas narration text so they stand out. */
+function renderNarrationHighlights(text) {
+  if (!text) return null;
+  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
+  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  return parts.map((part, i) => {
+    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+      return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+}
+
+/**
+ * KpiStrip — row of KPI cards.
+ *
+ * Props:
+ *   - kpis: Array<{ label, value, delta }>
+ *     delta is an optional string like "▲ 12.4% vs Apr"
+ *     (the component doesn't compute direction — caller formats the string).
+ */
+
+
+function KpiStrip({ kpis = [] }) {
+  if (!kpis.length) return null;
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: `repeat(${kpis.length}, 1fr)`,
+      gap: 14,
+      marginBottom: 18,
+    }}>
+      {kpis.map((kpi, i) => (
+        <div key={i} style={{
+          background: tok.card,
+          border: `1px solid ${tok.border}`,
+          borderRadius: 12,
+          padding: "16px 18px",
+          fontFamily: tok.fontUi,
+        }}>
+          <div style={{
+            fontSize: 11, color: tok.text2, fontWeight: 500,
+            textTransform: "uppercase", letterSpacing: "0.04em",
+            marginBottom: 8,
+          }}>{kpi.label}</div>
+          <div style={{
+            fontSize: 22, fontWeight: 800, letterSpacing: "-.02em",
+            lineHeight: 1.1, marginBottom: 6, color: tok.text,
+          }}>{kpi.value}</div>
+          {kpi.delta && (
+            <div style={{
+              fontSize: 11, fontWeight: 600,
+              color: kpi.delta.startsWith("▲") ? tok.green
+                   : kpi.delta.startsWith("▼") ? tok.red
+                   : tok.text3,
+            }}>{kpi.delta}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * BridgeCard — the purple-bordered transition card at the bottom of
+ * each screen that narrates the handoff to the next screen.
+ *
+ * Props:
+ *   - toScreenNum: string ("02")
+ *   - text: short headline that sets up the next screen
+ *   - onClick: navigate to next screen
+ */
+
+
+function BridgeCard({ toScreenNum, text, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        marginTop: 8,
+        padding: "22px 28px",
+        background: `linear-gradient(135deg, #fff, #FAFBFE)`,
+        border: `1px solid ${tok.border}`,
+        borderLeft: `3px solid ${tok.accent}`,
+        borderRadius: 10,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 24, cursor: "pointer", transition: "all .25s",
+        fontFamily: tok.fontUi,
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderLeftColor = tok.accentDeep;
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(124,92,255,.08)";
+        e.currentTarget.style.transform = "translateX(2px)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderLeftColor = tok.accent;
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.transform = "none";
+      }}
+    >
+      <div>
+        <div style={{
+          fontSize: 10, color: tok.accent,
+          textTransform: "uppercase", letterSpacing: "0.2em",
+          fontWeight: 700, marginBottom: 6,
+        }}>Continue · Screen {toScreenNum}</div>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 17, fontWeight: 500,
+          letterSpacing: "-.01em", lineHeight: 1.3, maxWidth: 560,
+          color: tok.text,
+        }}>{text}</div>
+      </div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 28, color: tok.accent,
+        fontStyle: "italic", fontWeight: 500,
+      }}>→</div>
+    </div>
+  );
+}
+
+/**
+ * Donut — renders a donut chart from allocation slices.
+ *
+ * Props:
+ *   - slices: Array<{ channel, color, percentage }>  // percentages sum ≤ 100
+ *   - centerLabel, centerSub
+ *   - size: pixel size (default 140)
+ */
+
+
+const STROKE = 3;
+const R = 15.915;  // 2πR = 100 → percentage maps directly to stroke-dasharray
+
+function Donut({
+  slices = [],
+  centerLabel,
+  centerSub,
+  centerColor,
+  size = 140,
+}) {
+  let offset = 0;
+  return (
+    <div style={{
+      position: "relative", width: size, height: size, flexShrink: 0,
+    }}>
+      <svg viewBox="0 0 36 36" style={{ width: "100%", height: "100%" }}>
+        {/* Track */}
+        <circle cx="18" cy="18" r={R} fill="none"
+                stroke={tok.border} strokeWidth={STROKE}/>
+        {/* Slices */}
+        {slices.map((s, i) => {
+          const pct = Math.max(0, Math.min(100, s.percentage || 0));
+          const dash = `${pct} ${100 - pct}`;
+          const dashOffset = -offset;
+          offset += pct;
+          return (
+            <circle
+              key={s.channel + i}
+              cx="18" cy="18" r={R} fill="none"
+              stroke={s.color} strokeWidth={STROKE}
+              strokeDasharray={dash}
+              strokeDashoffset={dashOffset}
+              transform="rotate(-90 18 18)"
+            />
+          );
+        })}
+      </svg>
+      {(centerLabel || centerSub) && (
+        <div style={{
+          position: "absolute", inset: 0,
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+        }}>
+          {centerLabel && (
+            <div style={{
+              fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 600,
+              letterSpacing: "-.02em", color: centerColor || tok.text,
+            }}>{centerLabel}</div>
+          )}
+          {centerSub && (
+            <div style={{
+              fontSize: 9, color: tok.text3,
+              textTransform: "uppercase", letterSpacing: "0.12em",
+              marginTop: 2, fontWeight: 600,
+            }}>{centerSub}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * ChannelSummaryTable — the per-channel KPI breakdown table.
+ *
+ * Columns: Channel · Spend · Revenue · ROI · Conversions · Trend
+ * Data: /api/channel-performance .summary
+ */
+
+
+function TrendChip({ direction, pct }) {
+  if (!pct) {
+    return <span style={{ color: tok.text3 }}>—</span>;
+  }
+  const isUp = direction === "up";
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: 4,
+      fontSize: 11, fontWeight: 600,
+      color: isUp ? tok.green : tok.red,
+    }}>
+      {isUp ? "↗" : "↘"} {Math.abs(pct).toFixed(1)}%
+    </span>
+  );
+}
+
+function ChannelSummaryTable({ rows = [] }) {
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "18px 20px",
+      fontFamily: tok.fontUi,
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>Channel Summary</div>
+      <div style={{
+        fontSize: 10, color: tok.text3, fontWeight: 500,
+        textTransform: "uppercase", letterSpacing: "0.05em",
+        marginBottom: 14,
+      }}>Per-channel performance</div>
+
+      {rows.length === 0 ? (
+        <div style={{
+          padding: "24px 0", textAlign: "center",
+          color: tok.text3, fontSize: 12, fontStyle: "italic",
+        }}>
+          Upload performance data to see per-channel KPIs.
+        </div>
+      ) : (
+        <table style={{
+          width: "100%", borderCollapse: "collapse", fontSize: 12,
+        }}>
+          <thead>
+            <tr style={{
+              textAlign: "left",
+              color: tok.text3, fontWeight: 600,
+              fontSize: 10, textTransform: "uppercase", letterSpacing: "0.05em",
+            }}>
+              <th style={{ padding: "10px 8px", fontWeight: 600 }}>Channel</th>
+              <th style={{ padding: "10px 8px", textAlign: "right", fontWeight: 600 }}>Spend</th>
+              <th style={{ padding: "10px 8px", textAlign: "right", fontWeight: 600 }}>Revenue</th>
+              <th style={{ padding: "10px 8px", textAlign: "right", fontWeight: 600 }}>ROI</th>
+              <th style={{ padding: "10px 8px", textAlign: "right", fontWeight: 600 }}>Conversions</th>
+              <th style={{ padding: "10px 8px", textAlign: "right", fontWeight: 600 }}>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i} style={{ borderTop: `1px solid ${tok.border}` }}>
+                <td style={{ padding: "12px 8px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{
+                      width: 8, height: 8, borderRadius: 2,
+                      background: row.color, flexShrink: 0,
+                    }}/>
+                    <span style={{ fontWeight: 500 }}>{row.channel}</span>
+                  </div>
+                </td>
+                <td style={{ padding: "12px 8px", textAlign: "right" }}>{row.spend_display}</td>
+                <td style={{ padding: "12px 8px", textAlign: "right", fontWeight: 600 }}>
+                  {row.revenue_display}
+                </td>
+                <td style={{ padding: "12px 8px", textAlign: "right" }}>
+                  <span style={{
+                    fontFamily: tok.fontDisplay, fontStyle: "italic", fontWeight: 600,
+                    color: row.roi >= 3 ? tok.greenDeep : row.roi >= 1.5 ? tok.text : tok.red,
+                  }}>{row.roi_display}</span>
+                </td>
+                <td style={{ padding: "12px 8px", textAlign: "right" }}>
+                  {row.conversions_display}
+                </td>
+                <td style={{ padding: "12px 8px", textAlign: "right" }}>
+                  <TrendChip direction={row.trend_direction} pct={row.trend_pct}/>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
+/**
+ * RevenueContributionCard — right-column card on Screen 03.
+ *
+ *   Revenue Contribution donut (center label = total)
+ *   Legend: channel · pct · revenue
+ *   Top Insight callout (purple-soft, highlights concentration)
+ *
+ * Data: /api/channel-performance .contribution and .top_insight
+ */
+
+
+
+function RevenueContributionCard({ contribution, topInsight }) {
+  const slices = contribution?.slices || [];
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "18px 20px",
+      fontFamily: tok.fontUi,
+      display: "flex", flexDirection: "column", gap: 16,
+    }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>Revenue Contribution</div>
+        <div style={{
+          fontSize: 10, color: tok.text3, fontWeight: 500,
+          textTransform: "uppercase", letterSpacing: "0.05em",
+        }}>By channel · this period</div>
+      </div>
+
+      {slices.length === 0 ? (
+        <div style={{
+          padding: "24px 0", textAlign: "center",
+          color: tok.text3, fontSize: 12, fontStyle: "italic",
+        }}>
+          Revenue breakdown populates once performance data is loaded.
+        </div>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Donut
+              slices={slices}
+              centerLabel={contribution.total_display}
+              centerSub="Total revenue"
+              size={140}
+            />
+            <div style={{ flex: 1 }}>
+              {slices.map((s, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "5px 0", fontSize: 12,
+                }}>
+                  <span style={{
+                    width: 8, height: 8, borderRadius: 2,
+                    background: s.color, flexShrink: 0,
+                  }}/>
+                  <span style={{ flex: 1 }}>{s.channel}</span>
+                  <span style={{
+                    display: "flex", flexDirection: "column", alignItems: "flex-end",
+                  }}>
+                    <strong style={{ fontWeight: 700 }}>{s.percentage}%</strong>
+                    <span style={{ color: tok.text3, fontSize: 11 }}>{s.revenue_display}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {topInsight && (
+            <div style={{
+              background: tok.accentSoft,
+              borderLeft: `3px solid ${tok.accent}`,
+              borderRadius: 6, padding: "12px 16px",
+              marginTop: 4,
+            }}>
+              <div style={{
+                fontSize: 10, color: tok.accentDeep,
+                textTransform: "uppercase", letterSpacing: "0.12em",
+                fontWeight: 700, marginBottom: 4,
+              }}>Top Insight</div>
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: tok.text, lineHeight: 1.4 }}>
+                {topInsight.headline}
+              </div>
+              {topInsight.detail && (
+                <div style={{ fontSize: 11, color: tok.text2, marginTop: 6, lineHeight: 1.5 }}>
+                  {topInsight.detail}
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * ChannelShiftPanel — the Channel Shift visualization added in plan v2.
+ *
+ * A 100%-stacked area chart showing how channel mix has evolved over
+ * the lookback window. Festival / peak-window markers from the macro
+ * baseline overlay the timeline, so the user can see why a shift
+ * happened (e.g. Display share spiked around Diwali).
+ *
+ * Data: /api/channel-performance .channel_shift
+ *   - series: [{ channel, color, points: [{month, percentage}] }]
+ *   - overlay_events: [{ month, name, kind }]
+ *   - source: "historical" | "synthetic_from_snapshot"
+ */
+
+
+const CHART_W = 720;
+const CHART_H = 220;
+const PAD_LEFT = 40;
+const PAD_RIGHT = 12;
+const PAD_TOP = 16;
+const PAD_BOTTOM = 36;
+
+function buildStackedPaths(series, months) {
+  if (!series?.length || !months?.length) return [];
+  const innerW = CHART_W - PAD_LEFT - PAD_RIGHT;
+  const innerH = CHART_H - PAD_TOP - PAD_BOTTOM;
+  const xStep = months.length > 1 ? innerW / (months.length - 1) : 0;
+
+  // Cumulative running total at each month index, per-slot
+  const running = months.map(() => 0);
+  const paths = [];
+
+  for (const s of series) {
+    const top = s.points.map((p, i) => {
+      running[i] += p.percentage;
+      const y = PAD_TOP + innerH * (1 - running[i] / 100);
+      return { x: PAD_LEFT + i * xStep, y };
+    });
+    const bottomRunning = top.map((pt, i) => {
+      const belowCumulative = running[i] - s.points[i].percentage;
+      const y = PAD_TOP + innerH * (1 - belowCumulative / 100);
+      return { x: pt.x, y };
+    });
+
+    const topStr = top.map((p, i) => (i === 0 ? `M${p.x},${p.y}` : `L${p.x},${p.y}`)).join(" ");
+    const bottomStr = bottomRunning
+      .slice().reverse()
+      .map(p => `L${p.x},${p.y}`).join(" ");
+    paths.push({
+      channel: s.channel,
+      color: s.color,
+      d: `${topStr} ${bottomStr} Z`,
+    });
+  }
+  return paths;
+}
+
+function ChannelShiftPanel({ shift }) {
+  const series = shift?.series || [];
+  const months = useMemo(
+    () => (series[0]?.points || []).map(p => p.month),
+    [series]
+  );
+
+  const paths = useMemo(() => buildStackedPaths(series, months), [series, months]);
+
+  const innerW = CHART_W - PAD_LEFT - PAD_RIGHT;
+  const innerH = CHART_H - PAD_TOP - PAD_BOTTOM;
+  const xStep = months.length > 1 ? innerW / (months.length - 1) : 0;
+
+  const overlay = shift?.overlay_events || [];
+  const overlayByMonth = new Map();
+  for (const e of overlay) {
+    if (!overlayByMonth.has(e.month)) overlayByMonth.set(e.month, []);
+    overlayByMonth.get(e.month).push(e);
+  }
+
+  // Show ~6 X-axis labels evenly spaced
+  const labelEvery = Math.max(1, Math.floor(months.length / 6));
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "20px 24px", marginBottom: 18,
+      fontFamily: tok.fontUi,
+    }}>
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+        marginBottom: 4,
+      }}>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700 }}>Channel Shift</div>
+          <div style={{
+            fontSize: 10, color: tok.text3, fontWeight: 500,
+            textTransform: "uppercase", letterSpacing: "0.05em",
+            marginTop: 2,
+          }}>
+            Mix evolution · last {shift?.lookback_months || 0} months
+          </div>
+        </div>
+        {shift?.source?.startsWith("synthetic") && (
+          <div style={{
+            padding: "4px 10px", background: tok.amberSoft,
+            color: tok.amberDeep, fontSize: 10, fontWeight: 600,
+            borderRadius: 4, letterSpacing: "0.05em",
+          }}>
+            DEMO · synthesised from snapshot
+          </div>
+        )}
+      </div>
+
+      {series.length === 0 ? (
+        <div style={{
+          padding: "40px 0", textAlign: "center",
+          color: tok.text3, fontSize: 12, fontStyle: "italic",
+        }}>
+          Channel shift populates once performance data is loaded.
+        </div>
+      ) : (
+        <>
+          <div style={{ marginTop: 14, overflow: "hidden" }}>
+            <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} style={{ width: "100%", height: "auto" }}>
+              {/* Y-axis gridlines (0, 25, 50, 75, 100%) */}
+              {[0, 25, 50, 75, 100].map(pct => {
+                const y = PAD_TOP + innerH * (1 - pct / 100);
+                return (
+                  <g key={pct}>
+                    <line x1={PAD_LEFT} x2={CHART_W - PAD_RIGHT}
+                          y1={y} y2={y}
+                          stroke={tok.border} strokeWidth="1" strokeDasharray={pct === 0 ? "0" : "2,3"}/>
+                    <text x={PAD_LEFT - 6} y={y + 3}
+                          fontSize="9" fill={tok.text3} textAnchor="end">
+                      {pct}%
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Stacked areas */}
+              {paths.map((p, i) => (
+                <path key={i} d={p.d} fill={p.color} fillOpacity="0.85"/>
+              ))}
+
+              {/* X-axis labels */}
+              {months.map((m, i) => {
+                if (i % labelEvery !== 0 && i !== months.length - 1) return null;
+                const x = PAD_LEFT + i * xStep;
+                const [, mm] = m.split("-");
+                const label = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(mm,10)-1] || m;
+                return (
+                  <text key={m} x={x} y={CHART_H - 18}
+                        fontSize="9" fill={tok.text3} textAnchor="middle">
+                    {label}
+                  </text>
+                );
+              })}
+
+              {/* Overlay event markers */}
+              {Array.from(overlayByMonth.entries()).map(([month, events]) => {
+                const idx = months.indexOf(month);
+                if (idx < 0) return null;
+                const x = PAD_LEFT + idx * xStep;
+                const label = events.map(e => e.name).join(" + ");
+                return (
+                  <g key={month}>
+                    <line x1={x} x2={x} y1={PAD_TOP} y2={CHART_H - PAD_BOTTOM}
+                          stroke={tok.atlas} strokeWidth="1.5" strokeDasharray="2,3"
+                          opacity="0.7"/>
+                    <circle cx={x} cy={PAD_TOP - 2} r="3.5" fill={tok.atlas}/>
+                    <text x={x} y={PAD_TOP - 6} fontSize="8" fill={tok.atlasDeep}
+                          textAnchor="middle" fontWeight="600">
+                      {events[0].name.split(" ")[0]}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+
+          {/* Legend */}
+          <div style={{
+            display: "flex", flexWrap: "wrap", gap: 14,
+            marginTop: 14, paddingTop: 14,
+            borderTop: `1px solid ${tok.border}`,
+          }}>
+            {series.map((s, i) => (
+              <div key={i} style={{
+                display: "flex", alignItems: "center", gap: 6, fontSize: 12,
+              }}>
+                <span style={{
+                  width: 10, height: 10, borderRadius: 2,
+                  background: s.color,
+                }}/>
+                <span>{s.channel}</span>
+                <span style={{ color: tok.text3, fontSize: 11 }}>
+                  {s.points[s.points.length - 1]?.percentage}%
+                </span>
+              </div>
+            ))}
+            {overlay.length > 0 && (
+              <div style={{
+                marginLeft: "auto", display: "flex", alignItems: "center", gap: 6,
+                fontSize: 11, color: tok.atlasDeep,
+              }}>
+                <span style={{
+                  width: 8, height: 8, borderRadius: "50%", background: tok.atlas,
+                }}/>
+                Macro events
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+
+function App() {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh", background: tok.bg, color: tok.text,
+      fontFamily: tok.fontUi, fontSize: 13, lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      <Sidebar activeScreen={3} clientName="Acme Consumer Co." clientPeriod="Quarterly review · Q2 2024"/>
+      <main style={{padding:"28px 36px 80px"}}>
+        <TopBar
+          number="03"
+          title="Channel Performance"
+          subtitle="Understand what's driving results"
+          right={<>
+            <Pill>May 1 – May 31, 2024 ▾</Pill>
+            <Pill>Compare: Apr ▾</Pill>
+            <Pill primary>Export</Pill>
+          </>}
+        />
+        {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE.atlas}/>}
+        <KpiStrip kpis={SAMPLE.kpis}/>
+        <div style={{display:"grid",gridTemplateColumns:"1.6fr 1fr",gap:14,marginBottom:18}}>
+          <ChannelSummaryTable rows={SAMPLE.summary}/>
+          <RevenueContributionCard contribution={SAMPLE.contribution} topInsight={SAMPLE.top_insight}/>
+        </div>
+        <ChannelShiftPanel shift={SAMPLE.channel_shift}/>
+        <BridgeCard toScreenNum="04" text="Now let's go one level deeper — which specific campaigns drove these channel numbers?"/>
+      </main>
+      <AtlasRail narration={SAMPLE.atlas} collapsed={atlasCollapsed} onToggle={() => setAtlasCollapsed(c => !c)}/>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body></html>

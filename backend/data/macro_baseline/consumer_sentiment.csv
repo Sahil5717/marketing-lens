@@ -1,0 +1,121 @@
+month,index_name,value,index_source,change_vs_prior,notes
+2022-01,RBI_CCS_Current_Situation,92.0,synthetic_baseline,,Post-holiday reset period
+2022-01,RBI_CCS_Future_Expectations,118.0,synthetic_baseline,,Post-holiday reset period
+2022-02,RBI_CCS_Current_Situation,92.1,synthetic_baseline,+0.1,
+2022-02,RBI_CCS_Future_Expectations,118.1,synthetic_baseline,+0.1,
+2022-03,RBI_CCS_Current_Situation,92.3,synthetic_baseline,+0.2,
+2022-03,RBI_CCS_Future_Expectations,118.2,synthetic_baseline,+0.1,
+2022-04,RBI_CCS_Current_Situation,92.5,synthetic_baseline,+0.2,
+2022-04,RBI_CCS_Future_Expectations,118.4,synthetic_baseline,+0.2,
+2022-05,RBI_CCS_Current_Situation,92.6,synthetic_baseline,+0.1,
+2022-05,RBI_CCS_Future_Expectations,118.5,synthetic_baseline,+0.1,
+2022-06,RBI_CCS_Current_Situation,92.6,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2022-06,RBI_CCS_Future_Expectations,118.6,synthetic_baseline,+0.1,Monsoon timing and inflation sensitivity
+2022-07,RBI_CCS_Current_Situation,92.7,synthetic_baseline,+0.1,Monsoon timing and inflation sensitivity
+2022-07,RBI_CCS_Future_Expectations,118.6,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2022-08,RBI_CCS_Current_Situation,92.9,synthetic_baseline,+0.2,
+2022-08,RBI_CCS_Future_Expectations,118.7,synthetic_baseline,+0.1,
+2022-09,RBI_CCS_Current_Situation,92.9,synthetic_baseline,+0.0,Festive confidence tailwind
+2022-09,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.1,Festive confidence tailwind
+2022-10,RBI_CCS_Current_Situation,93.0,synthetic_baseline,+0.1,Festive confidence tailwind
+2022-10,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.0,Festive confidence tailwind
+2022-11,RBI_CCS_Current_Situation,93.0,synthetic_baseline,+0.0,Festive confidence tailwind
+2022-11,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.0,Festive confidence tailwind
+2022-12,RBI_CCS_Current_Situation,93.0,synthetic_baseline,+0.0,
+2022-12,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.0,
+2023-01,RBI_CCS_Current_Situation,93.0,synthetic_baseline,+0.0,Post-holiday reset period
+2023-01,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.0,Post-holiday reset period
+2023-02,RBI_CCS_Current_Situation,93.1,synthetic_baseline,+0.1,
+2023-02,RBI_CCS_Future_Expectations,118.8,synthetic_baseline,+0.0,
+2023-03,RBI_CCS_Current_Situation,93.3,synthetic_baseline,+0.2,
+2023-03,RBI_CCS_Future_Expectations,119.0,synthetic_baseline,+0.2,
+2023-04,RBI_CCS_Current_Situation,93.5,synthetic_baseline,+0.2,
+2023-04,RBI_CCS_Future_Expectations,119.2,synthetic_baseline,+0.2,
+2023-05,RBI_CCS_Current_Situation,93.7,synthetic_baseline,+0.2,
+2023-05,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.2,
+2023-06,RBI_CCS_Current_Situation,93.7,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2023-06,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2023-07,RBI_CCS_Current_Situation,93.7,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2023-07,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.0,Monsoon timing and inflation sensitivity
+2023-08,RBI_CCS_Current_Situation,93.7,synthetic_baseline,+0.0,
+2023-08,RBI_CCS_Future_Expectations,119.3,synthetic_baseline,-0.1,
+2023-09,RBI_CCS_Current_Situation,93.8,synthetic_baseline,+0.1,Festive confidence tailwind
+2023-09,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.1,Festive confidence tailwind
+2023-10,RBI_CCS_Current_Situation,93.8,synthetic_baseline,+0.0,Festive confidence tailwind
+2023-10,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.0,Festive confidence tailwind
+2023-11,RBI_CCS_Current_Situation,93.8,synthetic_baseline,+0.0,Festive confidence tailwind
+2023-11,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.0,Festive confidence tailwind
+2023-12,RBI_CCS_Current_Situation,93.8,synthetic_baseline,+0.0,
+2023-12,RBI_CCS_Future_Expectations,119.3,synthetic_baseline,-0.1,
+2024-01,RBI_CCS_Current_Situation,93.9,synthetic_baseline,+0.1,Post-holiday reset period
+2024-01,RBI_CCS_Future_Expectations,119.3,synthetic_baseline,+0.0,Post-holiday reset period
+2024-02,RBI_CCS_Current_Situation,94.0,synthetic_baseline,+0.1,
+2024-02,RBI_CCS_Future_Expectations,119.4,synthetic_baseline,+0.1,
+2024-03,RBI_CCS_Current_Situation,94.1,synthetic_baseline,+0.1,
+2024-03,RBI_CCS_Future_Expectations,119.5,synthetic_baseline,+0.1,
+2024-04,RBI_CCS_Current_Situation,94.3,synthetic_baseline,+0.2,
+2024-04,RBI_CCS_Future_Expectations,119.8,synthetic_baseline,+0.3,
+2024-05,RBI_CCS_Current_Situation,94.5,synthetic_baseline,+0.2,
+2024-05,RBI_CCS_Future_Expectations,120.0,synthetic_baseline,+0.2,
+2024-06,RBI_CCS_Current_Situation,94.8,synthetic_baseline,+0.3,Monsoon timing and inflation sensitivity
+2024-06,RBI_CCS_Future_Expectations,120.3,synthetic_baseline,+0.3,Monsoon timing and inflation sensitivity
+2024-07,RBI_CCS_Current_Situation,95.0,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2024-07,RBI_CCS_Future_Expectations,120.5,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2024-08,RBI_CCS_Current_Situation,95.1,synthetic_baseline,+0.1,
+2024-08,RBI_CCS_Future_Expectations,120.6,synthetic_baseline,+0.1,
+2024-09,RBI_CCS_Current_Situation,95.4,synthetic_baseline,+0.3,Festive confidence tailwind
+2024-09,RBI_CCS_Future_Expectations,120.9,synthetic_baseline,+0.3,Festive confidence tailwind
+2024-10,RBI_CCS_Current_Situation,95.6,synthetic_baseline,+0.2,Festive confidence tailwind
+2024-10,RBI_CCS_Future_Expectations,121.1,synthetic_baseline,+0.2,Festive confidence tailwind
+2024-11,RBI_CCS_Current_Situation,95.7,synthetic_baseline,+0.1,Festive confidence tailwind
+2024-11,RBI_CCS_Future_Expectations,121.2,synthetic_baseline,+0.1,Festive confidence tailwind
+2024-12,RBI_CCS_Current_Situation,95.7,synthetic_baseline,+0.0,
+2024-12,RBI_CCS_Future_Expectations,121.2,synthetic_baseline,+0.0,
+2025-01,RBI_CCS_Current_Situation,95.9,synthetic_baseline,+0.2,Post-holiday reset period
+2025-01,RBI_CCS_Future_Expectations,121.3,synthetic_baseline,+0.1,Post-holiday reset period
+2025-02,RBI_CCS_Current_Situation,96.0,synthetic_baseline,+0.1,
+2025-02,RBI_CCS_Future_Expectations,121.5,synthetic_baseline,+0.2,
+2025-03,RBI_CCS_Current_Situation,96.3,synthetic_baseline,+0.3,
+2025-03,RBI_CCS_Future_Expectations,121.7,synthetic_baseline,+0.2,
+2025-04,RBI_CCS_Current_Situation,96.5,synthetic_baseline,+0.2,
+2025-04,RBI_CCS_Future_Expectations,122.0,synthetic_baseline,+0.3,
+2025-05,RBI_CCS_Current_Situation,96.7,synthetic_baseline,+0.2,
+2025-05,RBI_CCS_Future_Expectations,122.2,synthetic_baseline,+0.2,
+2025-06,RBI_CCS_Current_Situation,97.0,synthetic_baseline,+0.3,Monsoon timing and inflation sensitivity
+2025-06,RBI_CCS_Future_Expectations,122.4,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2025-07,RBI_CCS_Current_Situation,97.2,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2025-07,RBI_CCS_Future_Expectations,122.7,synthetic_baseline,+0.3,Monsoon timing and inflation sensitivity
+2025-08,RBI_CCS_Current_Situation,97.3,synthetic_baseline,+0.1,
+2025-08,RBI_CCS_Future_Expectations,122.8,synthetic_baseline,+0.1,
+2025-09,RBI_CCS_Current_Situation,97.4,synthetic_baseline,+0.1,Festive confidence tailwind
+2025-09,RBI_CCS_Future_Expectations,122.9,synthetic_baseline,+0.1,Festive confidence tailwind
+2025-10,RBI_CCS_Current_Situation,97.5,synthetic_baseline,+0.1,Festive confidence tailwind
+2025-10,RBI_CCS_Future_Expectations,122.9,synthetic_baseline,+0.0,Festive confidence tailwind
+2025-11,RBI_CCS_Current_Situation,97.5,synthetic_baseline,+0.0,Festive confidence tailwind
+2025-11,RBI_CCS_Future_Expectations,122.9,synthetic_baseline,+0.0,Festive confidence tailwind
+2025-12,RBI_CCS_Current_Situation,97.5,synthetic_baseline,+0.0,
+2025-12,RBI_CCS_Future_Expectations,122.8,synthetic_baseline,-0.1,
+2026-01,RBI_CCS_Current_Situation,97.6,synthetic_baseline,+0.1,Post-holiday reset period
+2026-01,RBI_CCS_Future_Expectations,122.9,synthetic_baseline,+0.1,Post-holiday reset period
+2026-02,RBI_CCS_Current_Situation,97.7,synthetic_baseline,+0.1,
+2026-02,RBI_CCS_Future_Expectations,123.1,synthetic_baseline,+0.2,
+2026-03,RBI_CCS_Current_Situation,98.0,synthetic_baseline,+0.3,
+2026-03,RBI_CCS_Future_Expectations,123.3,synthetic_baseline,+0.2,
+2026-04,RBI_CCS_Current_Situation,98.2,synthetic_baseline,+0.2,
+2026-04,RBI_CCS_Future_Expectations,123.6,synthetic_baseline,+0.3,
+2026-05,RBI_CCS_Current_Situation,98.5,synthetic_baseline,+0.3,
+2026-05,RBI_CCS_Future_Expectations,123.9,synthetic_baseline,+0.3,
+2026-06,RBI_CCS_Current_Situation,98.7,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2026-06,RBI_CCS_Future_Expectations,124.1,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2026-07,RBI_CCS_Current_Situation,98.9,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2026-07,RBI_CCS_Future_Expectations,124.3,synthetic_baseline,+0.2,Monsoon timing and inflation sensitivity
+2026-08,RBI_CCS_Current_Situation,99.1,synthetic_baseline,+0.2,
+2026-08,RBI_CCS_Future_Expectations,124.5,synthetic_baseline,+0.2,
+2026-09,RBI_CCS_Current_Situation,99.2,synthetic_baseline,+0.1,Festive confidence tailwind
+2026-09,RBI_CCS_Future_Expectations,124.5,synthetic_baseline,+0.0,Festive confidence tailwind
+2026-10,RBI_CCS_Current_Situation,99.2,synthetic_baseline,+0.0,Festive confidence tailwind
+2026-10,RBI_CCS_Future_Expectations,124.5,synthetic_baseline,+0.0,Festive confidence tailwind
+2026-11,RBI_CCS_Current_Situation,99.2,synthetic_baseline,+0.0,Festive confidence tailwind
+2026-11,RBI_CCS_Future_Expectations,124.5,synthetic_baseline,+0.0,Festive confidence tailwind
+2026-12,RBI_CCS_Current_Situation,99.2,synthetic_baseline,+0.0,
+2026-12,RBI_CCS_Future_Expectations,124.5,synthetic_baseline,+0.0,

@@ -1,0 +1,8 @@
+event_date,event_end_date,event_type,event_name,description,impact_direction,impact_magnitude,impact_pct,affected_channels,affected_regions,source,confidence
+2025-10-15,2025-10-20,seasonal_peak,Diwali Festival,Major festive season with high consumer spending,positive,high,25,email;display;social_paid,North;South;East;West,Internal Calendar,confirmed
+2025-11-25,2025-11-30,seasonal_peak,Black Friday / Cyber Monday,Peak ecommerce period,positive,high,30,paid_search;display;email;social_paid,,Industry Standard,confirmed
+2025-03-15,,competitor_launch,CompX New Product Launch,CompetitorX launching competing product in our category,negative,medium,-15,paid_search;display,,Industry Report Q1,estimated
+2025-06-01,2025-07-15,seasonal_peak,IPL Season,Cricket season drives high engagement in India,positive,medium,15,video_youtube;display;social_paid,North;South;West,Internal Research,confirmed
+2025-09-01,,cost_increase,Digital CPC Inflation Q4,Expected 15-20% CPC increase across digital channels in Q4,negative,medium,-12,paid_search;social_paid;display,,Google Ads Forecast,estimated
+2025-04-01,,market_growth,Category Growth Acceleration,Industry growing 12% YoY driven by digital transformation,positive,medium,8,,,Analyst Report,confirmed
+2025-08-01,,competitor_exit,CompY Exits Display,CompetitorY pulled all display advertising,positive,low,5,display,,Ad Intelligence,confirmed

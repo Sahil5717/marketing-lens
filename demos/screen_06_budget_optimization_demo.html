@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YI · Screen 06 Budget Optimization — Visual Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect, useMemo, useRef, useCallback, Fragment } = React;
+
+const SAMPLE = {"hero": {"eyebrow": "If we changed nothing else", "headline": {"prefix": "The", "same": "same ₹68.5 Cr", "middle": "could earn", "gain": "₹24.1 Cr more", "suffix": " — by spending it differently."}, "sub": "Four moves. Each with a reason and a confidence score. Reveal Atlas's recommendation below.", "cta": {"label": "See the four moves →", "meta": "87% confidence"}}, "allocation": {"total_budget": 685000000, "total_budget_display": "₹68.5 Cr", "current": [{"channel": "Search", "color": "#7C5CFF", "percentage": 35.9, "amount": 246000000, "display_amount": "₹24.6 Cr", "direction": null}, {"channel": "Meta Ads", "color": "#3B82F6", "percentage": 26.6, "amount": 182000000, "display_amount": "₹18.2 Cr", "direction": null}, {"channel": "LinkedIn", "color": "#10B981", "percentage": 14.0, "amount": 96000000, "display_amount": "₹9.6 Cr", "direction": null}, {"channel": "Display", "color": "#F59E0B", "percentage": 9.9, "amount": 68000000, "display_amount": "₹6.8 Cr", "direction": null}, {"channel": "YouTube", "color": "#EF4444", "percentage": 8.0, "amount": 55000000, "display_amount": "₹5.5 Cr", "direction": null}, {"channel": "Others", "color": "#8C92AC", "percentage": 5.5, "amount": 38000000, "display_amount": "₹3.8 Cr", "direction": null}], "recommended": [{"channel": "Search", "color": "#7C5CFF", "percentage": 43.9, "amount": 301000000, "display_amount": "₹30.1 Cr", "direction": "up"}, {"channel": "Meta Ads", "color": "#3B82F6", "percentage": 23.9, "amount": 164000000, "display_amount": "₹16.4 Cr", "direction": "down"}, {"channel": "LinkedIn", "color": "#10B981", "percentage": 16.9, "amount": 116000000, "display_amount": "₹11.6 Cr", "direction": "up"}, {"channel": "Display", "color": "#F59E0B", "percentage": 5.0, "amount": 34000000, "display_amount": "₹3.4 Cr", "direction": "down"}, {"channel": "YouTube", "color": "#EF4444", "percentage": 9.1, "amount": 62000000, "display_amount": "₹6.2 Cr", "direction": "up"}, {"channel": "Others", "color": "#8C92AC", "percentage": 1.2, "amount": 8000000, "display_amount": "₹80.0 L", "direction": "down"}]}, "moves": [{"num": "01.", "direction": "up", "action": "Move ₹5.5 Cr into Search", "channel": "Search", "delta_spend": 55000000, "delta_spend_display": "₹5.5 Cr", "revenue_lift": 198000000.0, "revenue_lift_display": "+₹19.8 Cr", "revenue_lift_kind": "gain", "confidence": 92, "confidence_display": "92%", "why": {"who": "Atlas · Reasoning", "text": "Search is well below saturation and is a high-marginal-ROI destination in the current response curve. Each additional rupee returns ₹3.60 in revenue today. The 80% Bayesian credible interval is [₹16.2 Cr, ₹23.4 Cr] — even the floor case supports the move."}}, {"num": "02.", "direction": "down", "action": "Pull ₹3.4 Cr from Display", "channel": "Display", "delta_spend": -34000000, "delta_spend_display": "₹3.4 Cr", "revenue_lift": -21080000.0, "revenue_lift_display": "−₹2.1 Cr", "revenue_lift_kind": "cut", "confidence": 94, "confidence_display": "94%", "why": {"who": "Atlas · Reasoning", "text": "Display has crossed its diminishing-returns inflection point. Spend above this level is purchasing impressions that don't convert. Marginal ROI has dropped to 0.62x."}}, {"num": "03.", "direction": "down", "action": "Pull ₹3.0 Cr from Others", "channel": "Others", "delta_spend": -30000000, "delta_spend_display": "₹3.0 Cr", "revenue_lift": -9000000.0, "revenue_lift_display": "−₹90.0 L", "revenue_lift_kind": "cut", "confidence": 75, "confidence_display": "75%", "why": {"who": "Atlas · Reasoning", "text": "Others has crossed its diminishing-returns inflection point. Spend above this level is purchasing impressions that don't convert. Marginal ROI has dropped to 0.30x."}}, {"num": "04.", "direction": "up", "action": "Move ₹2.0 Cr into LinkedIn", "channel": "LinkedIn", "delta_spend": 20000000, "delta_spend_display": "₹2.0 Cr", "revenue_lift": 64000000.0, "revenue_lift_display": "+₹6.4 Cr", "revenue_lift_kind": "gain", "confidence": 88, "confidence_display": "88%", "why": {"who": "Atlas · Reasoning", "text": "LinkedIn is well below saturation and is a high-marginal-ROI destination in the current response curve. Each additional rupee returns ₹3.20 in revenue today."}}], "impact": {"projected_roi": {"value": "4.42x", "delta": "▲ 22.1%"}, "incremental_revenue": {"value": "+₹24.1 Cr", "delta": "vs current"}, "cac_improvement": {"value": "−12.5%", "delta": "to ₹509"}, "payback_period": {"value": "1.8 mo", "delta": "months"}}, "atlas": {"paragraphs": [{"text": "Four moves net to +₹24.1 Cr. The strongest individually is Move #02, pull ₹3.4 cr from display — 94% confidence, near-zero downside."}, {"text": "If your CFO will only sign off on one thing, that's the one. The rest are higher-reward but slightly lower confidence."}], "suggested_questions": ["What's the downside risk of Move #01?", "Which move is most defensible to the CFO?", "How does this compare to last quarter's plan?", "What if the budget drops 20% next month?"], "source": "budget_optimization_template"}, "has_optimization": true};
+
+/**
+ * Shared design tokens for the Yield Intelligence frontend.
+ *
+ * Mirrors the `:root` block in the hybrid screen HTMLs. Any new screen
+ * imports from here rather than redefining. When the fresh Vite rebuild
+ * lands, this file moves to `src/design/tokens.ts` with types added.
+ */
+const tok = {
+  // Surface
+  bg:         "#F5F6FA",
+  card:       "#FFFFFF",
+  sidebar:    "#0F1535",
+  sidebarHover: "#1A2150",
+  border:     "#E5E7EF",
+  border2:    "#D8DCE8",
+
+  // Text
+  text:       "#0F1535",
+  text2:      "#5C6280",
+  text3:      "#8C92AC",
+
+  // Brand accent
+  accent:     "#7C5CFF",
+  accentSoft: "#EFEAFF",
+  accentDeep: "#5B3FD9",
+
+  // Semantic
+  green:      "#10B981",
+  greenSoft:  "#E6F8F2",
+  greenDeep:  "#047857",
+  red:        "#EF4444",
+  redSoft:    "#FEE9E9",
+  redDeep:    "#B91C1C",
+  amber:      "#F59E0B",
+  amberSoft:  "#FEF3D7",
+  amberDeep:  "#92400E",
+
+  // Atlas persona
+  atlas:      "#B8893B",
+  atlasSoft:  "#FBF3E0",
+  atlasDeep:  "#8C6520",
+
+  // Hero gradient stops
+  heroFrom:   "#0F1535",
+  heroTo:     "#1E2456",
+  heroNum:    "#FF8B7A",   // loss — coral italic in headline
+  heroGain:   "#7BE0BC",   // gain — mint italic in headline
+  heroEyebrow:"#FFB547",
+
+  // Fonts
+  fontUi:      "'Plus Jakarta Sans', system-ui, sans-serif",
+  fontDisplay: "'Fraunces', serif",
+};
+
+/** Standard card surface used across screens. */
+const panelStyle = {
+  background: tok.card,
+  border: `1px solid ${tok.border}`,
+  borderRadius: 12,
+  padding: "18px 20px",
+  fontFamily: tok.fontUi,
+  color: tok.text,
+  fontSize: 13,
+  lineHeight: 1.5,
+};
+
+const panelHeadingStyle = {
+  fontSize: 13,
+  fontWeight: 700,
+  marginBottom: 4,
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
+const panelTagStyle = {
+  fontSize: 10,
+  color: tok.text3,
+  fontWeight: 500,
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+  marginBottom: 14,
+};
+
+/** Inline "Atlas reasoning" callout — gold-soft box with left border. */
+const atlasCalloutStyle = {
+  background: tok.atlasSoft,
+  borderLeft: `3px solid ${tok.atlas}`,
+  borderRadius: 6,
+  padding: "12px 16px",
+  fontSize: 12,
+  color: tok.text,
+  lineHeight: 1.6,
+};
+
+/** Fonts link tag — consumers render this in their document head. */
+const FONTS_HREF =
+  "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
+
+
+/**
+ * TopBar — sits at the top of every screen's main column.
+ *
+ * Left:  big muted screen number, then title + subtitle
+ * Right: date range pill and share pill (slots for custom pills)
+ */
+
+
+function Pill({ children, primary, onClick }) {
+  const style = {
+    display: "inline-flex", alignItems: "center", gap: 8,
+    padding: "8px 14px",
+    background: primary ? tok.accent : tok.card,
+    border: `1px solid ${primary ? tok.accent : tok.border}`,
+    borderRadius: 8,
+    fontSize: 12, fontWeight: 500,
+    color: primary ? "#fff" : tok.text,
+    cursor: onClick ? "pointer" : "default",
+    fontFamily: tok.fontUi,
+  };
+  return <div style={style} onClick={onClick}>{children}</div>;
+}
+
+function TopBar({ number, title, subtitle, right }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      marginBottom: 24,
+    }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: tok.text3 }}>{number}</div>
+        <div>
+          <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-.015em" }}>{title}</div>
+          {subtitle && (
+            <div style={{ fontSize: 12, color: tok.text2, marginTop: 2 }}>{subtitle}</div>
+          )}
+        </div>
+      </div>
+      {right && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {right}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ * AppShell — the 3-column Yield Intelligence frame.
+ *
+ * Layout:
+ *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
+ *
+ * Usage:
+ *   <AppShell
+ *     activeScreen={1}
+ *     clientName="Acme Consumer Co."
+ *     clientPeriod="Quarterly review · Q2 2024"
+ *     atlas={<AtlasRail narration={...} />}
+ *   >
+ *     <ExecutiveSummaryScreen ... />
+ *   </AppShell>
+ *
+ * The sidebar and atlas rail are separate components in this file so
+ * each can be imported without dragging the whole shell in.
+ */
+
+
+const NAV = [
+  { num: "01", label: "Executive Summary" },
+  { num: "02", label: "Data Foundation" },
+  { num: "03", label: "Channel Performance" },
+  { num: "04", label: "Campaign Deep Dive" },
+  { num: "05", label: "Attribution" },
+  { num: "06", label: "Optimization" },
+  { num: "07", label: "Simulation" },
+  { num: "08", label: "Plan Builder" },
+  { num: "09", label: "Track & Monitor" },
+  { num: "10", label: "Executive Report" },
+];
+
+function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
+  return (
+    <aside style={{
+      background: tok.sidebar,
+      color: "#fff",
+      padding: "24px 14px",
+      position: "sticky",
+      top: 0,
+      height: "100vh",
+      overflowY: "auto",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Logo */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 13,
+        }}>YI</div>
+        Yield Intelligence
+      </div>
+
+      {/* Nav items */}
+      {NAV.map((item, idx) => {
+        const num = idx + 1;
+        const active = num === activeScreen;
+        return (
+          <div
+            key={item.num}
+            onClick={() => onNavigate && onNavigate(num)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8,
+              color: active ? "#fff" : "#A8AEC9",
+              background: active ? tok.accent : "transparent",
+              cursor: "pointer", fontSize: 13,
+              fontWeight: active ? 600 : 500,
+              marginBottom: 2,
+              transition: "all .15s",
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = tok.sidebarHover;
+              if (!active) e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+              if (!active) e.currentTarget.style.color = "#A8AEC9";
+            }}
+          >
+            <span style={{
+              display: "inline-block", width: 22, height: 22, borderRadius: 5,
+              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
+              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
+              flexShrink: 0,
+            }}>{item.num}</span>
+            {item.label}
+          </div>
+        );
+      })}
+
+      {/* Footer */}
+      {clientName && (
+        <div style={{
+          marginTop: 24, padding: 12, borderRadius: 10,
+          background: "rgba(255,255,255,.04)",
+          fontSize: 11, color: "#A8AEC9",
+        }}>
+          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+            {clientName}
+          </strong>
+          {clientPeriod}
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function AppShell({
+  activeScreen,
+  clientName,
+  clientPeriod,
+  atlas,
+  onNavigate,
+  children,
+}) {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh",
+      background: tok.bg,
+      color: tok.text,
+      fontFamily: tok.fontUi,
+      fontSize: 13,
+      lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+      WebkitFontSmoothing: "antialiased",
+    }}>
+      <Sidebar
+        activeScreen={activeScreen}
+        clientName={clientName}
+        clientPeriod={clientPeriod}
+        onNavigate={onNavigate}
+      />
+      <main style={{ padding: "28px 36px 80px" }}>
+        {children}
+      </main>
+      {atlas && React.cloneElement(atlas, {
+        collapsed: atlasCollapsed,
+        onToggle: () => setAtlasCollapsed(c => !c),
+      })}
+    </div>
+  );
+}
+
+
+/**
+ * AtlasRail — the collapsible right-hand panel that hosts Atlas's
+ * per-screen narration and suggested questions.
+ *
+ * When collapsed, a 56px strip remains showing only the avatar + vertical
+ * label + expand button. The screen's main flow can include an
+ * <AtlasInlineCallout/> so users still see Atlas's headline when the
+ * rail is collapsed.
+ *
+ * Props:
+ *   - narration: { paragraphs: [{text}], suggested_questions: [string] }
+ *   - collapsed + onToggle: controlled by AppShell
+ *   - onAsk: callback(question) for suggested-question clicks
+ */
+
+
+function AtlasAvatar({ size = 40 }) {
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+      fontSize: size * 0.45, position: "relative", flexShrink: 0,
+    }}>
+      A
+      <span style={{
+        content: '""', position: "absolute",
+        bottom: -1, right: -1, width: 10, height: 10, borderRadius: "50%",
+        background: tok.green, border: "2px solid #FAFBFE",
+      }}/>
+    </div>
+  );
+}
+
+function AtlasRailExpanded({ narration, onAsk, onCollapse }) {
+  const paragraphs = narration?.paragraphs || [];
+  const questions = narration?.suggested_questions || [];
+
+  return (
+    <div style={{
+      padding: "24px 22px",
+      display: "flex", flexDirection: "column", height: "100%",
+      overflowY: "auto",
+    }}>
+      {/* Head */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        paddingBottom: 18, borderBottom: `1px solid ${tok.border}`,
+        marginBottom: 20,
+      }}>
+        <AtlasAvatar />
+        <div style={{ flex: 1 }}>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 15, fontWeight: 600,
+            letterSpacing: "-.01em", lineHeight: 1.1,
+          }}>Atlas</div>
+          <div style={{ fontSize: 11, color: tok.text3, marginTop: 2 }}>
+            Your analyst · Online
+          </div>
+        </div>
+        <button
+          onClick={onCollapse}
+          title="Collapse"
+          style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: "transparent", border: `1px solid ${tok.border}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", color: tok.text2, fontSize: 12,
+            fontWeight: 700, fontFamily: tok.fontUi,
+          }}
+        >→</button>
+      </div>
+
+      {/* Narration */}
+      <div style={{ marginBottom: 22, fontSize: 13, lineHeight: 1.6, color: tok.text }}>
+        {paragraphs.map((p, i) => (
+          <p key={i} style={{ marginBottom: 12 }}>{renderNarrationHighlights(p.text)}</p>
+        ))}
+      </div>
+
+      {/* Suggested questions */}
+      {questions.length > 0 && (
+        <>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.18em",
+            marginBottom: 10, fontWeight: 600,
+          }}>Suggested questions</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "auto" }}>
+            {questions.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => onAsk && onAsk(q)}
+                style={{
+                  padding: "11px 14px",
+                  background: tok.card, border: `1px solid ${tok.border}`,
+                  borderRadius: 6, fontSize: 12, color: tok.text2,
+                  cursor: "pointer", lineHeight: 1.4, textAlign: "left",
+                  fontFamily: tok.fontUi,
+                  transition: "all .2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = tok.atlas;
+                  e.currentTarget.style.color = tok.text;
+                  e.currentTarget.style.background = tok.atlasSoft;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = tok.border;
+                  e.currentTarget.style.color = tok.text2;
+                  e.currentTarget.style.background = tok.card;
+                }}
+              >
+                <span style={{ color: tok.atlas, marginRight: 8, fontWeight: 700 }}>›</span>
+                {q}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Input box (non-functional placeholder in v1 — template-driven only) */}
+      <div style={{
+        marginTop: 18, paddingTop: 18,
+        borderTop: `1px solid ${tok.border}`,
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 8,
+          padding: "10px 12px", background: tok.card,
+          border: `1px solid ${tok.border}`, borderRadius: 8,
+        }}>
+          <input
+            type="text"
+            placeholder="Suggested questions only in v1"
+            disabled
+            style={{
+              flex: 1, background: "transparent", border: "none", outline: "none",
+              fontFamily: "inherit", fontSize: 12, color: tok.text3,
+            }}
+          />
+          <span style={{ color: tok.text3, fontWeight: 700, fontSize: 14 }}>↵</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AtlasRailCollapsed({ onExpand }) {
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", gap: 14,
+      padding: "24px 0", height: "100%",
+    }}>
+      <div onClick={onExpand} style={{ cursor: "pointer" }} title="Expand Atlas">
+        <AtlasAvatar size={38} />
+      </div>
+      <div style={{
+        writingMode: "vertical-rl", transform: "rotate(180deg)",
+        fontSize: 10, color: tok.text3, textTransform: "uppercase",
+        letterSpacing: "0.2em", fontWeight: 600, marginTop: 8,
+      }}>Atlas</div>
+      <button
+        onClick={onExpand}
+        title="Expand"
+        style={{
+          marginTop: "auto",
+          width: 32, height: 32, borderRadius: 6,
+          background: tok.card, border: `1px solid ${tok.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", color: tok.text2, fontSize: 14,
+        }}
+      >←</button>
+    </div>
+  );
+}
+
+function AtlasRail({ narration, collapsed, onToggle, onAsk }) {
+  return (
+    <aside style={{
+      background: "#FAFBFE",
+      borderLeft: `1px solid ${tok.border}`,
+      position: "sticky", top: 0, height: "100vh",
+      display: "flex", flexDirection: "column",
+      overflow: "hidden",
+      transition: "all .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      {collapsed
+        ? <AtlasRailCollapsed onExpand={onToggle}/>
+        : <AtlasRailExpanded narration={narration} onAsk={onAsk} onCollapse={onToggle}/>
+      }
+    </aside>
+  );
+}
+
+/** Inline Atlas callout — shown inside the main flow when the rail is collapsed. */
+function AtlasInlineCallout({ narration }) {
+  const first = narration?.paragraphs?.[0];
+  if (!first) return null;
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.atlasSoft}, #FEFAEC)`,
+      border: "1px solid #F2D89A",
+      borderLeft: `3px solid ${tok.atlas}`,
+      borderRadius: 10,
+      padding: "16px 20px",
+      marginBottom: 18,
+      display: "flex", alignItems: "flex-start", gap: 14,
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: "50%",
+        background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+        fontSize: 14, flexShrink: 0,
+      }}>A</div>
+      <div style={{ flex: 1 }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontWeight: 600, fontSize: 13,
+          color: tok.atlasDeep, marginBottom: 4, fontStyle: "italic",
+        }}>Atlas notes</div>
+        <div style={{ fontSize: 13, color: tok.text, lineHeight: 1.55 }}>
+          {renderNarrationHighlights(first.text)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Bold monetary figures in Atlas narration text so they stand out. */
+function renderNarrationHighlights(text) {
+  if (!text) return null;
+  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
+  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  return parts.map((part, i) => {
+    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+      return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+}
+
+
+/**
+ * MintHeroInsight — hero variant for Screen 06 and other "same input,
+ * better output" story moments. Differs from HeroInsight in:
+ *   - eyebrow accent is mint, not amber
+ *   - headline emphasises "same [budget]" in muted grey and "[gain]" in mint
+ *
+ * Props:
+ *   - headline: { prefix, same, middle, gain, suffix }
+ *       same renders muted grey italic; gain renders mint italic.
+ */
+
+
+function MintHeroInsight({ eyebrow, headline, sub, cta, onCtaClick }) {
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.heroFrom} 0%, ${tok.heroTo} 100%)`,
+      borderRadius: 14, padding: "28px 32px", marginBottom: 18,
+      display: "grid", gridTemplateColumns: "1fr auto", gap: 32,
+      alignItems: "center", position: "relative", overflow: "hidden",
+      fontFamily: tok.fontUi,
+    }}>
+      <div style={{
+        position: "absolute", top: -40, right: -40, width: 240, height: 240,
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(123,224,188,.18) 0%, transparent 70%)",
+        pointerEvents: "none",
+      }}/>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{
+          fontSize: 10, color: tok.heroGain,
+          textTransform: "uppercase", letterSpacing: "0.22em",
+          fontWeight: 700, marginBottom: 14,
+          display: "flex", alignItems: "center", gap: 10,
+        }}>
+          <span style={{ width: 24, height: 1, background: tok.heroGain }}/>
+          {eyebrow}
+        </div>
+
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 32, fontWeight: 500,
+          lineHeight: 1.15, color: "#fff", letterSpacing: "-.02em", maxWidth: 640,
+        }}>
+          {headline.prefix && <span>{headline.prefix} </span>}
+          {headline.same && (
+            <span style={{ color: "#B5BAD4", fontStyle: "italic" }}>{headline.same}</span>
+          )}
+          {headline.middle && <span> {headline.middle} </span>}
+          {headline.gain && (
+            <span style={{
+              color: tok.heroGain, fontStyle: "italic", fontWeight: 600,
+            }}>{headline.gain}</span>
+          )}
+          {headline.suffix}
+        </div>
+
+        {sub && (
+          <div style={{
+            fontSize: 13, color: "#B5BAD4",
+            marginTop: 12, maxWidth: 560, lineHeight: 1.55,
+          }}>{sub}</div>
+        )}
+      </div>
+
+      {cta && (
+        <div style={{ position: "relative", zIndex: 1, textAlign: "right" }}>
+          <button
+            onClick={onCtaClick}
+            style={{
+              padding: "11px 20px", background: "rgba(255,255,255,.1)",
+              color: "#fff", border: "1px solid rgba(255,255,255,.18)",
+              borderRadius: 8, fontSize: 12, fontWeight: 600,
+              cursor: onCtaClick ? "pointer" : "default",
+              fontFamily: tok.fontUi, transition: "all .2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,.18)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,.1)";
+            }}
+          >{cta.label}</button>
+          {cta.meta && (
+            <div style={{
+              fontSize: 10, color: "#8C92AC",
+              textTransform: "uppercase", letterSpacing: "0.15em",
+              marginTop: 10, fontWeight: 600,
+            }}>{cta.meta}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ * Donut — renders a donut chart from allocation slices.
+ *
+ * Props:
+ *   - slices: Array<{ channel, color, percentage }>  // percentages sum ≤ 100
+ *   - centerLabel, centerSub
+ *   - size: pixel size (default 140)
+ */
+
+
+const STROKE = 3;
+const R = 15.915;  // 2πR = 100 → percentage maps directly to stroke-dasharray
+
+function Donut({
+  slices = [],
+  centerLabel,
+  centerSub,
+  centerColor,
+  size = 140,
+}) {
+  let offset = 0;
+  return (
+    <div style={{
+      position: "relative", width: size, height: size, flexShrink: 0,
+    }}>
+      <svg viewBox="0 0 36 36" style={{ width: "100%", height: "100%" }}>
+        {/* Track */}
+        <circle cx="18" cy="18" r={R} fill="none"
+                stroke={tok.border} strokeWidth={STROKE}/>
+        {/* Slices */}
+        {slices.map((s, i) => {
+          const pct = Math.max(0, Math.min(100, s.percentage || 0));
+          const dash = `${pct} ${100 - pct}`;
+          const dashOffset = -offset;
+          offset += pct;
+          return (
+            <circle
+              key={s.channel + i}
+              cx="18" cy="18" r={R} fill="none"
+              stroke={s.color} strokeWidth={STROKE}
+              strokeDasharray={dash}
+              strokeDashoffset={dashOffset}
+              transform="rotate(-90 18 18)"
+            />
+          );
+        })}
+      </svg>
+      {(centerLabel || centerSub) && (
+        <div style={{
+          position: "absolute", inset: 0,
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+        }}>
+          {centerLabel && (
+            <div style={{
+              fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 600,
+              letterSpacing: "-.02em", color: centerColor || tok.text,
+            }}>{centerLabel}</div>
+          )}
+          {centerSub && (
+            <div style={{
+              fontSize: 9, color: tok.text3,
+              textTransform: "uppercase", letterSpacing: "0.12em",
+              marginTop: 2, fontWeight: 600,
+            }}>{centerSub}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ * AllocationComparison — the core Screen 06 component.
+ *
+ * Modes:
+ *   - default:   shows Current donut + "earned reveal" CTA (Recommended hidden)
+ *   - revealed:  shows Current and Recommended side-by-side + override toggle
+ *   - editing:   Recommended legend swaps into editable inputs with live deltas
+ *
+ * Data:
+ *   - allocation from GET /api/budget-optimization .allocation
+ *   - onScoreOverride(alloc): async callback that returns
+ *       { delta_vs_atlas_cr, delta_vs_current_cr, projected_roi, pushback, user_total_cr, budget_total_cr }
+ */
+
+
+
+function LegendRow({ slice, showDelta }) {
+  const direction = slice.direction;
+  const color = direction === "up" ? tok.green
+              : direction === "down" ? tok.red
+              : tok.text3;
+  const arrow = direction === "up" ? "↑" : direction === "down" ? "↓" : "";
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10,
+      padding: "7px 0", fontSize: 12,
+    }}>
+      <span style={{
+        width: 8, height: 8, borderRadius: 2,
+        background: slice.color, flexShrink: 0,
+      }}/>
+      <span style={{ flex: 1 }}>{slice.channel}</span>
+      <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+        <strong style={{
+          color: showDelta ? color : tok.text,
+          fontSize: 12, fontWeight: 700,
+        }}>
+          {slice.percentage}% {showDelta && arrow}
+        </strong>
+        <span style={{ color: tok.text3, fontSize: 11 }}>{slice.display_amount}</span>
+      </span>
+    </div>
+  );
+}
+
+function CurrentSide({ current, totalDisplay }) {
+  return (
+    <div>
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        marginBottom: 16,
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700 }}>Current</div>
+        <div style={{
+          fontSize: 10, color: tok.text3,
+          textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600,
+        }}>Today</div>
+      </div>
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <Donut
+          slices={current}
+          centerLabel={totalDisplay}
+          centerSub="Total"
+          size={140}
+        />
+        <div style={{ flex: 1 }}>
+          {current.map((s, i) => <LegendRow key={i} slice={s}/>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EarnedRevealCTA({ onReveal }) {
+  return (
+    <div
+      onClick={onReveal}
+      style={{
+        background: `linear-gradient(135deg, ${tok.accentSoft}, #F7F3FF)`,
+        border: `1px dashed ${tok.accent}`,
+        borderRadius: 12, padding: "32px 28px",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 16,
+        cursor: "pointer", transition: "all .25s",
+        textAlign: "center",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = `linear-gradient(135deg, ${tok.accent}, ${tok.accentDeep})`;
+        e.currentTarget.querySelectorAll("*").forEach(el => el.style.color = "#fff");
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = `linear-gradient(135deg, ${tok.accentSoft}, #F7F3FF)`;
+        e.currentTarget.querySelector(".reveal-eyebrow").style.color = tok.accent;
+        e.currentTarget.querySelector(".reveal-text").style.color = tok.text;
+        e.currentTarget.querySelector(".reveal-arrow").style.color = tok.accent;
+        e.currentTarget.querySelector(".reveal-arrow").style.background = tok.card;
+      }}
+    >
+      <div className="reveal-eyebrow" style={{
+        fontSize: 10, color: tok.accent,
+        textTransform: "uppercase", letterSpacing: "0.22em",
+        fontWeight: 700,
+      }}>Earned reveal</div>
+      <div className="reveal-text" style={{
+        fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 500,
+        letterSpacing: "-.01em", lineHeight: 1.35,
+        maxWidth: 260, color: tok.text,
+      }}>
+        Show me <em>how Atlas would reallocate</em> these rupees
+      </div>
+      <div className="reveal-arrow" style={{
+        width: 42, height: 42, borderRadius: "50%",
+        background: tok.card, color: tok.accent,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 20, fontWeight: 700, transition: "all .2s",
+      }}>→</div>
+    </div>
+  );
+}
+
+function RecommendedSide({
+  recommended, totalDisplay, editing, userValues, onUserChange,
+}) {
+  return (
+    <div>
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        marginBottom: 16,
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700 }}>Atlas Recommended</div>
+        <div style={{
+          fontSize: 10, color: tok.green,
+          textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600,
+        }}>↗ Optimized</div>
+      </div>
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <Donut
+          slices={recommended}
+          centerLabel={totalDisplay}
+          centerSub="Total"
+          centerColor={tok.accentDeep}
+          size={140}
+        />
+        <div style={{ flex: 1 }}>
+          {!editing && recommended.map((s, i) =>
+            <LegendRow key={i} slice={s} showDelta />
+          )}
+
+          {editing && recommended.map((s, i) => {
+            const atlasCr = s.amount / 1e7;
+            const value = userValues[s.channel] ?? atlasCr;
+            return (
+              <div key={i} style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "6px 0",
+              }}>
+                <span style={{
+                  width: 8, height: 8, borderRadius: 2,
+                  background: s.color, flexShrink: 0,
+                }}/>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 500 }}>{s.channel}</div>
+                  <div style={{ fontSize: 10, color: tok.text3 }}>
+                    Atlas: ₹{atlasCr.toFixed(1)} Cr
+                  </div>
+                </div>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={value}
+                  onChange={e => onUserChange(s.channel, parseFloat(e.target.value))}
+                  style={{
+                    width: 80, padding: "6px 8px",
+                    border: `1px solid ${tok.border}`, borderRadius: 6,
+                    fontFamily: "inherit", fontSize: 12,
+                    textAlign: "right",
+                  }}
+                />
+                <span style={{ fontSize: 11, color: tok.text3 }}>Cr</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditTotalBar({ userTotal, budgetTotal }) {
+  const diff = Math.abs(userTotal - budgetTotal);
+  const matches = diff < 0.15;
+  return (
+    <div style={{
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      padding: "12px 16px",
+      background: matches ? tok.greenSoft : tok.redSoft,
+      border: `1px solid ${matches ? "#D0F0E1" : "#F9D0D0"}`,
+      borderRadius: 8, marginTop: 16,
+      fontSize: 12,
+    }}>
+      <span style={{ fontWeight: 600 }}>Total allocation</span>
+      <span>
+        <span style={{
+          fontWeight: 700,
+          color: matches ? tok.greenDeep : tok.redDeep,
+        }}>₹{userTotal.toFixed(1)} Cr</span>
+        <span style={{ color: tok.text3 }}> / ₹{budgetTotal.toFixed(1)} Cr budget</span>
+      </span>
+    </div>
+  );
+}
+
+function AtlasPushback({ pushback }) {
+  if (!pushback) return null;
+  return (
+    <div style={{
+      marginTop: 14, padding: "14px 18px",
+      background: `linear-gradient(135deg, ${tok.atlasSoft}, #FEFAEC)`,
+      border: `1px solid #F2D89A`,
+      borderLeft: `3px solid ${tok.atlas}`,
+      borderRadius: 10,
+      display: "flex", gap: 14, alignItems: "flex-start",
+    }}>
+      <div style={{
+        width: 30, height: 30, borderRadius: "50%",
+        background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+        fontSize: 13, flexShrink: 0,
+      }}>A</div>
+      <div style={{ flex: 1, fontSize: 13, lineHeight: 1.55 }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontStyle: "italic", fontWeight: 600,
+          color: tok.atlasDeep, marginBottom: 4,
+          fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em",
+        }}>Atlas · Pushback</div>
+        <div style={{ fontWeight: 600, marginBottom: 4 }}>{pushback.headline}</div>
+        <div style={{ color: tok.text2, fontSize: 12 }}>{pushback.detail}</div>
+      </div>
+    </div>
+  );
+}
+
+function AllocationComparison({
+  allocation,
+  onScoreOverride,
+  revealed: controlledRevealed,
+  onReveal,
+}) {
+  const [internalRevealed, setInternalRevealed] = useState(false);
+  const revealed = controlledRevealed !== undefined ? controlledRevealed : internalRevealed;
+  const handleReveal = () => {
+    setInternalRevealed(true);
+    if (onReveal) onReveal();
+  };
+
+  const [editing, setEditing] = useState(false);
+  const [userValues, setUserValues] = useState({});
+  const [scoreResult, setScoreResult] = useState(null);
+
+  // Initialize user values from Atlas recommendation
+  useEffect(() => {
+    if (revealed && allocation?.recommended) {
+      const init = {};
+      allocation.recommended.forEach(s => {
+        init[s.channel] = +(s.amount / 1e7).toFixed(1);
+      });
+      setUserValues(init);
+    }
+  }, [revealed, allocation]);
+
+  const userTotal = useMemo(
+    () => Object.values(userValues).reduce((a, b) => a + (b || 0), 0),
+    [userValues]
+  );
+  const budgetTotal = (allocation?.total_budget ?? 0) / 1e7;
+
+  // When editing, fetch override score after debounce
+  useEffect(() => {
+    if (!editing || !onScoreOverride) return;
+    const id = setTimeout(() => {
+      onScoreOverride(userValues).then(setScoreResult).catch(() => setScoreResult(null));
+    }, 350);
+    return () => clearTimeout(id);
+  }, [editing, userValues, onScoreOverride]);
+
+  const handleUserChange = useCallback((channel, val) => {
+    setUserValues(prev => ({ ...prev, [channel]: val }));
+  }, []);
+
+  const handleReset = () => {
+    if (!allocation?.recommended) return;
+    const init = {};
+    allocation.recommended.forEach(s => {
+      init[s.channel] = +(s.amount / 1e7).toFixed(1);
+    });
+    setUserValues(init);
+    setScoreResult(null);
+  };
+
+  if (!allocation) return null;
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "22px 24px", marginBottom: 18,
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Head */}
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        marginBottom: 18,
+      }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 600,
+          letterSpacing: "-.01em",
+        }}>Current vs Recommended Allocation</div>
+        <div style={{ fontSize: 12, color: tok.text2 }}>
+          Total budget · <strong>{allocation.total_budget_display}</strong>
+        </div>
+      </div>
+
+      {/* Comparison grid */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: revealed ? "1fr 1fr" : "1fr 1fr",
+        gap: 20,
+      }}>
+        <CurrentSide current={allocation.current} totalDisplay={allocation.total_budget_display}/>
+        {!revealed ? (
+          <EarnedRevealCTA onReveal={handleReveal}/>
+        ) : (
+          <RecommendedSide
+            recommended={allocation.recommended}
+            totalDisplay={allocation.total_budget_display}
+            editing={editing}
+            userValues={userValues}
+            onUserChange={handleUserChange}
+          />
+        )}
+      </div>
+
+      {/* Edit-mode extras */}
+      {editing && (
+        <>
+          <EditTotalBar userTotal={userTotal} budgetTotal={budgetTotal}/>
+          <AtlasPushback pushback={scoreResult?.pushback}/>
+        </>
+      )}
+
+      {/* Toggle row */}
+      {revealed && (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          marginTop: 20, paddingTop: 16,
+          borderTop: `1px solid ${tok.border}`,
+          gap: 16,
+        }}>
+          <div style={{ fontSize: 12, color: tok.text2, flex: 1 }}>
+            Need to override Atlas's recommendation? <strong>You can edit individual channels</strong> — Atlas flags overrides that hurt the plan.
+          </div>
+          <button
+            onClick={() => {
+              if (editing) handleReset();
+              setEditing(e => !e);
+            }}
+            style={{
+              padding: "9px 16px",
+              background: editing ? tok.card : tok.accent,
+              color: editing ? tok.text : "#fff",
+              border: `1px solid ${editing ? tok.border : tok.accent}`,
+              borderRadius: 8,
+              fontFamily: "inherit", fontSize: 12, fontWeight: 600,
+              cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 6,
+            }}
+          >
+            {editing ? "Cancel" : "✎ Override recommendation"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ * ImpactStrip — 4-cell summary metrics row sitting below the allocation
+ * comparison. Greys out when the allocation hasn't been revealed yet, to
+ * preserve the earned-reveal narrative.
+ *
+ * Data: from /api/budget-optimization .impact
+ */
+
+
+function Cell({ label, value, sub, subColor, muted }) {
+  return (
+    <div style={{
+      padding: "16px 18px",
+      opacity: muted ? 0.45 : 1,
+      transition: "opacity .25s",
+    }}>
+      <div style={{
+        fontSize: 11, color: tok.text2, fontWeight: 500,
+        textTransform: "uppercase", letterSpacing: "0.04em",
+        marginBottom: 8,
+      }}>{label}</div>
+      <div style={{
+        fontSize: 22, fontWeight: 800, letterSpacing: "-.02em",
+        lineHeight: 1.1, marginBottom: 6,
+        color: /^\+|gain/.test(value) ? tok.greenDeep : tok.text,
+      }}>{value}</div>
+      {sub && (
+        <div style={{
+          fontSize: 11, fontWeight: 600,
+          color: subColor || tok.text3,
+        }}>{sub}</div>
+      )}
+    </div>
+  );
+}
+
+function ImpactStrip({ impact, revealed = true, onViewSimulation }) {
+  if (!impact) return null;
+  const muted = !revealed;
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, marginBottom: 18,
+      display: "grid",
+      // 4 cells × 1fr, 3 dividers × auto, 1 button × auto = 8 tracks
+      gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr auto",
+      alignItems: "center",
+      fontFamily: tok.fontUi,
+    }}>
+      <Cell
+        label="Projected ROI"
+        value={impact.projected_roi.value}
+        sub={impact.projected_roi.delta}
+        subColor={impact.projected_roi.delta?.startsWith("▲") ? tok.green : tok.text3}
+        muted={muted}
+      />
+      <div style={{ borderLeft: `1px solid ${tok.border}`, height: 60, alignSelf: "center" }}/>
+      <Cell
+        label="Incremental Revenue"
+        value={impact.incremental_revenue.value}
+        sub={impact.incremental_revenue.delta}
+        muted={muted}
+      />
+      <div style={{ borderLeft: `1px solid ${tok.border}`, height: 60, alignSelf: "center" }}/>
+      <Cell
+        label="CAC Improvement"
+        value={impact.cac_improvement.value}
+        sub={impact.cac_improvement.delta}
+        subColor={tok.green}
+        muted={muted}
+      />
+      <div style={{ borderLeft: `1px solid ${tok.border}`, height: 60, alignSelf: "center" }}/>
+      <Cell
+        label="Payback Period"
+        value={impact.payback_period.value}
+        sub={impact.payback_period.delta}
+        muted={muted}
+      />
+      <button
+        onClick={onViewSimulation}
+        disabled={muted}
+        style={{
+          margin: "0 20px", padding: "10px 18px",
+          background: muted ? tok.border : tok.accent,
+          color: "#fff", border: "none", borderRadius: 8,
+          fontFamily: "inherit", fontSize: 12, fontWeight: 600,
+          cursor: muted ? "not-allowed" : "pointer",
+          whiteSpace: "nowrap",
+          transition: "background .2s",
+        }}
+      >View Simulation →</button>
+    </div>
+  );
+}
+
+
+/**
+ * FourMoves — Atlas's top 4 moves with inline "Why?" reveals.
+ *
+ * Each move shows:
+ *   - number, direction arrow, action text with coloured delta
+ *   - revenue lift/loss (mint if gain, coral if cut)
+ *   - confidence % with horizontal bar
+ *   - collapsible Atlas reasoning (80% Bayesian credible interval when present)
+ *
+ * Data: from /api/budget-optimization .moves
+ */
+
+
+/** Render the action string with the monetary delta highlighted in accent. */
+function renderActionText(move) {
+  const parts = move.action.split(move.delta_spend_display);
+  if (parts.length !== 2) {
+    // Fallback: just render the action
+    return move.action;
+  }
+  return (
+    <>
+      {parts[0]}
+      <span style={{ fontWeight: 700, color: tok.accentDeep }}>
+        {move.delta_spend_display}
+      </span>
+      {parts[1]}
+    </>
+  );
+}
+
+function ConfidenceBar({ pct }) {
+  return (
+    <div style={{
+      width: 60, height: 4, background: tok.border, borderRadius: 2,
+      overflow: "hidden",
+    }}>
+      <div style={{
+        width: `${Math.max(0, Math.min(100, pct))}%`,
+        height: "100%",
+        background: pct >= 85 ? tok.green : pct >= 70 ? tok.amber : tok.red,
+      }}/>
+    </div>
+  );
+}
+
+function MoveRow({ move, isOpen, onToggle }) {
+  const isUp = move.direction === "up";
+  return (
+    <div style={{
+      padding: "16px 0",
+      borderBottom: `1px solid ${tok.border}`,
+    }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "32px 1fr 140px 140px 80px",
+        alignItems: "center", gap: 16,
+      }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontStyle: "italic",
+          fontSize: 14, color: tok.text3, fontWeight: 500,
+        }}>{move.num}</div>
+
+        <div style={{ fontSize: 13, fontWeight: 500 }}>
+          <span style={{
+            display: "inline-block", marginRight: 8,
+            color: isUp ? tok.green : tok.red, fontWeight: 700,
+          }}>{isUp ? "↑" : "↓"}</span>
+          {renderActionText(move)}
+        </div>
+
+        <div>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 15, fontWeight: 600,
+            fontStyle: "italic", letterSpacing: "-.01em",
+            color: move.revenue_lift_kind === "gain" ? tok.greenDeep : tok.red,
+          }}>{move.revenue_lift_display}</div>
+          <div style={{ fontSize: 10, color: tok.text3,
+                         textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            {move.revenue_lift_kind === "gain" ? "Revenue lift" : "Lost revenue"}
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700 }}>{move.confidence_display}</div>
+          <div style={{ marginTop: 4 }}><ConfidenceBar pct={move.confidence}/></div>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 4,
+          }}>Conf</div>
+        </div>
+
+        <div
+          onClick={onToggle}
+          style={{
+            fontSize: 10, fontWeight: 600, color: tok.atlasDeep,
+            background: tok.atlasSoft,
+            padding: "4px 10px", borderRadius: 5,
+            cursor: "pointer", border: "1px solid #F2D89A",
+            display: "flex", alignItems: "center", gap: 4,
+            userSelect: "none", justifyContent: "center",
+            transition: "all .2s",
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = tok.atlas;
+            e.currentTarget.style.color = "#fff";
+            e.currentTarget.style.borderColor = tok.atlas;
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = tok.atlasSoft;
+            e.currentTarget.style.color = tok.atlasDeep;
+            e.currentTarget.style.borderColor = "#F2D89A";
+          }}
+        >
+          Why? <span style={{
+            display: "inline-block",
+            transform: isOpen ? "rotate(180deg)" : "none",
+            transition: "transform .25s",
+          }}>▾</span>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div style={{ paddingTop: 14, paddingLeft: 48 }}>
+          <div style={atlasCalloutStyle}>
+            <div style={{
+              fontFamily: tok.fontDisplay, fontStyle: "italic", fontWeight: 600,
+              color: tok.atlasDeep, marginBottom: 6,
+              fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em",
+            }}>{move.why.who}</div>
+            {move.why.text}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FourMoves({ moves = [] }) {
+  const [openIdx, setOpenIdx] = useState(null);
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "22px 24px", marginBottom: 18,
+      fontFamily: tok.fontUi,
+    }}>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 600,
+        letterSpacing: "-.01em", marginBottom: 4,
+      }}>The Four Moves</div>
+      <div style={{
+        fontSize: 11, color: tok.text3, fontWeight: 500,
+        marginBottom: 14,
+      }}>Each with a reason · Each with a confidence score</div>
+
+      {moves.length === 0 ? (
+        <div style={{
+          padding: "24px 0", textAlign: "center",
+          color: tok.text3, fontSize: 12, fontStyle: "italic",
+        }}>
+          Moves populate once the optimizer has run on current performance data.
+        </div>
+      ) : moves.map((m, i) => (
+        <MoveRow
+          key={i}
+          move={m}
+          isOpen={openIdx === i}
+          onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+        />
+      ))}
+    </div>
+  );
+}
+
+
+/**
+ * NetSummary — the closing summary card that reiterates the value
+ * proposition in one line before the bridge to Screen 07.
+ *
+ * Uses mint gradient + same headline pattern as the hero, but smaller.
+ */
+
+
+function NetSummary({ budgetDisplay, upliftDisplay, impact, onRunScenario }) {
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.greenSoft}, #F0FCF6)`,
+      border: `1px solid #CDECDD`,
+      borderRadius: 12, padding: "22px 28px", marginBottom: 18,
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      gap: 24, fontFamily: tok.fontUi,
+    }}>
+      <div style={{ flex: 1 }}>
+        <div style={{
+          fontSize: 10, color: tok.greenDeep,
+          textTransform: "uppercase", letterSpacing: "0.2em",
+          fontWeight: 700, marginBottom: 6,
+        }}>Net result</div>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 22, fontWeight: 500,
+          letterSpacing: "-.01em", lineHeight: 1.3,
+        }}>
+          Same <span style={{ color: tok.text2, fontStyle: "italic" }}>{budgetDisplay}</span> in.{" "}
+          <span style={{
+            color: tok.greenDeep, fontStyle: "italic", fontWeight: 600,
+          }}>{upliftDisplay} more out.</span>
+        </div>
+        {impact && (
+          <div style={{
+            fontSize: 12, color: tok.text2, marginTop: 8,
+          }}>
+            ROI moves from{" "}
+            <strong>
+              {impact.projected_roi?.current_display || "current"} →{" "}
+              {impact.projected_roi?.value}
+            </strong>
+            {impact.cac_improvement?.value && impact.cac_improvement.value !== "—" && (
+              <> · CAC {impact.cac_improvement.value}</>
+            )}
+            {impact.payback_period?.value && impact.payback_period.value !== "—" && (
+              <> · Payback {impact.payback_period.value}</>
+            )}
+          </div>
+        )}
+      </div>
+      <button
+        onClick={onRunScenario}
+        style={{
+          padding: "11px 20px",
+          background: tok.greenDeep, color: "#fff",
+          border: "none", borderRadius: 8,
+          fontFamily: "inherit", fontSize: 12, fontWeight: 600,
+          cursor: "pointer", whiteSpace: "nowrap",
+        }}
+      >Run as scenario →</button>
+    </div>
+  );
+}
+
+
+/**
+ * BridgeCard — the purple-bordered transition card at the bottom of
+ * each screen that narrates the handoff to the next screen.
+ *
+ * Props:
+ *   - toScreenNum: string ("02")
+ *   - text: short headline that sets up the next screen
+ *   - onClick: navigate to next screen
+ */
+
+
+function BridgeCard({ toScreenNum, text, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        marginTop: 8,
+        padding: "22px 28px",
+        background: `linear-gradient(135deg, #fff, #FAFBFE)`,
+        border: `1px solid ${tok.border}`,
+        borderLeft: `3px solid ${tok.accent}`,
+        borderRadius: 10,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 24, cursor: "pointer", transition: "all .25s",
+        fontFamily: tok.fontUi,
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderLeftColor = tok.accentDeep;
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(124,92,255,.08)";
+        e.currentTarget.style.transform = "translateX(2px)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderLeftColor = tok.accent;
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.transform = "none";
+      }}
+    >
+      <div>
+        <div style={{
+          fontSize: 10, color: tok.accent,
+          textTransform: "uppercase", letterSpacing: "0.2em",
+          fontWeight: 700, marginBottom: 6,
+        }}>Continue · Screen {toScreenNum}</div>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 17, fontWeight: 500,
+          letterSpacing: "-.01em", lineHeight: 1.3, maxWidth: 560,
+          color: tok.text,
+        }}>{text}</div>
+      </div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 28, color: tok.accent,
+        fontStyle: "italic", fontWeight: 500,
+      }}>→</div>
+    </div>
+  );
+}
+
+
+// Mock override scorer — matches the backend's behavior closely
+async function mockScoreOverride(userAlloc) {
+  // Atlas plan in Cr
+  const atlasAlloc = {};
+  SAMPLE.allocation.recommended.forEach(s => { atlasAlloc[s.channel] = s.amount / 1e7; });
+  // Marginal ROIs per channel (from source data, rough)
+  const marginals = {
+    'Search': 3.6, 'Meta Ads': 0.2, 'LinkedIn': 3.2,
+    'Display': 0.62, 'YouTube': 2.1, 'Others': 0.3,
+  };
+  let penalty = 0; let worst = null;
+  for (const ch of Object.keys(atlasAlloc)) {
+    const diff = (userAlloc[ch] || atlasAlloc[ch]) - atlasAlloc[ch];
+    const m = marginals[ch] || 1;
+    penalty += Math.abs(diff) * m * 0.5;
+    if (Math.abs(diff) > 1 && (!worst || Math.abs(diff) * m > Math.abs(worst.diff) * worst.m)) {
+      worst = { channel: ch, diff, m };
+    }
+  }
+  const deltaVsAtlas = -penalty;
+  let pushback = null;
+  if (deltaVsAtlas < -1 && worst) {
+    pushback = {
+      headline: `Heads up — that override hurts the plan by ~₹${Math.abs(deltaVsAtlas).toFixed(1)} Cr.`,
+      detail: `${worst.channel} moved by ₹${Math.abs(worst.diff).toFixed(1)} Cr. Its marginal ROI is ${worst.m.toFixed(2)}x, so the lost lift compounds.`,
+    };
+  }
+  return { delta_vs_atlas_cr: +deltaVsAtlas.toFixed(2), pushback };
+}
+
+function App() {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  const mainContent = (<>
+    <TopBar
+      number="06"
+      title="Budget Optimization"
+      subtitle="AI-driven budget allocation for maximum ROI"
+      right={<>
+        <Pill>Total Budget: <strong style={{marginLeft:4}}>{SAMPLE.allocation.total_budget_display}</strong></Pill>
+        <Pill>Constraints ▾</Pill>
+        <Pill primary>Edit</Pill>
+      </>}
+    />
+    <MintHeroInsight
+      eyebrow={SAMPLE.hero.eyebrow}
+      headline={SAMPLE.hero.headline}
+      sub={SAMPLE.hero.sub}
+      cta={SAMPLE.hero.cta}
+      onCtaClick={() => setRevealed(true)}
+    />
+    {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE.atlas}/>}
+    <AllocationComparison
+      allocation={SAMPLE.allocation}
+      revealed={revealed}
+      onReveal={() => setRevealed(true)}
+      onScoreOverride={mockScoreOverride}
+    />
+    <ImpactStrip impact={SAMPLE.impact} revealed={revealed}/>
+    <FourMoves moves={SAMPLE.moves}/>
+    <NetSummary
+      budgetDisplay={SAMPLE.allocation.total_budget_display}
+      upliftDisplay={SAMPLE.impact.incremental_revenue.value}
+      impact={SAMPLE.impact}
+    />
+    <BridgeCard
+      toScreenNum="07"
+      text="Want to stress-test this against a downturn, a competitor surge, or a 20% budget cut?"
+    />
+  </>);
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh", background: tok.bg, color: tok.text,
+      fontFamily: tok.fontUi, fontSize: 13, lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      <Sidebar activeScreen={6} clientName="Acme Consumer Co." clientPeriod="Quarterly review · Q2 2024"/>
+      <main style={{padding:"28px 36px 80px"}}>{mainContent}</main>
+      <AtlasRail
+        narration={SAMPLE.atlas}
+        collapsed={atlasCollapsed}
+        onToggle={() => setAtlasCollapsed(c => !c)}
+      />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+region,year,onset_date,withdrawal_date,intensity,deviation_from_normal,notes
+Kerala,2022,2022-05-29,2022-10-14,normal,-2_days_early,SW monsoon onset reference point for India
+Mumbai,2022,2022-06-11,2022-09-28,above_normal,+1_day_late,"OOH, footfall and logistics sensitive metro"
+Delhi,2022,2022-06-30,2022-09-24,normal,+1_day_late,Late-arriving monsoon influences footfall and heat-relief demand
+Kolkata,2022,2022-06-11,2022-10-09,above_normal,on_time,High humidity and rainfall sensitivity in East retail patterns
+Bengaluru,2022,2022-06-05,2022-10-20,normal,on_time,Intermittent rain impacts commuting and discretionary footfall
+Hyderabad,2022,2022-06-14,2022-10-12,normal,+2_days_late,Rainfall timing affects outdoor activity and local logistics
+Chennai,2022,2022-10-23,2022-12-18,above_normal,+1_day_late,NE monsoon dominant; stronger Q4 weather pattern
+Pune,2022,2022-06-09,2022-10-08,normal,on_time,Monsoon intensity influences mobility and weekend retail
+Ahmedabad,2022,2022-06-25,2022-09-21,below_normal,+3_days_late,Variable monsoon impacts cooling and discretionary demand
+Lucknow,2022,2022-06-24,2022-09-25,normal,on_time,North/Central demand softness during heavy rain phases
+Kerala,2023,2023-06-08,2023-10-16,below_normal,+8_days_late,SW monsoon onset reference point for India
+Mumbai,2023,2023-06-25,2023-09-30,below_normal,+15_days_late,"OOH, footfall and logistics sensitive metro"
+Delhi,2023,2023-06-29,2023-09-26,normal,on_time,Late-arriving monsoon influences footfall and heat-relief demand
+Kolkata,2023,2023-06-13,2023-10-11,normal,+1_day_late,High humidity and rainfall sensitivity in East retail patterns
+Bengaluru,2023,2023-06-07,2023-10-19,normal,+1_day_late,Intermittent rain impacts commuting and discretionary footfall
+Hyderabad,2023,2023-06-20,2023-10-10,below_normal,+8_days_late,Rainfall timing affects outdoor activity and local logistics
+Chennai,2023,2023-10-29,2023-12-21,below_normal,+6_days_late,NE monsoon dominant; stronger Q4 weather pattern
+Pune,2023,2023-06-23,2023-10-06,below_normal,+12_days_late,Monsoon intensity influences mobility and weekend retail
+Ahmedabad,2023,2023-06-28,2023-09-20,below_normal,+6_days_late,Variable monsoon impacts cooling and discretionary demand
+Lucknow,2023,2023-06-27,2023-09-23,normal,+3_days_late,North/Central demand softness during heavy rain phases
+Kerala,2024,2024-06-02,2024-10-15,normal,+1_day_late,SW monsoon onset reference point for India
+Mumbai,2024,2024-06-10,2024-09-30,above_normal,+2_days_late,"OOH, footfall and logistics sensitive metro"
+Delhi,2024,2024-06-28,2024-09-25,normal,on_time,Late-arriving monsoon influences footfall and heat-relief demand
+Kolkata,2024,2024-06-12,2024-10-10,normal,-1_day_early,High humidity and rainfall sensitivity in East retail patterns
+Bengaluru,2024,2024-06-05,2024-10-19,normal,on_time,Intermittent rain impacts commuting and discretionary footfall
+Hyderabad,2024,2024-06-14,2024-10-11,above_normal,+2_days_late,Rainfall timing affects outdoor activity and local logistics
+Chennai,2024,2024-10-20,2024-12-20,below_normal,-5_days_late,NE monsoon dominant; stronger Q4 weather pattern
+Pune,2024,2024-06-09,2024-10-07,above_normal,+1_day_late,Monsoon intensity influences mobility and weekend retail
+Ahmedabad,2024,2024-06-24,2024-09-18,normal,+2_days_late,Variable monsoon impacts cooling and discretionary demand
+Lucknow,2024,2024-06-22,2024-09-24,normal,on_time,North/Central demand softness during heavy rain phases
+Kerala,2025,2025-05-30,2025-10-13,above_normal,-2_days_early,SW monsoon onset reference point for India
+Mumbai,2025,2025-06-07,2025-09-29,above_normal,-1_day_early,"OOH, footfall and logistics sensitive metro"
+Delhi,2025,2025-06-27,2025-09-24,normal,-1_day_early,Late-arriving monsoon influences footfall and heat-relief demand
+Kolkata,2025,2025-06-09,2025-10-08,above_normal,-3_days_early,High humidity and rainfall sensitivity in East retail patterns
+Bengaluru,2025,2025-06-04,2025-10-18,normal,-1_day_early,Intermittent rain impacts commuting and discretionary footfall
+Hyderabad,2025,2025-06-12,2025-10-09,normal,on_time,Rainfall timing affects outdoor activity and local logistics
+Chennai,2025,2025-10-22,2025-12-19,normal,on_time,NE monsoon dominant; stronger Q4 weather pattern
+Pune,2025,2025-06-08,2025-10-06,above_normal,on_time,Monsoon intensity influences mobility and weekend retail
+Ahmedabad,2025,2025-06-22,2025-09-17,normal,on_time,Variable monsoon impacts cooling and discretionary demand
+Lucknow,2025,2025-06-21,2025-09-22,normal,-1_day_early,North/Central demand softness during heavy rain phases
+Kerala,2026,2026-06-03,2026-10-14,normal,+2_days_late,SW monsoon onset reference point for India
+Mumbai,2026,2026-06-12,2026-09-30,normal,+4_days_late,"OOH, footfall and logistics sensitive metro"
+Delhi,2026,2026-06-30,2026-09-25,normal,+2_days_late,Late-arriving monsoon influences footfall and heat-relief demand
+Kolkata,2026,2026-06-13,2026-10-10,normal,+1_day_late,High humidity and rainfall sensitivity in East retail patterns
+Bengaluru,2026,2026-06-06,2026-10-20,normal,+1_day_late,Intermittent rain impacts commuting and discretionary footfall
+Hyderabad,2026,2026-06-16,2026-10-11,normal,+4_days_late,Rainfall timing affects outdoor activity and local logistics
+Chennai,2026,2026-10-24,2026-12-20,normal,+2_days_late,NE monsoon dominant; stronger Q4 weather pattern
+Pune,2026,2026-06-11,2026-10-08,normal,+3_days_late,Monsoon intensity influences mobility and weekend retail
+Ahmedabad,2026,2026-06-25,2026-09-19,normal,+3_days_late,Variable monsoon impacts cooling and discretionary demand
+Lucknow,2026,2026-06-24,2026-09-24,normal,+2_days_late,North/Central demand softness during heavy rain phases

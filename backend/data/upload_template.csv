@@ -1,0 +1,6 @@
+date,channel,channel_type,campaign,region,product,spend,revenue,impressions,clicks,leads,mqls,sqls,conversions,bounce_rate,avg_session_duration_sec,form_completion_rate,nps_score,grps,reach,store_visits,calls_generated,event_attendees,dealer_enquiries
+2022-01-01,paid_search,online,PS_Brand,North,Product_A,12000,45600,96000,4320,302,136,52,15,0.36,155,0.14,38,0,0,0,0,0,0
+2022-01-01,events,offline,Trade_Show,North,Product_A,45000,198000,0,0,450,203,77,28,0,0,0,68,0,0,0,0,450,120
+2022-01-01,tv_national,offline,TV_Brand_Q1,North,Product_A,85000,127500,0,0,0,0,0,8,0,0,0,42,285,2500000,0,890,0,0
+2025-01-01,paid_search,online,PS_Brand,North,Product_A,18000,79200,144000,6480,454,204,78,24,0.30,175,0.18,44,0,0,0,0,0,0
+2025-01-01,tv_national,offline,TV_Brand_Q1,North,Product_A,95000,152000,0,0,0,0,0,10,0,0,0,44,310,2800000,0,1020,0,0

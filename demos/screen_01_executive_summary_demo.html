@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YI · Screen 01 Executive Summary — Visual Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+  #root{min-height:100vh}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+// React hooks aliased so the inlined JSX (which normally imports them)
+// resolves them as locals.
+const { useState, useEffect, useMemo, useRef, useCallback, Fragment } = React;
+
+// ─── Baked-in sample data (from real backend endpoints) ───────────────
+const SAMPLE_EXEC = {"hero": {"eyebrow": "Where you stand this quarter", "headline": {"prefix": "You're leaving", "loss": "₹35.8 Cr", "middle": "on the table this month — but", "gain": "₹35.6 Cr is recoverable", "suffix": "."}, "sub": "Three pillars — revenue leakage, experience drop, and avoidable cost — explain where the value is sitting. Each has a recommended move below.", "cta": {"label": "Take the tour →", "meta": "87% confidence"}}, "kpis": [{"label": "Total Revenue", "value": "₹248 Cr", "delta": ""}, {"label": "ROI", "value": "3.62x", "delta": ""}, {"label": "Marketing Spend", "value": "₹68.5 Cr", "delta": ""}, {"label": "CAC", "value": "—", "delta": ""}, {"label": "Pipeline Influence", "value": "₹347 Cr", "delta": ""}], "pillars": {"total_cost": {"amount": 358000000, "display": "₹35.8 Cr", "label": "Total cost · This month"}, "pillars": [{"id": "leak", "roman": "i.", "name": "Revenue Leakage", "amount": 243000000, "display": "₹24.3 Cr", "description": "Spend that produced revenue, but less than it could have. Saturated channels held while under-saturated ones starve.", "tag": "Recoverable"}, {"id": "drop", "roman": "ii.", "name": "Experience Drop", "amount": 83000000, "display": "₹8.3 Cr", "description": "Funnel friction — primarily mobile — converting fewer of the leads your spend already paid to acquire.", "tag": "Mostly fixable"}, {"id": "avoid", "roman": "iii.", "name": "Avoidable Cost", "amount": 32000000, "display": "₹3.2 Cr", "description": "Spend on channels past their saturation point or with negative marginal ROI. Money that came back as nothing.", "tag": "Cuttable today"}]}, "opportunities": [{"icon": "↑", "amount": 241000000, "display": "+₹24.1 Cr", "name": "Reallocate spend", "detail": "Shift under-performing channels into higher-marginal-ROI ones"}, {"icon": "×", "amount": -32000000, "display": "−₹3.2 Cr", "name": "Cut waste", "detail": "Pause channels past their saturation point"}, {"icon": "↗", "amount": 83000000, "display": "+₹8.3 Cr", "name": "Fix conversion", "detail": "Address mobile funnel drop and landing-page friction"}], "top_actions": [{"num": 1, "text": "Shift 15% budget to Search", "impact": "+₹5.2 Cr", "why": {"who": "Atlas · Reasoning", "text": "Search is your highest marginal-ROI channel and well below saturation. Each additional rupee returns ₹3.6 in revenue today. The risk is operational — your team has to actually deploy the +₹3.7 Cr of incremental Search spend in 30 days."}}, {"num": 2, "text": "Fix mobile funnel drop", "impact": "+12% CVR", "why": {"who": "Atlas · Reasoning", "text": "Mobile users have a 4.5× drop-off vs desktop on checkout. You are paying full CAC to acquire these users, then losing them at conversion. A 50% improvement unlocks ₹4 Cr with zero incremental spend."}}, {"num": 3, "text": "Scale top-performing campaigns", "impact": "+₹2.1 Cr", "why": {"who": "Atlas · Reasoning", "text": "Three campaigns (Brand_Search_May, NB_Gen_Search_May, LinkedIn_B2B_May) are converting 40%+ above your portfolio median with headroom to absorb 2× current spend before saturation. Lower-risk alternative to channel-level reallocation."}}], "atlas": {"paragraphs": [{"text": "The headline number — ₹35.8 Cr — is the one most clients fixate on. But the interesting thing isn't the size. It's the shape."}, {"text": "About ₹35.6 Cr of it is recoverable within this quarter. That's a 99% recovery ratio — most engagements I've reviewed see 60–70%."}], "suggested_questions": ["Why is the recovery ratio this high?", "Which channel is leaking the most?", "How confident are you in ₹24.3 Cr?", "What would the CFO push back on?"], "source": "executive_summary_template"}, "has_data": true};
+const SAMPLE_MC   = {"as_of": "2024-08-01", "category": "FMCG", "regions": ["Mumbai", "Delhi"], "demand_trend": {"lookback_months": 4, "points": [{"month": "2024-05", "value": 99.4, "label": "May"}, {"month": "2024-06", "value": 98.9, "label": "Jun"}, {"month": "2024-07", "value": 99.6, "label": "Jul"}, {"month": "2024-08", "value": 100.9, "label": "Aug"}]}, "upcoming_peaks": [{"start_date": "2024-08-15", "end_date": "2024-08-15", "name": "Independence Day", "kind": "public_holiday", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Brand campaigns and patriotic retail promotions", "days_away": 14}, {"start_date": "2024-08-19", "end_date": "2024-08-19", "name": "Raksha Bandhan", "kind": "festival", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Gifting, confectionery and quick-commerce uplift", "days_away": 18}, {"start_date": "2024-10-03", "end_date": "2024-10-12", "name": "Navratri", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Pre-Diwali ramp in apparel, beauty and jewelry", "days_away": 63}, {"start_date": "2024-10-29", "end_date": "2024-11-03", "name": "Diwali", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Peak all-India demand period for apparel, jewelry, electronics and gifting", "days_away": 89}], "atlas_narration": {"headline": "Demand for FMCG has been broadly flat over the last 4 months, per the macro baseline.", "detail": "The next major peak is Navratri in 63 days — historically a high-impact window.", "follow_up": "Want me to overlay the last three years of this same period?", "source": "macro_baseline", "confidence": "medium"}, "source": "macro_baseline (YI-curated, per plan v2 §2A.1)"};
+
+// ─── tokens ───────────────────────────────────────────────────────────
+/**
+ * Shared design tokens for the Yield Intelligence frontend.
+ *
+ * Mirrors the `:root` block in the hybrid screen HTMLs. Any new screen
+ * imports from here rather than redefining. When the fresh Vite rebuild
+ * lands, this file moves to `src/design/tokens.ts` with types added.
+ */
+const tok = {
+  // Surface
+  bg:         "#F5F6FA",
+  card:       "#FFFFFF",
+  sidebar:    "#0F1535",
+  sidebarHover: "#1A2150",
+  border:     "#E5E7EF",
+  border2:    "#D8DCE8",
+
+  // Text
+  text:       "#0F1535",
+  text2:      "#5C6280",
+  text3:      "#8C92AC",
+
+  // Brand accent
+  accent:     "#7C5CFF",
+  accentSoft: "#EFEAFF",
+  accentDeep: "#5B3FD9",
+
+  // Semantic
+  green:      "#10B981",
+  greenSoft:  "#E6F8F2",
+  greenDeep:  "#047857",
+  red:        "#EF4444",
+  redSoft:    "#FEE9E9",
+  redDeep:    "#B91C1C",
+  amber:      "#F59E0B",
+  amberSoft:  "#FEF3D7",
+  amberDeep:  "#92400E",
+
+  // Atlas persona
+  atlas:      "#B8893B",
+  atlasSoft:  "#FBF3E0",
+  atlasDeep:  "#8C6520",
+
+  // Hero gradient stops
+  heroFrom:   "#0F1535",
+  heroTo:     "#1E2456",
+  heroNum:    "#FF8B7A",   // loss — coral italic in headline
+  heroGain:   "#7BE0BC",   // gain — mint italic in headline
+  heroEyebrow:"#FFB547",
+
+  // Fonts
+  fontUi:      "'Plus Jakarta Sans', system-ui, sans-serif",
+  fontDisplay: "'Fraunces', serif",
+};
+
+/** Standard card surface used across screens. */
+const panelStyle = {
+  background: tok.card,
+  border: `1px solid ${tok.border}`,
+  borderRadius: 12,
+  padding: "18px 20px",
+  fontFamily: tok.fontUi,
+  color: tok.text,
+  fontSize: 13,
+  lineHeight: 1.5,
+};
+
+const panelHeadingStyle = {
+  fontSize: 13,
+  fontWeight: 700,
+  marginBottom: 4,
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
+const panelTagStyle = {
+  fontSize: 10,
+  color: tok.text3,
+  fontWeight: 500,
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+  marginBottom: 14,
+};
+
+/** Inline "Atlas reasoning" callout — gold-soft box with left border. */
+const atlasCalloutStyle = {
+  background: tok.atlasSoft,
+  borderLeft: `3px solid ${tok.atlas}`,
+  borderRadius: 6,
+  padding: "12px 16px",
+  fontSize: 12,
+  color: tok.text,
+  lineHeight: 1.6,
+};
+
+/** Fonts link tag — consumers render this in their document head. */
+const FONTS_HREF =
+  "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
+
+
+// Market-context panels use their own tok object — but it's defined
+// identically, so we just alias it here instead of including twice.
+const mc_tok = tok;
+
+// ─── Design-system components ─────────────────────────────────────────
+/**
+ * TopBar — sits at the top of every screen's main column.
+ *
+ * Left:  big muted screen number, then title + subtitle
+ * Right: date range pill and share pill (slots for custom pills)
+ */
+
+
+function Pill({ children, primary, onClick }) {
+  const style = {
+    display: "inline-flex", alignItems: "center", gap: 8,
+    padding: "8px 14px",
+    background: primary ? tok.accent : tok.card,
+    border: `1px solid ${primary ? tok.accent : tok.border}`,
+    borderRadius: 8,
+    fontSize: 12, fontWeight: 500,
+    color: primary ? "#fff" : tok.text,
+    cursor: onClick ? "pointer" : "default",
+    fontFamily: tok.fontUi,
+  };
+  return <div style={style} onClick={onClick}>{children}</div>;
+}
+
+function TopBar({ number, title, subtitle, right }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      marginBottom: 24,
+    }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: tok.text3 }}>{number}</div>
+        <div>
+          <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-.015em" }}>{title}</div>
+          {subtitle && (
+            <div style={{ fontSize: 12, color: tok.text2, marginTop: 2 }}>{subtitle}</div>
+          )}
+        </div>
+      </div>
+      {right && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {right}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// AppShell (trimmed to just Sidebar; the app wires its own layout)
+/**
+ * AppShell — the 3-column Yield Intelligence frame.
+ *
+ * Layout:
+ *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
+ *
+ * Usage:
+ *   <AppShell
+ *     activeScreen={1}
+ *     clientName="Acme Consumer Co."
+ *     clientPeriod="Quarterly review · Q2 2024"
+ *     atlas={<AtlasRail narration={...} />}
+ *   >
+ *     <ExecutiveSummaryScreen ... />
+ *   </AppShell>
+ *
+ * The sidebar and atlas rail are separate components in this file so
+ * each can be imported without dragging the whole shell in.
+ */
+
+
+const NAV = [
+  { num: "01", label: "Executive Summary" },
+  { num: "02", label: "Data Foundation" },
+  { num: "03", label: "Channel Performance" },
+  { num: "04", label: "Campaign Deep Dive" },
+  { num: "05", label: "Attribution" },
+  { num: "06", label: "Optimization" },
+  { num: "07", label: "Simulation" },
+  { num: "08", label: "Plan Builder" },
+  { num: "09", label: "Track & Monitor" },
+  { num: "10", label: "Executive Report" },
+];
+
+function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
+  return (
+    <aside style={{
+      background: tok.sidebar,
+      color: "#fff",
+      padding: "24px 14px",
+      position: "sticky",
+      top: 0,
+      height: "100vh",
+      overflowY: "auto",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Logo */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 13,
+        }}>YI</div>
+        Yield Intelligence
+      </div>
+
+      {/* Nav items */}
+      {NAV.map((item, idx) => {
+        const num = idx + 1;
+        const active = num === activeScreen;
+        return (
+          <div
+            key={item.num}
+            onClick={() => onNavigate && onNavigate(num)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8,
+              color: active ? "#fff" : "#A8AEC9",
+              background: active ? tok.accent : "transparent",
+              cursor: "pointer", fontSize: 13,
+              fontWeight: active ? 600 : 500,
+              marginBottom: 2,
+              transition: "all .15s",
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = tok.sidebarHover;
+              if (!active) e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+              if (!active) e.currentTarget.style.color = "#A8AEC9";
+            }}
+          >
+            <span style={{
+              display: "inline-block", width: 22, height: 22, borderRadius: 5,
+              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
+              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
+              flexShrink: 0,
+            }}>{item.num}</span>
+            {item.label}
+          </div>
+        );
+      })}
+
+      {/* Footer */}
+      {clientName && (
+        <div style={{
+          marginTop: 24, padding: 12, borderRadius: 10,
+          background: "rgba(255,255,255,.04)",
+          fontSize: 11, color: "#A8AEC9",
+        }}>
+          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+            {clientName}
+          </strong>
+          {clientPeriod}
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function AppShell({
+  activeScreen,
+  clientName,
+  clientPeriod,
+  atlas,
+  onNavigate,
+  children,
+}) {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh",
+      background: tok.bg,
+      color: tok.text,
+      fontFamily: tok.fontUi,
+      fontSize: 13,
+      lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+      WebkitFontSmoothing: "antialiased",
+    }}>
+      <Sidebar
+        activeScreen={activeScreen}
+        clientName={clientName}
+        clientPeriod={clientPeriod}
+        onNavigate={onNavigate}
+      />
+      <main style={{ padding: "28px 36px 80px" }}>
+        {children}
+      </main>
+      {atlas && React.cloneElement(atlas, {
+        collapsed: atlasCollapsed,
+        onToggle: () => setAtlasCollapsed(c => !c),
+      })}
+    </div>
+  );
+}
+
+
+/**
+ * AtlasRail — the collapsible right-hand panel that hosts Atlas's
+ * per-screen narration and suggested questions.
+ *
+ * When collapsed, a 56px strip remains showing only the avatar + vertical
+ * label + expand button. The screen's main flow can include an
+ * <AtlasInlineCallout/> so users still see Atlas's headline when the
+ * rail is collapsed.
+ *
+ * Props:
+ *   - narration: { paragraphs: [{text}], suggested_questions: [string] }
+ *   - collapsed + onToggle: controlled by AppShell
+ *   - onAsk: callback(question) for suggested-question clicks
+ */
+
+
+function AtlasAvatar({ size = 40 }) {
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+      fontSize: size * 0.45, position: "relative", flexShrink: 0,
+    }}>
+      A
+      <span style={{
+        content: '""', position: "absolute",
+        bottom: -1, right: -1, width: 10, height: 10, borderRadius: "50%",
+        background: tok.green, border: "2px solid #FAFBFE",
+      }}/>
+    </div>
+  );
+}
+
+function AtlasRailExpanded({ narration, onAsk, onCollapse }) {
+  const paragraphs = narration?.paragraphs || [];
+  const questions = narration?.suggested_questions || [];
+
+  return (
+    <div style={{
+      padding: "24px 22px",
+      display: "flex", flexDirection: "column", height: "100%",
+      overflowY: "auto",
+    }}>
+      {/* Head */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        paddingBottom: 18, borderBottom: `1px solid ${tok.border}`,
+        marginBottom: 20,
+      }}>
+        <AtlasAvatar />
+        <div style={{ flex: 1 }}>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 15, fontWeight: 600,
+            letterSpacing: "-.01em", lineHeight: 1.1,
+          }}>Atlas</div>
+          <div style={{ fontSize: 11, color: tok.text3, marginTop: 2 }}>
+            Your analyst · Online
+          </div>
+        </div>
+        <button
+          onClick={onCollapse}
+          title="Collapse"
+          style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: "transparent", border: `1px solid ${tok.border}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", color: tok.text2, fontSize: 12,
+            fontWeight: 700, fontFamily: tok.fontUi,
+          }}
+        >→</button>
+      </div>
+
+      {/* Narration */}
+      <div style={{ marginBottom: 22, fontSize: 13, lineHeight: 1.6, color: tok.text }}>
+        {paragraphs.map((p, i) => (
+          <p key={i} style={{ marginBottom: 12 }}>{renderNarrationHighlights(p.text)}</p>
+        ))}
+      </div>
+
+      {/* Suggested questions */}
+      {questions.length > 0 && (
+        <>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.18em",
+            marginBottom: 10, fontWeight: 600,
+          }}>Suggested questions</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "auto" }}>
+            {questions.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => onAsk && onAsk(q)}
+                style={{
+                  padding: "11px 14px",
+                  background: tok.card, border: `1px solid ${tok.border}`,
+                  borderRadius: 6, fontSize: 12, color: tok.text2,
+                  cursor: "pointer", lineHeight: 1.4, textAlign: "left",
+                  fontFamily: tok.fontUi,
+                  transition: "all .2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = tok.atlas;
+                  e.currentTarget.style.color = tok.text;
+                  e.currentTarget.style.background = tok.atlasSoft;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = tok.border;
+                  e.currentTarget.style.color = tok.text2;
+                  e.currentTarget.style.background = tok.card;
+                }}
+              >
+                <span style={{ color: tok.atlas, marginRight: 8, fontWeight: 700 }}>›</span>
+                {q}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Input box (non-functional placeholder in v1 — template-driven only) */}
+      <div style={{
+        marginTop: 18, paddingTop: 18,
+        borderTop: `1px solid ${tok.border}`,
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 8,
+          padding: "10px 12px", background: tok.card,
+          border: `1px solid ${tok.border}`, borderRadius: 8,
+        }}>
+          <input
+            type="text"
+            placeholder="Suggested questions only in v1"
+            disabled
+            style={{
+              flex: 1, background: "transparent", border: "none", outline: "none",
+              fontFamily: "inherit", fontSize: 12, color: tok.text3,
+            }}
+          />
+          <span style={{ color: tok.text3, fontWeight: 700, fontSize: 14 }}>↵</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AtlasRailCollapsed({ onExpand }) {
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", gap: 14,
+      padding: "24px 0", height: "100%",
+    }}>
+      <div onClick={onExpand} style={{ cursor: "pointer" }} title="Expand Atlas">
+        <AtlasAvatar size={38} />
+      </div>
+      <div style={{
+        writingMode: "vertical-rl", transform: "rotate(180deg)",
+        fontSize: 10, color: tok.text3, textTransform: "uppercase",
+        letterSpacing: "0.2em", fontWeight: 600, marginTop: 8,
+      }}>Atlas</div>
+      <button
+        onClick={onExpand}
+        title="Expand"
+        style={{
+          marginTop: "auto",
+          width: 32, height: 32, borderRadius: 6,
+          background: tok.card, border: `1px solid ${tok.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", color: tok.text2, fontSize: 14,
+        }}
+      >←</button>
+    </div>
+  );
+}
+
+function AtlasRail({ narration, collapsed, onToggle, onAsk }) {
+  return (
+    <aside style={{
+      background: "#FAFBFE",
+      borderLeft: `1px solid ${tok.border}`,
+      position: "sticky", top: 0, height: "100vh",
+      display: "flex", flexDirection: "column",
+      overflow: "hidden",
+      transition: "all .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      {collapsed
+        ? <AtlasRailCollapsed onExpand={onToggle}/>
+        : <AtlasRailExpanded narration={narration} onAsk={onAsk} onCollapse={onToggle}/>
+      }
+    </aside>
+  );
+}
+
+/** Inline Atlas callout — shown inside the main flow when the rail is collapsed. */
+function AtlasInlineCallout({ narration }) {
+  const first = narration?.paragraphs?.[0];
+  if (!first) return null;
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.atlasSoft}, #FEFAEC)`,
+      border: "1px solid #F2D89A",
+      borderLeft: `3px solid ${tok.atlas}`,
+      borderRadius: 10,
+      padding: "16px 20px",
+      marginBottom: 18,
+      display: "flex", alignItems: "flex-start", gap: 14,
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: "50%",
+        background: `linear-gradient(135deg, ${tok.atlas}, ${tok.atlasDeep})`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "#fff", fontFamily: tok.fontDisplay, fontWeight: 700,
+        fontSize: 14, flexShrink: 0,
+      }}>A</div>
+      <div style={{ flex: 1 }}>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontWeight: 600, fontSize: 13,
+          color: tok.atlasDeep, marginBottom: 4, fontStyle: "italic",
+        }}>Atlas notes</div>
+        <div style={{ fontSize: 13, color: tok.text, lineHeight: 1.55 }}>
+          {renderNarrationHighlights(first.text)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Bold monetary figures in Atlas narration text so they stand out. */
+function renderNarrationHighlights(text) {
+  if (!text) return null;
+  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
+  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  return parts.map((part, i) => {
+    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+      return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+}
+
+
+// ─── Screen 01 components ─────────────────────────────────────────────
+/**
+ * HeroInsight — dark gradient card that frames the screen's single
+ * most important number. Used at the top of Screen 01 and 06.
+ *
+ * Props:
+ *   - eyebrow:  short uppercase label ("Where you stand this quarter")
+ *   - headline: { prefix, loss, middle, gain, suffix }
+ *       prefix/middle/suffix render as white Fraunces italic-ish copy;
+ *       loss renders in coral italic, gain renders in mint italic.
+ *   - sub:      muted body copy underneath
+ *   - cta:      { label, meta } — right-side CTA with confidence meta
+ */
+
+
+function HeroInsight({ eyebrow, headline, sub, cta, onCtaClick }) {
+  return (
+    <div style={{
+      background: `linear-gradient(135deg, ${tok.heroFrom} 0%, ${tok.heroTo} 100%)`,
+      borderRadius: 14,
+      padding: "28px 32px",
+      marginBottom: 18,
+      display: "grid",
+      gridTemplateColumns: "1fr auto",
+      gap: 32,
+      alignItems: "center",
+      position: "relative",
+      overflow: "hidden",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Decorative radial gradient blobs */}
+      <div style={{
+        position: "absolute", top: -40, right: -40, width: 240, height: 240,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, rgba(124,92,255,.18) 0%, transparent 70%)`,
+        pointerEvents: "none",
+      }}/>
+      <div style={{
+        position: "absolute", bottom: -30, left: -30, width: 180, height: 180,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, rgba(232,193,106,.08) 0%, transparent 70%)`,
+        pointerEvents: "none",
+      }}/>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Eyebrow */}
+        <div style={{
+          fontSize: 10, color: tok.heroEyebrow,
+          textTransform: "uppercase", letterSpacing: "0.22em",
+          fontWeight: 700, marginBottom: 14,
+          display: "flex", alignItems: "center", gap: 10,
+        }}>
+          <span style={{ width: 24, height: 1, background: tok.heroEyebrow }}/>
+          {eyebrow}
+        </div>
+
+        {/* Headline */}
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 32, fontWeight: 500,
+          lineHeight: 1.15, color: "#fff", letterSpacing: "-.02em",
+          maxWidth: 640,
+        }}>
+          {headline.prefix && <span>{headline.prefix} </span>}
+          {headline.loss && (
+            <span style={{
+              color: tok.heroNum, fontStyle: "italic", fontWeight: 600,
+            }}>{headline.loss}</span>
+          )}
+          {headline.middle && <span> {headline.middle} </span>}
+          {headline.gain && (
+            <span style={{
+              color: tok.heroGain, fontStyle: "italic", fontWeight: 600,
+            }}>{headline.gain}</span>
+          )}
+          {headline.suffix}
+        </div>
+
+        {/* Sub */}
+        {sub && (
+          <div style={{
+            fontSize: 13, color: "#B5BAD4",
+            marginTop: 12, maxWidth: 560, lineHeight: 1.55,
+          }}>{sub}</div>
+        )}
+      </div>
+
+      {/* CTA */}
+      {cta && (
+        <div style={{ position: "relative", zIndex: 1, textAlign: "right" }}>
+          <button
+            onClick={onCtaClick}
+            style={{
+              padding: "11px 20px",
+              background: "rgba(255,255,255,.1)",
+              color: "#fff",
+              border: "1px solid rgba(255,255,255,.18)",
+              borderRadius: 8,
+              fontSize: 12, fontWeight: 600,
+              cursor: onCtaClick ? "pointer" : "default",
+              fontFamily: tok.fontUi,
+              transition: "all .2s",
+              backdropFilter: "blur(4px)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,.18)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,.1)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,.18)";
+            }}
+          >{cta.label}</button>
+          {cta.meta && (
+            <div style={{
+              fontSize: 10, color: "#8C92AC",
+              textTransform: "uppercase", letterSpacing: "0.15em",
+              marginTop: 10, fontWeight: 600,
+            }}>{cta.meta}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ * KpiStrip — row of KPI cards.
+ *
+ * Props:
+ *   - kpis: Array<{ label, value, delta }>
+ *     delta is an optional string like "▲ 12.4% vs Apr"
+ *     (the component doesn't compute direction — caller formats the string).
+ */
+
+
+function KpiStrip({ kpis = [] }) {
+  if (!kpis.length) return null;
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: `repeat(${kpis.length}, 1fr)`,
+      gap: 14,
+      marginBottom: 18,
+    }}>
+      {kpis.map((kpi, i) => (
+        <div key={i} style={{
+          background: tok.card,
+          border: `1px solid ${tok.border}`,
+          borderRadius: 12,
+          padding: "16px 18px",
+          fontFamily: tok.fontUi,
+        }}>
+          <div style={{
+            fontSize: 11, color: tok.text2, fontWeight: 500,
+            textTransform: "uppercase", letterSpacing: "0.04em",
+            marginBottom: 8,
+          }}>{kpi.label}</div>
+          <div style={{
+            fontSize: 22, fontWeight: 800, letterSpacing: "-.02em",
+            lineHeight: 1.1, marginBottom: 6, color: tok.text,
+          }}>{kpi.value}</div>
+          {kpi.delta && (
+            <div style={{
+              fontSize: 11, fontWeight: 600,
+              color: kpi.delta.startsWith("▲") ? tok.green
+                   : kpi.delta.startsWith("▼") ? tok.red
+                   : tok.text3,
+            }}>{kpi.delta}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+/**
+ * PillarsPanel — the three-pillar cost-of-bad-allocation panel.
+ *
+ * Lifts the "Cost of Bad Allocation" card from the HTML reference: a
+ * header with panel title + total, then three coloured tiles
+ * (red-soft / amber-soft / purple-soft) with roman numerals, amounts,
+ * descriptions, and a recoverability tag.
+ *
+ * Data from: /api/executive-summary .pillars
+ */
+
+
+const PILLAR_THEMES = {
+  leak: {
+    gradFrom: "#FEF1EF", gradTo: "#FEE9E9",
+    border: "#FBD5D0", amount: "#C04020",
+  },
+  drop: {
+    gradFrom: "#FEF8E7", gradTo: "#FEF3D7",
+    border: "#F9E2A6", amount: "#A56A00",
+  },
+  avoid: {
+    gradFrom: "#F4ECFF", gradTo: "#EFE2FF",
+    border: "#DEC9F8", amount: "#7340C0",
+  },
+};
+
+function Pillar({ pillar }) {
+  const theme = PILLAR_THEMES[pillar.id] || PILLAR_THEMES.leak;
+  return (
+    <div style={{
+      padding: "18px 20px",
+      borderRadius: 10,
+      background: `linear-gradient(135deg, ${theme.gradFrom}, ${theme.gradTo})`,
+      border: `1px solid ${theme.border}`,
+      cursor: "pointer",
+      transition: "all .25s",
+    }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,21,53,.06)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "none";
+        e.currentTarget.style.boxShadow = "none";
+      }}
+    >
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 11, color: tok.text3,
+        fontStyle: "italic", marginBottom: 10, fontWeight: 500,
+      }}>{pillar.roman}</div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 16, fontWeight: 600,
+        letterSpacing: "-.01em", marginBottom: 8, color: tok.text,
+      }}>{pillar.name}</div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 30, fontWeight: 600,
+        letterSpacing: "-.02em", lineHeight: 1, fontStyle: "italic",
+        marginBottom: 8, color: theme.amount,
+      }}>{pillar.display}</div>
+      <div style={{
+        fontSize: 11, color: tok.text2, lineHeight: 1.5, marginBottom: 10,
+      }}>{pillar.description}</div>
+      <div style={{
+        fontSize: 10, fontWeight: 600,
+        textTransform: "uppercase", letterSpacing: "0.05em",
+        color: theme.amount,
+      }}>{pillar.tag}</div>
+    </div>
+  );
+}
+
+function PillarsPanel({ data }) {
+  if (!data) return null;
+  const { total_cost, pillars } = data;
+
+  return (
+    <div style={{
+      background: tok.card, border: `1px solid ${tok.border}`,
+      borderRadius: 12, padding: "22px 24px", marginBottom: 18,
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Head */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        marginBottom: 18,
+      }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 18, fontWeight: 600,
+            letterSpacing: "-.01em", color: tok.text,
+          }}>The Cost of Bad Allocation</div>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 600,
+          }}>Three pillars · Quantified</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{
+            fontSize: 10, color: tok.text3,
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            fontWeight: 600, marginBottom: 2,
+          }}>{total_cost.label}</div>
+          <div style={{
+            fontFamily: tok.fontDisplay, fontSize: 24, fontWeight: 600,
+            letterSpacing: "-.02em", color: tok.red, fontStyle: "italic",
+          }}>{total_cost.display}</div>
+        </div>
+      </div>
+
+      {/* Three pillars */}
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14,
+      }}>
+        {pillars.map(p => <Pillar key={p.id} pillar={p}/>)}
+      </div>
+    </div>
+  );
+}
+
+
+/**
+ * OpportunitiesAndActions — the two-column row below the pillars panel.
+ *
+ *   Left:  Recovery Opportunities (3 coloured tiles)
+ *   Right: Top Actions (prioritised list with inline "Why?" reveals)
+ *
+ * The "Why?" reveal is the reusable Atlas-reasoning pattern from the HTML
+ * reference — click opens a gold-soft callout with reasoning.
+ */
+
+
+function Opportunity({ opp }) {
+  return (
+    <div style={{
+      padding: 14, borderRadius: 10,
+      background: tok.greenSoft,
+      cursor: "pointer", transition: "all .2s",
+      border: "1px solid transparent",
+    }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = tok.green;
+        e.currentTarget.style.transform = "translateY(-1px)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = "transparent";
+        e.currentTarget.style.transform = "none";
+      }}
+    >
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace", fontWeight: 700,
+        color: tok.green, fontSize: 14, marginBottom: 8,
+      }}>{opp.icon}</div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 20, fontWeight: 600,
+        color: tok.greenDeep, fontStyle: "italic",
+        marginBottom: 4, letterSpacing: "-.02em",
+      }}>{opp.display}</div>
+      <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: tok.text }}>
+        {opp.name}
+      </div>
+      <div style={{ fontSize: 10, color: tok.text2, lineHeight: 1.45 }}>
+        {opp.detail}
+      </div>
+    </div>
+  );
+}
+
+function ActionRow({ action, isOpen, onToggle }) {
+  return (
+    <>
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        padding: "12px 0",
+        borderBottom: `1px solid ${tok.border}`,
+      }}>
+        <div style={{
+          width: 24, height: 24, borderRadius: 6,
+          background: tok.accentSoft, color: tok.accent,
+          fontWeight: 700, fontSize: 11,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          flexShrink: 0,
+        }}>{action.num}</div>
+        <div style={{ flex: 1, fontSize: 12, fontWeight: 500 }}>{action.text}</div>
+        <div style={{
+          fontSize: 11, color: tok.green, fontWeight: 700,
+          fontFamily: tok.fontDisplay, fontStyle: "italic",
+        }}>{action.impact}</div>
+        <div
+          onClick={onToggle}
+          style={{
+            fontSize: 10, fontWeight: 600, color: tok.atlasDeep,
+            background: tok.atlasSoft,
+            padding: "4px 10px", borderRadius: 5,
+            cursor: "pointer", border: "1px solid #F2D89A",
+            display: "flex", alignItems: "center", gap: 4,
+            transition: "all .2s",
+            userSelect: "none",
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = tok.atlas;
+            e.currentTarget.style.color = "#fff";
+            e.currentTarget.style.borderColor = tok.atlas;
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = tok.atlasSoft;
+            e.currentTarget.style.color = tok.atlasDeep;
+            e.currentTarget.style.borderColor = "#F2D89A";
+          }}
+        >
+          Why? <span style={{
+            display: "inline-block",
+            transform: isOpen ? "rotate(180deg)" : "none",
+            transition: "transform .25s",
+          }}>▾</span>
+        </div>
+      </div>
+
+      {/* Reveal */}
+      {isOpen && (
+        <div style={{ padding: "14px 0 14px 36px", borderBottom: `1px solid ${tok.border}` }}>
+          <div style={atlasCalloutStyle}>
+            <div style={{
+              fontFamily: tok.fontDisplay, fontStyle: "italic", fontWeight: 600,
+              color: tok.atlasDeep, marginBottom: 6,
+              fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em",
+            }}>{action.why?.who || "Atlas · Reasoning"}</div>
+            {action.why?.text}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function OpportunitiesAndActions({ opportunities = [], topActions = [] }) {
+  const [openIdx, setOpenIdx] = useState(null);
+
+  return (
+    <div style={{
+      display: "grid", gridTemplateColumns: "1.5fr 1fr",
+      gap: 14, marginBottom: 18,
+    }}>
+      {/* Left: Recovery Opportunities */}
+      <div style={{
+        background: tok.card, border: `1px solid ${tok.border}`,
+        borderRadius: 12, padding: "18px 20px",
+      }}>
+        <div style={{
+          fontSize: 13, fontWeight: 700, marginBottom: 4,
+          display: "flex", alignItems: "center", gap: 8,
+        }}>Recovery Opportunities</div>
+        <div style={{
+          fontSize: 10, color: tok.green, fontWeight: 500,
+          textTransform: "uppercase", letterSpacing: "0.05em",
+          marginBottom: 14,
+        }}>Potential Impact · Within this quarter</div>
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10,
+        }}>
+          {opportunities.length === 0 ? (
+            <div style={{
+              gridColumn: "1 / -1",
+              padding: "24px 0", textAlign: "center",
+              color: tok.text3, fontSize: 12, fontStyle: "italic",
+            }}>
+              Opportunities populate once the three-pillar engine has run on uploaded data.
+            </div>
+          ) : opportunities.map((o, i) => <Opportunity key={i} opp={o}/>)}
+        </div>
+      </div>
+
+      {/* Right: Top Actions */}
+      <div style={{
+        background: tok.card, border: `1px solid ${tok.border}`,
+        borderRadius: 12, padding: "18px 20px",
+      }}>
+        <div style={{
+          fontSize: 13, fontWeight: 700, marginBottom: 4,
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          Top Actions
+          <span style={{ fontWeight: 500, color: tok.text3, fontSize: 11 }}>(Prioritized)</span>
+        </div>
+        <div style={{
+          fontSize: 10, color: tok.text3, fontWeight: 500,
+          textTransform: "uppercase", letterSpacing: "0.05em",
+          marginBottom: 14,
+        }}>By marginal impact</div>
+
+        {topActions.length === 0 ? (
+          <div style={{
+            padding: "24px 0", color: tok.text3, fontSize: 12, fontStyle: "italic",
+          }}>
+            Actions populate once the optimizer has run.
+          </div>
+        ) : topActions.map((action, i) => (
+          <ActionRow
+            key={i}
+            action={action}
+            isOpen={openIdx === i}
+            onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+/**
+ * BridgeCard — the purple-bordered transition card at the bottom of
+ * each screen that narrates the handoff to the next screen.
+ *
+ * Props:
+ *   - toScreenNum: string ("02")
+ *   - text: short headline that sets up the next screen
+ *   - onClick: navigate to next screen
+ */
+
+
+function BridgeCard({ toScreenNum, text, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        marginTop: 8,
+        padding: "22px 28px",
+        background: `linear-gradient(135deg, #fff, #FAFBFE)`,
+        border: `1px solid ${tok.border}`,
+        borderLeft: `3px solid ${tok.accent}`,
+        borderRadius: 10,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 24, cursor: "pointer", transition: "all .25s",
+        fontFamily: tok.fontUi,
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderLeftColor = tok.accentDeep;
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(124,92,255,.08)";
+        e.currentTarget.style.transform = "translateX(2px)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderLeftColor = tok.accent;
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.transform = "none";
+      }}
+    >
+      <div>
+        <div style={{
+          fontSize: 10, color: tok.accent,
+          textTransform: "uppercase", letterSpacing: "0.2em",
+          fontWeight: 700, marginBottom: 6,
+        }}>Continue · Screen {toScreenNum}</div>
+        <div style={{
+          fontFamily: tok.fontDisplay, fontSize: 17, fontWeight: 500,
+          letterSpacing: "-.01em", lineHeight: 1.3, maxWidth: 560,
+          color: tok.text,
+        }}>{text}</div>
+      </div>
+      <div style={{
+        fontFamily: tok.fontDisplay, fontSize: 28, color: tok.accent,
+        fontStyle: "italic", fontWeight: 500,
+      }}>→</div>
+    </div>
+  );
+}
+
+
+// ─── Bottom-row market-context panels ─────────────────────────────────
+// Replace the imported panelStyle refs with local ones since we have tok
+const panelStyleLocal = panelStyle;
+const panelHeadingStyleLocal = panelHeadingStyle;
+const panelTagStyleLocal = panelTagStyle;
+
+/**
+ * MarketContextPanel
+ *
+ * Renders the left card of Screen 01's bottom row. Shows a demand-trend
+ * area chart over a macro baseline lookback window (default 4 months,
+ * to match the HTML reference's "Last 90 Days" framing).
+ *
+ * Data contract: the `data.demand_trend.points` array from
+ *   GET /api/market-context
+ * Each point: { month: "YYYY-MM", value: number, label: "Mar" }
+ *
+ * Design references:
+ *   - 05-hybrid-executive-summary.html  (bottom-row left card)
+ *   - Build plan v2 §2A.3 (macro baseline feeds Screen 01)
+ *
+ * Intentionally stateless and pure — passes all data in via props so it
+ * drops into either the current app or a fresh Vite rebuild.
+ */
+
+
+const CHART_W = 400;
+const CHART_H = 140;
+const PAD_TOP = 10;
+const PAD_BOTTOM = 18;  // leaves room for month labels
+
+/**
+ * Given an array of { value } points, return an SVG path `d` string for
+ * a line (no fill) going through them, left-to-right.
+ */
+function buildLinePath(points) {
+  if (points.length === 0) return "";
+  const { xs, ys } = mapPoints(points);
+  return xs.map((x, i) => (i === 0 ? `M${x},${ys[i]}` : `L${x},${ys[i]}`)).join(" ");
+}
+
+/**
+ * Area fill version — same line but closed at the bottom of the chart.
+ */
+function buildAreaPath(points) {
+  if (points.length === 0) return "";
+  const { xs, ys } = mapPoints(points);
+  const line = xs.map((x, i) => (i === 0 ? `M${x},${ys[i]}` : `L${x},${ys[i]}`)).join(" ");
+  const lastX = xs[xs.length - 1];
+  const firstX = xs[0];
+  return `${line} L${lastX},${CHART_H} L${firstX},${CHART_H} Z`;
+}
+
+/**
+ * Map the raw values into chart-space coordinates. The y-axis auto-scales
+ * to the data's min/max with a small headroom so the line doesn't kiss
+ * the card edges.
+ */
+function mapPoints(points) {
+  const values = points.map(p => p.value);
+  const minV = Math.min(...values);
+  const maxV = Math.max(...values);
+  const range = maxV - minV || 1;  // avoid /0 when all values equal
+  const headroom = range * 0.15;
+  const yMin = minV - headroom;
+  const yMax = maxV + headroom;
+
+  const innerH = CHART_H - PAD_TOP - PAD_BOTTOM;
+  const xStep = points.length > 1 ? CHART_W / (points.length - 1) : 0;
+
+  const xs = points.map((_, i) => i * xStep);
+  const ys = points.map(p => {
+    const t = (p.value - yMin) / (yMax - yMin);
+    return PAD_TOP + (1 - t) * innerH;
+  });
+  return { xs, ys };
+}
+
+function DemandTrendChart({ points }) {
+  if (!points || points.length === 0) {
+    return (
+      <div style={{
+        height: CHART_H, display: "flex", alignItems: "center",
+        justifyContent: "center", color: tok.text3, fontSize: 12,
+      }}>
+        No macro data available for the selected window.
+      </div>
+    );
+  }
+
+  const { xs, ys } = mapPoints(points);
+  const linePath = buildLinePath(points);
+  const areaPath = buildAreaPath(points);
+
+  return (
+    <div style={{ height: CHART_H, marginTop: 8 }}>
+      <svg
+        viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+        preserveAspectRatio="none"
+        style={{ width: "100%", height: "100%" }}
+      >
+        <defs>
+          <linearGradient id="mc-gradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={tok.accent} stopOpacity="0.25" />
+            <stop offset="100%" stopColor={tok.accent} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill="url(#mc-gradient)" />
+        <path d={linePath} stroke={tok.accent} strokeWidth="2" fill="none" />
+
+        {/* Month labels below the chart */}
+        <g fontSize="9" fill={tok.text3} fontFamily={tok.fontUi}>
+          {points.map((p, i) => (
+            <text
+              key={p.month}
+              x={xs[i]}
+              y={CHART_H - 3}
+              textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"}
+            >
+              {p.label}
+            </text>
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function MarketContextPanel({ data, loading, error }) {
+  if (loading) {
+    return (
+      <div style={panelStyleLocal}>
+        <div style={panelHeadingStyle}>Market Context</div>
+        <div style={panelTagStyle}>Demand Trend</div>
+        <div style={{ height: CHART_H, ...centeredStyle, color: tok.text3 }}>Loading…</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={panelStyleLocal}>
+        <div style={panelHeadingStyle}>Market Context</div>
+        <div style={panelTagStyle}>Demand Trend</div>
+        <div style={{ height: CHART_H, ...centeredStyle, color: tok.red, fontSize: 12 }}>
+          {String(error)}
+        </div>
+      </div>
+    );
+  }
+
+  const points = data?.demand_trend?.points ?? [];
+  const lookback = data?.demand_trend?.lookback_months;
+  const tag = lookback
+    ? `Demand trend — last ${lookback} months`
+    : "Demand trend";
+
+  return (
+    <div style={panelStyleLocal}>
+      <div style={panelHeadingStyle}>Market Context</div>
+      <div style={panelTagStyle}>{tag}</div>
+      <DemandTrendChart points={points} />
+    </div>
+  );
+}
+
+const centeredStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+
+/**
+ * UpcomingPeakWindowsPanel
+ *
+ * Renders the right card of Screen 01's bottom row. Lists upcoming
+ * festivals + public holidays with an impact badge, sourced from the
+ * centrally-curated macro baseline.
+ *
+ * Data contract: the `data.upcoming_peaks` array from
+ *   GET /api/market-context
+ * Each peak: { start_date, end_date, name, kind, significance,
+ *              significance_score, regions, notes, days_away }
+ *
+ * Design references:
+ *   - 05-hybrid-executive-summary.html  (bottom-row right card)
+ */
+
+
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * Format a date range like the HTML reference:
+ *   "Jun 14 – Jun 28"   for multi-day
+ *   "Aug 15"            for single-day
+ * Inputs are ISO strings from the API.
+ */
+function formatDateRange(startISO, endISO) {
+  const s = new Date(startISO);
+  const e = new Date(endISO);
+  const startStr = `${SHORT_MONTHS[s.getUTCMonth()]} ${s.getUTCDate()}`;
+  if (startISO === endISO) return startStr;
+  const endStr = `${SHORT_MONTHS[e.getUTCMonth()]} ${e.getUTCDate()}`;
+  return `${startStr} – ${endStr}`;
+}
+
+/** Map significance display string to a badge style (red-soft / amber-soft). */
+function badgeStyleFor(significance) {
+  if (significance === "High") {
+    return { background: tok.redSoft, color: "#B91C1C" };
+  }
+  if (significance === "Medium") {
+    return { background: tok.amberSoft, color: "#92400E" };
+  }
+  return { background: tok.bg, color: tok.text3 };
+}
+
+function PeakRow({ peak, isLast }) {
+  const range = formatDateRange(peak.start_date, peak.end_date);
+  const badge = badgeStyleFor(peak.significance);
+
+  return (
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "10px 0",
+      borderBottom: isLast ? "none" : `1px solid ${tok.border}`,
+      fontSize: 12,
+    }}>
+      <div>
+        <div style={{ fontWeight: 600 }}>{range}</div>
+        <div style={{ color: tok.text2, fontSize: 11, marginTop: 2 }}>
+          {peak.name}
+        </div>
+      </div>
+      <span style={{
+        padding: "2px 8px",
+        borderRadius: 4,
+        fontSize: 10,
+        fontWeight: 600,
+        ...badge,
+      }}>
+        {peak.significance}
+      </span>
+    </div>
+  );
+}
+
+function UpcomingPeakWindowsPanel({ data, loading, error }) {
+  if (loading) {
+    return (
+      <div style={panelStyle}>
+        <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+        <div style={panelTagStyle}>Plan ahead</div>
+        <div style={{ color: tok.text3, padding: "20px 0", fontSize: 12 }}>Loading…</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={panelStyle}>
+        <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+        <div style={panelTagStyle}>Plan ahead</div>
+        <div style={{ color: tok.red, padding: "20px 0", fontSize: 12 }}>{String(error)}</div>
+      </div>
+    );
+  }
+
+  const peaks = data?.upcoming_peaks ?? [];
+
+  if (peaks.length === 0) {
+    return (
+      <div style={panelStyle}>
+        <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+        <div style={panelTagStyle}>Plan ahead</div>
+        <div style={{
+          color: tok.text3,
+          padding: "24px 0",
+          fontSize: 12,
+          fontStyle: "italic",
+        }}>
+          No peak windows in the lookahead range. Macro baseline is
+          sparse during this period — expand the window or check back
+          closer to festival season.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={panelStyle}>
+      <div style={panelHeadingStyle}>Upcoming Peak Windows</div>
+      <div style={panelTagStyle}>Plan ahead</div>
+      {peaks.map((peak, i) => (
+        <PeakRow
+          key={`${peak.name}-${peak.start_date}`}
+          peak={peak}
+          isLast={i === peaks.length - 1}
+        />
+      ))}
+    </div>
+  );
+}
+
+
+// ─── App composition ──────────────────────────────────────────────────
+function App() {
+  const [atlasCollapsed, setAtlasCollapsed] = React.useState(false);
+
+  const mcState = { data: SAMPLE_MC, loading: false, error: null };
+
+  const mainContent = (<>
+    <TopBar
+      number="01"
+      title="Executive Summary"
+      subtitle="Decision Command Center"
+      right={<>
+        <Pill>May 1 – May 31, 2024 ▾</Pill>
+        <Pill>⇪ Share</Pill>
+      </>}
+    />
+    <HeroInsight
+      eyebrow={SAMPLE_EXEC.hero.eyebrow}
+      headline={SAMPLE_EXEC.hero.headline}
+      sub={SAMPLE_EXEC.hero.sub}
+      cta={SAMPLE_EXEC.hero.cta}
+    />
+    {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE_EXEC.atlas}/>}
+    <KpiStrip kpis={SAMPLE_EXEC.kpis}/>
+    <PillarsPanel data={SAMPLE_EXEC.pillars}/>
+    <OpportunitiesAndActions
+      opportunities={SAMPLE_EXEC.opportunities}
+      topActions={SAMPLE_EXEC.top_actions}
+    />
+    <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:14,marginBottom:18}}>
+      <MarketContextPanel {...mcState}/>
+      <UpcomingPeakWindowsPanel {...mcState}/>
+    </div>
+    <BridgeCard
+      toScreenNum="02"
+      text="Before we tell you how — let's check whether the data underneath this is trustworthy."
+    />
+  </>);
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh", background: tok.bg, color: tok.text,
+      fontFamily: tok.fontUi, fontSize: 13, lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+    }}>
+      <Sidebar
+        activeScreen={1}
+        clientName="Acme Consumer Co."
+        clientPeriod="Quarterly review · Q2 2024"
+      />
+      <main style={{padding:"28px 36px 80px"}}>{mainContent}</main>
+      <AtlasRail
+        narration={SAMPLE_EXEC.atlas}
+        collapsed={atlasCollapsed}
+        onToggle={() => setAtlasCollapsed(c => !c)}
+      />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

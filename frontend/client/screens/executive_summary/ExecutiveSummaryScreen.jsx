@@ -113,18 +113,19 @@ export function ExecutiveSummaryBody({
  */
 export default function ExecutiveSummaryScreen({
   apiBase = "",
+  engagementId = "default",
   marketContextProps = {},
   atlasInline = false,
   onNavigateToScreen,
 }) {
-  const { data, loading, error } = useExecutiveSummary({ apiBase });
+  const { data, loading, error } = useExecutiveSummary({ apiBase, engagementId });
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
   return (
     <ExecutiveSummaryBody
       data={data}
-      marketContextProps={{ apiBase, ...marketContextProps }}
+      marketContextProps={{ apiBase, engagementId, ...marketContextProps }}
       atlasInline={atlasInline}
       onNavigateToScreen={onNavigateToScreen}
     />

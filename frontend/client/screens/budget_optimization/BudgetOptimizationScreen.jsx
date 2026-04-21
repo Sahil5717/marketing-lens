@@ -108,10 +108,11 @@ export function BudgetOptimizationBody({
 
 export default function BudgetOptimizationScreen({
   apiBase = "",
+  engagementId = "default",
   atlasInline = false,
   onNavigateToScreen,
 }) {
-  const { data, loading, error, scoreOverride } = useBudgetOptimization({ apiBase });
+  const { data, loading, error, scoreOverride } = useBudgetOptimization({ apiBase, engagementId });
 
   if (loading) return <LoadingState/>;
   if (error) return <ErrorState error={error}/>;

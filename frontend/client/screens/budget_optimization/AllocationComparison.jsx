@@ -15,6 +15,23 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { tok } from "../../design/tokens.js";
 import Donut from "./Donut.jsx";
 
+/**
+ * Parse the backend's display_amount string like "$24.6M" / "₹24.6 Cr" /
+ * "€12.4M" / "£582" into { value, scale, unitSuffix, symbol }.
+ * We use the scale + unit from the recommended total so all edit inputs
+ * share the same scale (no mixed M and K in the same edit column).
+ */
+function parseScale(displayAmount) {
+  if (!displayAmount) return { divisor: 1, unitSuffix: "", symbol: "" };
+  const m = /^[+\u2212]?([$€£₹])[\d,]+(?:\.\d+)?\s*(B|M|K|Cr|L)?/.exec(displayAmount);
+  if (!m) return { divisor: 1, unitSuffix: "", symbol: "" };
+  const [, symbol, unit] = m;
+  const map = { B: 1e9, M: 1e6, K: 1e3, Cr: 1e7, L: 1e5 };
+  const divisor = map[unit] || 1;
+  const unitSuffix = unit ? (unit === "Cr" ? "Cr" : unit === "L" ? "L" : unit) : "";
+  return { divisor, unitSuffix, symbol };
+}
+
 function LegendRow({ slice, showDelta }) {
   const direction = slice.direction;
   const color = direction === "up" ? tok.green
@@ -107,7 +124,7 @@ function EarnedRevealCTA({ onReveal }) {
         letterSpacing: "-.01em", lineHeight: 1.35,
         maxWidth: 260, color: tok.text,
       }}>
-        Show me <em>how Atlas would reallocate</em> these rupees
+        Show me <em>how Atlas would reallocate</em> this budget
       </div>
       <div className="reveal-arrow" style={{
         width: 42, height: 42, borderRadius: "50%",
@@ -148,8 +165,11 @@ function RecommendedSide({
           )}
 
           {editing && recommended.map((s, i) => {
-            const atlasCr = s.amount / 1e7;
-            const value = userValues[s.channel] ?? atlasCr;
+            // Use the same scale as the backend's display_amount so
+            // "24.6 M" stays in scale with "$24.6M" shown by the backend.
+            const { divisor, unitSuffix, symbol } = parseScale(s.display_amount);
+            const atlasScaled = s.amount / divisor;
+            const value = userValues[s.channel] ?? +atlasScaled.toFixed(1);
             return (
               <div key={i} style={{
                 display: "flex", alignItems: "center", gap: 10,
@@ -162,22 +182,32 @@ function RecommendedSide({
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 12, fontWeight: 500 }}>{s.channel}</div>
                   <div style={{ fontSize: 10, color: tok.text3 }}>
-                    Atlas: ₹{atlasCr.toFixed(1)} Cr
+                    Atlas: {s.display_amount}
                   </div>
                 </div>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={value}
-                  onChange={e => onUserChange(s.channel, parseFloat(e.target.value))}
-                  style={{
-                    width: 80, padding: "6px 8px",
-                    border: `1px solid ${tok.border}`, borderRadius: 6,
-                    fontFamily: "inherit", fontSize: 12,
-                    textAlign: "right",
-                  }}
-                />
-                <span style={{ fontSize: 11, color: tok.text3 }}>Cr</span>
+                <div style={{
+                  display: "flex", alignItems: "center",
+                  border: `1px solid ${tok.border}`, borderRadius: 6,
+                  overflow: "hidden",
+                }}>
+                  <span style={{
+                    padding: "6px 8px", background: tok.panelSoft,
+                    color: tok.text3, fontSize: 11, fontWeight: 600,
+                  }}>{symbol}</span>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={value}
+                    onChange={e => onUserChange(s.channel, parseFloat(e.target.value) * divisor)}
+                    style={{
+                      width: 70, padding: "6px 8px",
+                      border: "none",
+                      fontFamily: "inherit", fontSize: 12,
+                      textAlign: "right", outline: "none",
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: 11, color: tok.text3 }}>{unitSuffix}</span>
               </div>
             );
           })}
@@ -187,9 +217,13 @@ function RecommendedSide({
   );
 }
 
-function EditTotalBar({ userTotal, budgetTotal }) {
-  const diff = Math.abs(userTotal - budgetTotal);
-  const matches = diff < 0.15;
+function EditTotalBar({ userTotal, budgetTotal, totalDisplay }) {
+  // Tolerance: 0.1% of budget — matches the backend's "big shift" cutoff
+  const tolerance = Math.max(budgetTotal * 0.001, 1);
+  const matches = Math.abs(userTotal - budgetTotal) < tolerance;
+  // Scale derived from the backend's formatted total, so user + budget
+  // render with the same suffix (e.g. both in M for USD, both in Cr for INR).
+  const { divisor, unitSuffix, symbol } = parseScale(totalDisplay);
   return (
     <div style={{
       display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -204,8 +238,10 @@ function EditTotalBar({ userTotal, budgetTotal }) {
         <span style={{
           fontWeight: 700,
           color: matches ? tok.greenDeep : tok.redDeep,
-        }}>₹{userTotal.toFixed(1)} Cr</span>
-        <span style={{ color: tok.text3 }}> / ₹{budgetTotal.toFixed(1)} Cr budget</span>
+        }}>{symbol}{(userTotal / divisor).toFixed(1)}{unitSuffix}</span>
+        <span style={{ color: tok.text3 }}>
+          {" "}/ {symbol}{(budgetTotal / divisor).toFixed(1)}{unitSuffix} budget
+        </span>
       </span>
     </div>
   );
@@ -259,12 +295,12 @@ export default function AllocationComparison({
   const [userValues, setUserValues] = useState({});
   const [scoreResult, setScoreResult] = useState(null);
 
-  // Initialize user values from Atlas recommendation
+  // Initialize user values from Atlas recommendation (in native currency units)
   useEffect(() => {
     if (revealed && allocation?.recommended) {
       const init = {};
       allocation.recommended.forEach(s => {
-        init[s.channel] = +(s.amount / 1e7).toFixed(1);
+        init[s.channel] = s.amount;
       });
       setUserValues(init);
     }
@@ -274,7 +310,8 @@ export default function AllocationComparison({
     () => Object.values(userValues).reduce((a, b) => a + (b || 0), 0),
     [userValues]
   );
-  const budgetTotal = (allocation?.total_budget ?? 0) / 1e7;
+  // Budget total in native currency units
+  const budgetTotal = allocation?.total_budget ?? 0;
 
   // When editing, fetch override score after debounce
   useEffect(() => {
@@ -293,7 +330,7 @@ export default function AllocationComparison({
     if (!allocation?.recommended) return;
     const init = {};
     allocation.recommended.forEach(s => {
-      init[s.channel] = +(s.amount / 1e7).toFixed(1);
+      init[s.channel] = s.amount;
     });
     setUserValues(init);
     setScoreResult(null);
@@ -344,7 +381,11 @@ export default function AllocationComparison({
       {/* Edit-mode extras */}
       {editing && (
         <>
-          <EditTotalBar userTotal={userTotal} budgetTotal={budgetTotal}/>
+          <EditTotalBar
+            userTotal={userTotal}
+            budgetTotal={budgetTotal}
+            totalDisplay={allocation.total_budget_display}
+          />
           <AtlasPushback pushback={scoreResult?.pushback}/>
         </>
       )}

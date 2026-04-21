@@ -11,7 +11,7 @@
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useMemo, useRef, useCallback, Fragment } = React;
 
-const SAMPLE = {"kpis": [{"label": "Total Spend", "value": "₹68.5 Cr", "delta": "▲ 8.7% vs prior"}, {"label": "Revenue", "value": "₹248 Cr", "delta": "▲ 12.4% vs prior"}, {"label": "ROI", "value": "3.62x", "delta": "▲ 0.46 vs prior"}, {"label": "Conversions", "value": "214K", "delta": "▲ 9.2% vs prior"}, {"label": "CAC", "value": "₹3,201", "delta": "▼ 6.3% vs prior"}], "summary": [{"channel": "Search", "color": "#7C5CFF", "spend": 246000000, "spend_display": "₹24.6 Cr", "revenue": 1208000000, "revenue_display": "₹121 Cr", "roi": 4.91, "roi_display": "4.91x", "conversions": 98300, "conversions_display": "98K", "trend_pct": 12.0, "trend_direction": "up"}, {"channel": "Meta Ads", "color": "#3B82F6", "spend": 182000000, "spend_display": "₹18.2 Cr", "revenue": 754000000, "revenue_display": "₹75.4 Cr", "roi": 4.14, "roi_display": "4.14x", "conversions": 63100, "conversions_display": "63K", "trend_pct": 4.2, "trend_direction": "up"}, {"channel": "LinkedIn", "color": "#10B981", "spend": 96000000, "spend_display": "₹9.6 Cr", "revenue": 224000000, "revenue_display": "₹22.4 Cr", "roi": 2.33, "roi_display": "2.33x", "conversions": 18200, "conversions_display": "18K", "trend_pct": 18.6, "trend_direction": "up"}, {"channel": "YouTube", "color": "#EF4444", "spend": 55000000, "spend_display": "₹5.5 Cr", "revenue": 112000000, "revenue_display": "₹11.2 Cr", "roi": 2.04, "roi_display": "2.04x", "conversions": 9900, "conversions_display": "10K", "trend_pct": 3.1, "trend_direction": "up"}, {"channel": "Display", "color": "#F59E0B", "spend": 68000000, "spend_display": "₹6.8 Cr", "revenue": 110000000, "revenue_display": "₹11.0 Cr", "roi": 1.62, "roi_display": "1.62x", "conversions": 16800, "conversions_display": "17K", "trend_pct": -7.3, "trend_direction": "down"}, {"channel": "Others", "color": "#8C92AC", "spend": 38000000, "spend_display": "₹3.8 Cr", "revenue": 72000000, "revenue_display": "₹7.2 Cr", "roi": 1.89, "roi_display": "1.89x", "conversions": 7700, "conversions_display": "8K", "trend_pct": -2.4, "trend_direction": "down"}], "contribution": {"total": 2480000000, "total_display": "₹248 Cr", "slices": [{"channel": "Search", "color": "#7C5CFF", "percentage": 48.7, "revenue": 1208000000, "revenue_display": "₹121 Cr"}, {"channel": "Meta Ads", "color": "#3B82F6", "percentage": 30.4, "revenue": 754000000, "revenue_display": "₹75.4 Cr"}, {"channel": "LinkedIn", "color": "#10B981", "percentage": 9.0, "revenue": 224000000, "revenue_display": "₹22.4 Cr"}, {"channel": "YouTube", "color": "#EF4444", "percentage": 4.5, "revenue": 112000000, "revenue_display": "₹11.2 Cr"}, {"channel": "Display", "color": "#F59E0B", "percentage": 4.4, "revenue": 110000000, "revenue_display": "₹11.0 Cr"}, {"channel": "Others", "color": "#8C92AC", "percentage": 2.9, "revenue": 72000000, "revenue_display": "₹7.2 Cr"}]}, "top_insight": {"headline": "Search and Meta Ads together contribute 79.1% of total revenue.", "detail": "Concentration risk is high — a meaningful shock to either channel would be felt portfolio-wide."}, "channel_shift": {"lookback_months": 24, "source": "synthetic_from_snapshot", "series": [{"channel": "Search", "color": "#7C5CFF", "points": [{"month": "2024-05", "percentage": 34.9}, {"month": "2024-06", "percentage": 35.7}, {"month": "2024-07", "percentage": 35.6}, {"month": "2024-08", "percentage": 35.0}, {"month": "2024-09", "percentage": 34.4}, {"month": "2024-10", "percentage": 34.6}, {"month": "2024-11", "percentage": 35.2}, {"month": "2024-12", "percentage": 35.9}, {"month": "2025-01", "percentage": 35.9}, {"month": "2025-02", "percentage": 35.3}, {"month": "2025-03", "percentage": 34.7}, {"month": "2025-04", "percentage": 34.8}, {"month": "2025-05", "percentage": 35.4}, {"month": "2025-06", "percentage": 36.2}, {"month": "2025-07", "percentage": 36.2}, {"month": "2025-08", "percentage": 35.5}, {"month": "2025-09", "percentage": 34.9}, {"month": "2025-10", "percentage": 35.1}, {"month": "2025-11", "percentage": 35.8}, {"month": "2025-12", "percentage": 36.4}, {"month": "2026-01", "percentage": 36.4}, {"month": "2026-02", "percentage": 35.8}, {"month": "2026-03", "percentage": 35.2}, {"month": "2026-04", "percentage": 35.3}]}, {"channel": "Meta Ads", "color": "#3B82F6", "points": [{"month": "2024-05", "percentage": 26.7}, {"month": "2024-06", "percentage": 26.5}, {"month": "2024-07", "percentage": 25.8}, {"month": "2024-08", "percentage": 25.2}, {"month": "2024-09", "percentage": 25.3}, {"month": "2024-10", "percentage": 26.1}, {"month": "2024-11", "percentage": 26.8}, {"month": "2024-12", "percentage": 26.8}, {"month": "2025-01", "percentage": 26.0}, {"month": "2025-02", "percentage": 25.4}, {"month": "2025-03", "percentage": 25.5}, {"month": "2025-04", "percentage": 26.3}, {"month": "2025-05", "percentage": 27.0}, {"month": "2025-06", "percentage": 26.9}, {"month": "2025-07", "percentage": 26.2}, {"month": "2025-08", "percentage": 25.6}, {"month": "2025-09", "percentage": 25.7}, {"month": "2025-10", "percentage": 26.5}, {"month": "2025-11", "percentage": 27.2}, {"month": "2025-12", "percentage": 27.1}, {"month": "2026-01", "percentage": 26.3}, {"month": "2026-02", "percentage": 25.8}, {"month": "2026-03", "percentage": 25.9}, {"month": "2026-04", "percentage": 26.7}]}, {"channel": "LinkedIn", "color": "#10B981", "points": [{"month": "2024-05", "percentage": 15.3}, {"month": "2024-06", "percentage": 14.5}, {"month": "2024-07", "percentage": 13.8}, {"month": "2024-08", "percentage": 13.8}, {"month": "2024-09", "percentage": 14.7}, {"month": "2024-10", "percentage": 15.3}, {"month": "2024-11", "percentage": 15.2}, {"month": "2024-12", "percentage": 14.3}, {"month": "2025-01", "percentage": 13.7}, {"month": "2025-02", "percentage": 13.7}, {"month": "2025-03", "percentage": 14.5}, {"month": "2025-04", "percentage": 15.2}, {"month": "2025-05", "percentage": 15.0}, {"month": "2025-06", "percentage": 14.2}, {"month": "2025-07", "percentage": 13.4}, {"month": "2025-08", "percentage": 13.5}, {"month": "2025-09", "percentage": 14.3}, {"month": "2025-10", "percentage": 14.9}, {"month": "2025-11", "percentage": 14.8}, {"month": "2025-12", "percentage": 14.0}, {"month": "2026-01", "percentage": 13.4}, {"month": "2026-02", "percentage": 13.4}, {"month": "2026-03", "percentage": 14.2}, {"month": "2026-04", "percentage": 14.7}]}, {"channel": "YouTube", "color": "#EF4444", "points": [{"month": "2024-05", "percentage": 8.3}, {"month": "2024-06", "percentage": 7.6}, {"month": "2024-07", "percentage": 7.7}, {"month": "2024-08", "percentage": 8.5}, {"month": "2024-09", "percentage": 9.1}, {"month": "2024-10", "percentage": 9.0}, {"month": "2024-11", "percentage": 8.1}, {"month": "2024-12", "percentage": 7.5}, {"month": "2025-01", "percentage": 7.7}, {"month": "2025-02", "percentage": 8.4}, {"month": "2025-03", "percentage": 9.0}, {"month": "2025-04", "percentage": 8.9}, {"month": "2025-05", "percentage": 8.1}, {"month": "2025-06", "percentage": 7.4}, {"month": "2025-07", "percentage": 7.5}, {"month": "2025-08", "percentage": 8.2}, {"month": "2025-09", "percentage": 9.0}, {"month": "2025-10", "percentage": 8.7}, {"month": "2025-11", "percentage": 8.0}, {"month": "2025-12", "percentage": 7.4}, {"month": "2026-01", "percentage": 7.4}, {"month": "2026-02", "percentage": 8.1}, {"month": "2026-03", "percentage": 8.8}, {"month": "2026-04", "percentage": 8.7}]}, {"channel": "Display", "color": "#F59E0B", "points": [{"month": "2024-05", "percentage": 9.6}, {"month": "2024-06", "percentage": 9.7}, {"month": "2024-07", "percentage": 10.5}, {"month": "2024-08", "percentage": 11.1}, {"month": "2024-09", "percentage": 10.9}, {"month": "2024-10", "percentage": 10.2}, {"month": "2024-11", "percentage": 9.5}, {"month": "2024-12", "percentage": 9.6}, {"month": "2025-01", "percentage": 10.3}, {"month": "2025-02", "percentage": 10.9}, {"month": "2025-03", "percentage": 10.8}, {"month": "2025-04", "percentage": 10.0}, {"month": "2025-05", "percentage": 9.3}, {"month": "2025-06", "percentage": 9.5}, {"month": "2025-07", "percentage": 10.3}, {"month": "2025-08", "percentage": 10.9}, {"month": "2025-09", "percentage": 10.7}, {"month": "2025-10", "percentage": 9.9}, {"month": "2025-11", "percentage": 9.2}, {"month": "2025-12", "percentage": 9.4}, {"month": "2026-01", "percentage": 10.2}, {"month": "2026-02", "percentage": 10.7}, {"month": "2026-03", "percentage": 10.5}, {"month": "2026-04", "percentage": 9.8}]}, {"channel": "Others", "color": "#8C92AC", "points": [{"month": "2024-05", "percentage": 5.2}, {"month": "2024-06", "percentage": 6.0}, {"month": "2024-07", "percentage": 6.6}, {"month": "2024-08", "percentage": 6.4}, {"month": "2024-09", "percentage": 5.6}, {"month": "2024-10", "percentage": 4.9}, {"month": "2024-11", "percentage": 5.1}, {"month": "2024-12", "percentage": 5.9}, {"month": "2025-01", "percentage": 6.5}, {"month": "2025-02", "percentage": 6.3}, {"month": "2025-03", "percentage": 5.5}, {"month": "2025-04", "percentage": 4.9}, {"month": "2025-05", "percentage": 5.1}, {"month": "2025-06", "percentage": 5.8}, {"month": "2025-07", "percentage": 6.4}, {"month": "2025-08", "percentage": 6.2}, {"month": "2025-09", "percentage": 5.4}, {"month": "2025-10", "percentage": 4.9}, {"month": "2025-11", "percentage": 5.1}, {"month": "2025-12", "percentage": 5.7}, {"month": "2026-01", "percentage": 6.3}, {"month": "2026-02", "percentage": 6.1}, {"month": "2026-03", "percentage": 5.3}, {"month": "2026-04", "percentage": 4.8}]}], "overlay_events": [{"month": "2024-09", "name": "Onam", "kind": "festival"}, {"month": "2024-10", "name": "Navratri", "kind": "festival"}, {"month": "2024-10", "name": "Durga Puja", "kind": "festival"}, {"month": "2024-10", "name": "Diwali", "kind": "festival"}, {"month": "2025-03", "name": "Eid al-Fitr", "kind": "festival"}, {"month": "2025-09", "name": "Onam", "kind": "festival"}, {"month": "2025-09", "name": "Navratri", "kind": "festival"}, {"month": "2025-09", "name": "Durga Puja", "kind": "festival"}, {"month": "2025-10", "name": "Diwali", "kind": "festival"}, {"month": "2026-03", "name": "Eid al-Fitr", "kind": "festival"}]}, "atlas": {"paragraphs": [{"text": "Search is your revenue engine — ₹121 Cr at a 4.91x ROI. Second place is roughly 30% of revenue if you have two or more channels."}, {"text": "Concentration is the risk. Top two channels account for 79% of revenue — worth noting before the next planning cycle."}, {"text": "The Channel Shift panel is extrapolated from the current snapshot — upload 12+ months of history for a real trend read."}], "suggested_questions": ["What drove the Q2 shift away from Others?", "Is Search saturating?", "Which channel has the widest ROI variance month-to-month?", "Where is the concentration risk most acute?"], "source": "channel_performance_template"}, "has_data": true};
+const SAMPLE = {"engagement": {"id": "default", "name": "Default Engagement", "currency": "USD", "locale": "en-US", "created_at": 1776784929.0, "updated_at": 1776784929.0}, "kpis": [{"label": "Total Spend", "value": "$68.5M", "delta": "▲ 8.7% vs prior"}, {"label": "Revenue", "value": "$248M", "delta": "▲ 12.4% vs prior"}, {"label": "ROI", "value": "3.62x", "delta": "▲ 0.46 vs prior"}, {"label": "Conversions", "value": "214K", "delta": "▲ 9.2% vs prior"}, {"label": "CAC", "value": "$320", "delta": "▼ 6.3% vs prior"}], "summary": [{"channel": "Search", "color": "#7C5CFF", "spend": 24600000, "spend_display": "$24.6M", "revenue": 120800000, "revenue_display": "$121M", "roi": 4.91, "roi_display": "4.91x", "conversions": 98300, "conversions_display": "98K", "trend_pct": 12.0, "trend_direction": "up"}, {"channel": "Meta Ads", "color": "#3B82F6", "spend": 18200000, "spend_display": "$18.2M", "revenue": 75400000, "revenue_display": "$75.4M", "roi": 4.14, "roi_display": "4.14x", "conversions": 63100, "conversions_display": "63K", "trend_pct": 4.2, "trend_direction": "up"}, {"channel": "LinkedIn", "color": "#10B981", "spend": 9600000, "spend_display": "$9.6M", "revenue": 22400000, "revenue_display": "$22.4M", "roi": 2.33, "roi_display": "2.33x", "conversions": 18200, "conversions_display": "18K", "trend_pct": 18.6, "trend_direction": "up"}, {"channel": "YouTube", "color": "#EF4444", "spend": 5500000, "spend_display": "$5.5M", "revenue": 11200000, "revenue_display": "$11.2M", "roi": 2.04, "roi_display": "2.04x", "conversions": 9900, "conversions_display": "10K", "trend_pct": 3.1, "trend_direction": "up"}, {"channel": "Display", "color": "#F59E0B", "spend": 6800000, "spend_display": "$6.8M", "revenue": 11000000, "revenue_display": "$11.0M", "roi": 1.62, "roi_display": "1.62x", "conversions": 16800, "conversions_display": "17K", "trend_pct": -7.3, "trend_direction": "down"}, {"channel": "Others", "color": "#8C92AC", "spend": 3800000, "spend_display": "$3.8M", "revenue": 7200000, "revenue_display": "$7.2M", "roi": 1.89, "roi_display": "1.89x", "conversions": 7700, "conversions_display": "8K", "trend_pct": -2.4, "trend_direction": "down"}], "contribution": {"total": 248000000, "total_display": "$248M", "slices": [{"channel": "Search", "color": "#7C5CFF", "percentage": 48.7, "revenue": 120800000, "revenue_display": "$121M"}, {"channel": "Meta Ads", "color": "#3B82F6", "percentage": 30.4, "revenue": 75400000, "revenue_display": "$75.4M"}, {"channel": "LinkedIn", "color": "#10B981", "percentage": 9.0, "revenue": 22400000, "revenue_display": "$22.4M"}, {"channel": "YouTube", "color": "#EF4444", "percentage": 4.5, "revenue": 11200000, "revenue_display": "$11.2M"}, {"channel": "Display", "color": "#F59E0B", "percentage": 4.4, "revenue": 11000000, "revenue_display": "$11.0M"}, {"channel": "Others", "color": "#8C92AC", "percentage": 2.9, "revenue": 7200000, "revenue_display": "$7.2M"}]}, "top_insight": {"headline": "Search and Meta Ads together contribute 79.1% of total revenue.", "detail": "Concentration risk is high — a meaningful shock to either channel would be felt portfolio-wide."}, "channel_shift": {"lookback_months": 24, "source": "synthetic_from_snapshot", "series": [{"channel": "Search", "color": "#7C5CFF", "points": [{"month": "2024-05", "percentage": 34.9}, {"month": "2024-06", "percentage": 35.7}, {"month": "2024-07", "percentage": 35.6}, {"month": "2024-08", "percentage": 35.0}, {"month": "2024-09", "percentage": 34.4}, {"month": "2024-10", "percentage": 34.6}, {"month": "2024-11", "percentage": 35.2}, {"month": "2024-12", "percentage": 35.9}, {"month": "2025-01", "percentage": 35.9}, {"month": "2025-02", "percentage": 35.3}, {"month": "2025-03", "percentage": 34.7}, {"month": "2025-04", "percentage": 34.8}, {"month": "2025-05", "percentage": 35.4}, {"month": "2025-06", "percentage": 36.2}, {"month": "2025-07", "percentage": 36.2}, {"month": "2025-08", "percentage": 35.5}, {"month": "2025-09", "percentage": 34.9}, {"month": "2025-10", "percentage": 35.1}, {"month": "2025-11", "percentage": 35.8}, {"month": "2025-12", "percentage": 36.4}, {"month": "2026-01", "percentage": 36.4}, {"month": "2026-02", "percentage": 35.8}, {"month": "2026-03", "percentage": 35.2}, {"month": "2026-04", "percentage": 35.3}]}, {"channel": "Meta Ads", "color": "#3B82F6", "points": [{"month": "2024-05", "percentage": 26.7}, {"month": "2024-06", "percentage": 26.5}, {"month": "2024-07", "percentage": 25.8}, {"month": "2024-08", "percentage": 25.2}, {"month": "2024-09", "percentage": 25.3}, {"month": "2024-10", "percentage": 26.1}, {"month": "2024-11", "percentage": 26.8}, {"month": "2024-12", "percentage": 26.8}, {"month": "2025-01", "percentage": 26.0}, {"month": "2025-02", "percentage": 25.4}, {"month": "2025-03", "percentage": 25.5}, {"month": "2025-04", "percentage": 26.3}, {"month": "2025-05", "percentage": 27.0}, {"month": "2025-06", "percentage": 26.9}, {"month": "2025-07", "percentage": 26.2}, {"month": "2025-08", "percentage": 25.6}, {"month": "2025-09", "percentage": 25.7}, {"month": "2025-10", "percentage": 26.5}, {"month": "2025-11", "percentage": 27.2}, {"month": "2025-12", "percentage": 27.1}, {"month": "2026-01", "percentage": 26.3}, {"month": "2026-02", "percentage": 25.8}, {"month": "2026-03", "percentage": 25.9}, {"month": "2026-04", "percentage": 26.7}]}, {"channel": "LinkedIn", "color": "#10B981", "points": [{"month": "2024-05", "percentage": 15.3}, {"month": "2024-06", "percentage": 14.5}, {"month": "2024-07", "percentage": 13.8}, {"month": "2024-08", "percentage": 13.8}, {"month": "2024-09", "percentage": 14.7}, {"month": "2024-10", "percentage": 15.3}, {"month": "2024-11", "percentage": 15.2}, {"month": "2024-12", "percentage": 14.3}, {"month": "2025-01", "percentage": 13.7}, {"month": "2025-02", "percentage": 13.7}, {"month": "2025-03", "percentage": 14.5}, {"month": "2025-04", "percentage": 15.2}, {"month": "2025-05", "percentage": 15.0}, {"month": "2025-06", "percentage": 14.2}, {"month": "2025-07", "percentage": 13.4}, {"month": "2025-08", "percentage": 13.5}, {"month": "2025-09", "percentage": 14.3}, {"month": "2025-10", "percentage": 14.9}, {"month": "2025-11", "percentage": 14.8}, {"month": "2025-12", "percentage": 14.0}, {"month": "2026-01", "percentage": 13.4}, {"month": "2026-02", "percentage": 13.4}, {"month": "2026-03", "percentage": 14.2}, {"month": "2026-04", "percentage": 14.7}]}, {"channel": "YouTube", "color": "#EF4444", "points": [{"month": "2024-05", "percentage": 8.3}, {"month": "2024-06", "percentage": 7.6}, {"month": "2024-07", "percentage": 7.7}, {"month": "2024-08", "percentage": 8.5}, {"month": "2024-09", "percentage": 9.1}, {"month": "2024-10", "percentage": 9.0}, {"month": "2024-11", "percentage": 8.1}, {"month": "2024-12", "percentage": 7.5}, {"month": "2025-01", "percentage": 7.7}, {"month": "2025-02", "percentage": 8.4}, {"month": "2025-03", "percentage": 9.0}, {"month": "2025-04", "percentage": 8.9}, {"month": "2025-05", "percentage": 8.1}, {"month": "2025-06", "percentage": 7.4}, {"month": "2025-07", "percentage": 7.5}, {"month": "2025-08", "percentage": 8.2}, {"month": "2025-09", "percentage": 9.0}, {"month": "2025-10", "percentage": 8.7}, {"month": "2025-11", "percentage": 8.0}, {"month": "2025-12", "percentage": 7.4}, {"month": "2026-01", "percentage": 7.4}, {"month": "2026-02", "percentage": 8.1}, {"month": "2026-03", "percentage": 8.8}, {"month": "2026-04", "percentage": 8.7}]}, {"channel": "Display", "color": "#F59E0B", "points": [{"month": "2024-05", "percentage": 9.6}, {"month": "2024-06", "percentage": 9.7}, {"month": "2024-07", "percentage": 10.5}, {"month": "2024-08", "percentage": 11.1}, {"month": "2024-09", "percentage": 10.9}, {"month": "2024-10", "percentage": 10.2}, {"month": "2024-11", "percentage": 9.5}, {"month": "2024-12", "percentage": 9.6}, {"month": "2025-01", "percentage": 10.3}, {"month": "2025-02", "percentage": 10.9}, {"month": "2025-03", "percentage": 10.8}, {"month": "2025-04", "percentage": 10.0}, {"month": "2025-05", "percentage": 9.3}, {"month": "2025-06", "percentage": 9.5}, {"month": "2025-07", "percentage": 10.3}, {"month": "2025-08", "percentage": 10.9}, {"month": "2025-09", "percentage": 10.7}, {"month": "2025-10", "percentage": 9.9}, {"month": "2025-11", "percentage": 9.2}, {"month": "2025-12", "percentage": 9.4}, {"month": "2026-01", "percentage": 10.2}, {"month": "2026-02", "percentage": 10.7}, {"month": "2026-03", "percentage": 10.5}, {"month": "2026-04", "percentage": 9.8}]}, {"channel": "Others", "color": "#8C92AC", "points": [{"month": "2024-05", "percentage": 5.2}, {"month": "2024-06", "percentage": 6.0}, {"month": "2024-07", "percentage": 6.6}, {"month": "2024-08", "percentage": 6.4}, {"month": "2024-09", "percentage": 5.6}, {"month": "2024-10", "percentage": 4.9}, {"month": "2024-11", "percentage": 5.1}, {"month": "2024-12", "percentage": 5.9}, {"month": "2025-01", "percentage": 6.5}, {"month": "2025-02", "percentage": 6.3}, {"month": "2025-03", "percentage": 5.5}, {"month": "2025-04", "percentage": 4.9}, {"month": "2025-05", "percentage": 5.1}, {"month": "2025-06", "percentage": 5.8}, {"month": "2025-07", "percentage": 6.4}, {"month": "2025-08", "percentage": 6.2}, {"month": "2025-09", "percentage": 5.4}, {"month": "2025-10", "percentage": 4.9}, {"month": "2025-11", "percentage": 5.1}, {"month": "2025-12", "percentage": 5.7}, {"month": "2026-01", "percentage": 6.3}, {"month": "2026-02", "percentage": 6.1}, {"month": "2026-03", "percentage": 5.3}, {"month": "2026-04", "percentage": 4.8}]}], "overlay_events": [{"month": "2024-09", "name": "Onam", "kind": "festival"}, {"month": "2024-10", "name": "Navratri", "kind": "festival"}, {"month": "2024-10", "name": "Durga Puja", "kind": "festival"}, {"month": "2024-10", "name": "Diwali", "kind": "festival"}, {"month": "2025-03", "name": "Eid al-Fitr", "kind": "festival"}, {"month": "2025-09", "name": "Onam", "kind": "festival"}, {"month": "2025-09", "name": "Navratri", "kind": "festival"}, {"month": "2025-09", "name": "Durga Puja", "kind": "festival"}, {"month": "2025-10", "name": "Diwali", "kind": "festival"}, {"month": "2026-03", "name": "Eid al-Fitr", "kind": "festival"}]}, "atlas": {"paragraphs": [{"text": "Search is your revenue engine — $121M at a 4.91x ROI. Second place is roughly 30% of revenue if you have two or more channels."}, {"text": "Concentration is the risk. Top two channels account for 79% of revenue — worth noting before the next planning cycle."}, {"text": "The Channel Shift panel is extrapolated from the current snapshot — upload 12+ months of history for a real trend read."}], "suggested_questions": ["What drove the Q2 shift away from Others?", "Is Search saturating?", "Which channel has the widest ROI variance month-to-month?", "Where is the concentration risk most acute?"], "source": "channel_performance_template"}, "has_data": true};
 
 /**
  * Shared design tokens for the Yield Intelligence frontend.
@@ -112,6 +112,7 @@ const atlasCalloutStyle = {
 const FONTS_HREF =
   "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
 
+
 /**
  * TopBar — sits at the top of every screen's main column.
  *
@@ -159,160 +160,6 @@ function TopBar({ number, title, subtitle, right }) {
   );
 }
 
-/**
- * AppShell — the 3-column Yield Intelligence frame.
- *
- * Layout:
- *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
- *
- * Usage:
- *   <AppShell
- *     activeScreen={1}
- *     clientName="Acme Consumer Co."
- *     clientPeriod="Quarterly review · Q2 2024"
- *     atlas={<AtlasRail narration={...} />}
- *   >
- *     <ExecutiveSummaryScreen ... />
- *   </AppShell>
- *
- * The sidebar and atlas rail are separate components in this file so
- * each can be imported without dragging the whole shell in.
- */
-
-
-const NAV = [
-  { num: "01", label: "Executive Summary" },
-  { num: "02", label: "Data Foundation" },
-  { num: "03", label: "Channel Performance" },
-  { num: "04", label: "Campaign Deep Dive" },
-  { num: "05", label: "Attribution" },
-  { num: "06", label: "Optimization" },
-  { num: "07", label: "Simulation" },
-  { num: "08", label: "Plan Builder" },
-  { num: "09", label: "Track & Monitor" },
-  { num: "10", label: "Executive Report" },
-];
-
-function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
-  return (
-    <aside style={{
-      background: tok.sidebar,
-      color: "#fff",
-      padding: "24px 14px",
-      position: "sticky",
-      top: 0,
-      height: "100vh",
-      overflowY: "auto",
-      fontFamily: tok.fontUi,
-    }}>
-      {/* Logo */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
-      }}>
-        <div style={{
-          width: 28, height: 28, borderRadius: 8,
-          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 13,
-        }}>YI</div>
-        Yield Intelligence
-      </div>
-
-      {/* Nav items */}
-      {NAV.map((item, idx) => {
-        const num = idx + 1;
-        const active = num === activeScreen;
-        return (
-          <div
-            key={item.num}
-            onClick={() => onNavigate && onNavigate(num)}
-            style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "10px 12px", borderRadius: 8,
-              color: active ? "#fff" : "#A8AEC9",
-              background: active ? tok.accent : "transparent",
-              cursor: "pointer", fontSize: 13,
-              fontWeight: active ? 600 : 500,
-              marginBottom: 2,
-              transition: "all .15s",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) e.currentTarget.style.background = tok.sidebarHover;
-              if (!active) e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              if (!active) e.currentTarget.style.background = "transparent";
-              if (!active) e.currentTarget.style.color = "#A8AEC9";
-            }}
-          >
-            <span style={{
-              display: "inline-block", width: 22, height: 22, borderRadius: 5,
-              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
-              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
-              flexShrink: 0,
-            }}>{item.num}</span>
-            {item.label}
-          </div>
-        );
-      })}
-
-      {/* Footer */}
-      {clientName && (
-        <div style={{
-          marginTop: 24, padding: 12, borderRadius: 10,
-          background: "rgba(255,255,255,.04)",
-          fontSize: 11, color: "#A8AEC9",
-        }}>
-          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
-            {clientName}
-          </strong>
-          {clientPeriod}
-        </div>
-      )}
-    </aside>
-  );
-}
-
-function AppShell({
-  activeScreen,
-  clientName,
-  clientPeriod,
-  atlas,
-  onNavigate,
-  children,
-}) {
-  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
-
-  return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
-      minHeight: "100vh",
-      background: tok.bg,
-      color: tok.text,
-      fontFamily: tok.fontUi,
-      fontSize: 13,
-      lineHeight: 1.5,
-      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
-      WebkitFontSmoothing: "antialiased",
-    }}>
-      <Sidebar
-        activeScreen={activeScreen}
-        clientName={clientName}
-        clientPeriod={clientPeriod}
-        onNavigate={onNavigate}
-      />
-      <main style={{ padding: "28px 36px 80px" }}>
-        {children}
-      </main>
-      {atlas && React.cloneElement(atlas, {
-        collapsed: atlasCollapsed,
-        onToggle: () => setAtlasCollapsed(c => !c),
-      })}
-    </div>
-  );
-}
 
 /**
  * AtlasRail — the collapsible right-hand panel that hosts Atlas's
@@ -546,15 +393,426 @@ function AtlasInlineCallout({ narration }) {
 /** Bold monetary figures in Atlas narration text so they stand out. */
 function renderNarrationHighlights(text) {
   if (!text) return null;
-  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
-  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  // Match currency-formatted money across all supported currencies:
+  //   USD/EUR/GBP: $/€/£ + digits + B/M/K suffix (or just digits for small amounts)
+  //   INR:         ₹ + digits + Cr/L suffix
+  // Also matches signed deltas (+$5.2M, −₹3.1 Cr) at word boundaries.
+  const moneyRegex = /([+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?)/g;
+  const parts = text.split(moneyRegex);
   return parts.map((part, i) => {
-    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+    // A part is a match if it starts with a currency symbol (possibly
+    // after a + or − sign) and contains digits.
+    if (/^[+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?$/.test(part)) {
       return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
     }
     return <React.Fragment key={i}>{part}</React.Fragment>;
   });
 }
+
+
+/**
+ * AppShell — the 3-column Yield Intelligence frame.
+ *
+ * Layout:
+ *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
+ *
+ * Usage:
+ *   <AppShell
+ *     activeScreen={1}
+ *     clientName="Acme Consumer Co."
+ *     clientPeriod="Quarterly review · Q2 2024"
+ *     atlas={<AtlasRail narration={...} />}
+ *   >
+ *     <ExecutiveSummaryScreen ... />
+ *   </AppShell>
+ *
+ * The sidebar and atlas rail are separate components in this file so
+ * each can be imported without dragging the whole shell in.
+ */
+
+
+
+const NAV = [
+  { num: "01", label: "Executive Summary" },
+  { num: "02", label: "Data Foundation" },
+  { num: "03", label: "Channel Performance" },
+  { num: "04", label: "Campaign Deep Dive" },
+  { num: "05", label: "Attribution" },
+  { num: "06", label: "Optimization" },
+  { num: "07", label: "Simulation" },
+  { num: "08", label: "Plan Builder" },
+  { num: "09", label: "Track & Monitor" },
+  { num: "10", label: "Executive Report" },
+];
+
+function Sidebar({
+  activeScreen = 1,
+  clientName,
+  clientPeriod,
+  onNavigate,
+  apiBase,
+  engagementId,
+  onEngagementChange,
+}) {
+  return (
+    <aside style={{
+      background: tok.sidebar,
+      color: "#fff",
+      padding: "24px 14px",
+      position: "sticky",
+      top: 0,
+      height: "100vh",
+      overflowY: "auto",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Logo */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 13,
+        }}>YI</div>
+        Yield Intelligence
+      </div>
+
+      {/* Nav items */}
+      {NAV.map((item, idx) => {
+        const num = idx + 1;
+        const active = num === activeScreen;
+        return (
+          <div
+            key={item.num}
+            onClick={() => onNavigate && onNavigate(num)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8,
+              color: active ? "#fff" : "#A8AEC9",
+              background: active ? tok.accent : "transparent",
+              cursor: "pointer", fontSize: 13,
+              fontWeight: active ? 600 : 500,
+              marginBottom: 2,
+              transition: "all .15s",
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = tok.sidebarHover;
+              if (!active) e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+              if (!active) e.currentTarget.style.color = "#A8AEC9";
+            }}
+          >
+            <span style={{
+              display: "inline-block", width: 22, height: 22, borderRadius: 5,
+              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
+              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
+              flexShrink: 0,
+            }}>{item.num}</span>
+            {item.label}
+          </div>
+        );
+      })}
+
+      {/* Footer: engagement selector + client footer */}
+      {(engagementId !== undefined || clientName) && (
+        <div style={{ marginTop: 24 }}>
+          {engagementId !== undefined && (
+            <div style={{ marginBottom: clientName ? 10 : 0 }}>
+              <EngagementSelector
+                apiBase={apiBase}
+                engagementId={engagementId}
+                onChange={onEngagementChange}
+                compact
+              />
+            </div>
+          )}
+          {clientName && (
+            <div style={{
+              padding: 12, borderRadius: 10,
+              background: "rgba(255,255,255,.04)",
+              fontSize: 11, color: "#A8AEC9",
+            }}>
+              <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+                {clientName}
+              </strong>
+              {clientPeriod}
+            </div>
+          )}
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function AppShell({
+  activeScreen,
+  clientName,
+  clientPeriod,
+  atlas,
+  onNavigate,
+  children,
+  apiBase = "",
+  engagementId: controlledEngagementId,
+  onEngagementChange,
+}) {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  // If no controlled engagementId is passed, manage it internally via localStorage
+  const [internalEngagementId, setInternalEngagementId] = useState(getStoredEngagementId);
+  const engagementId = controlledEngagementId ?? internalEngagementId;
+  const handleEngagementChange = (id) => {
+    setStoredEngagementId(id);
+    setInternalEngagementId(id);
+    if (onEngagementChange) onEngagementChange(id);
+  };
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh",
+      background: tok.bg,
+      color: tok.text,
+      fontFamily: tok.fontUi,
+      fontSize: 13,
+      lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+      WebkitFontSmoothing: "antialiased",
+    }}>
+      <Sidebar
+        activeScreen={activeScreen}
+        clientName={clientName}
+        clientPeriod={clientPeriod}
+        onNavigate={onNavigate}
+        apiBase={apiBase}
+        engagementId={engagementId}
+        onEngagementChange={handleEngagementChange}
+      />
+      <main style={{ padding: "28px 36px 80px" }}>
+        {typeof children === "function" ? children({ engagementId }) : children}
+      </main>
+      {atlas && React.cloneElement(atlas, {
+        collapsed: atlasCollapsed,
+        onToggle: () => setAtlasCollapsed(c => !c),
+      })}
+    </div>
+  );
+}
+
+
+/**
+ * EngagementSelector — dropdown for picking the active engagement.
+ *
+ * Fetches the engagement list from /api/engagements once on mount, persists
+ * the current selection in localStorage under "yi.engagementId", and fires
+ * onChange(engagementId) when the user picks a different one.
+ *
+ * Rendered inside the Sidebar footer so the current engagement is visible
+ * at all times (sets the context for every number on the screen).
+ *
+ * Props
+ * -----
+ *   apiBase         blank for same-origin; "http://localhost:8000" in dev
+ *   engagementId    currently-selected id (controlled)
+ *   onChange        (newId) => void
+ *   compact         true for a tighter footer look
+ */
+
+
+const STORAGE_KEY = "yi.engagementId";
+
+function getStoredEngagementId() {
+  try {
+    return localStorage.getItem(STORAGE_KEY) || "default";
+  } catch {
+    return "default";
+  }
+}
+
+function setStoredEngagementId(id) {
+  try {
+    localStorage.setItem(STORAGE_KEY, id);
+  } catch {
+    /* no-op if storage is disabled */
+  }
+}
+
+function EngagementSelector({
+  apiBase = "",
+  engagementId = "default",
+  onChange,
+  compact = false,
+}) {
+  const [engagements, setEngagements] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
+  const rootRef = useRef(null);
+
+  // Load engagements once
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${apiBase}/api/engagements`)
+      .then(r => {
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        if (cancelled) return;
+        setEngagements(data.engagements || []);
+        setCurrencies(data.supported_currencies || []);
+        setError(null);
+      })
+      .catch(err => {
+        if (!cancelled) setError(err.message);
+      });
+    return () => { cancelled = true; };
+  }, [apiBase]);
+
+  // Close when clicking outside
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  const current = engagements.find(e => e.id === engagementId)
+    || { id: engagementId, name: engagementId === "default" ? "Default" : engagementId, currency: "USD" };
+
+  const handlePick = (id) => {
+    setStoredEngagementId(id);
+    setOpen(false);
+    if (onChange) onChange(id);
+  };
+
+  return (
+    <div ref={rootRef} style={{ position: "relative", fontFamily: tok.fontUi }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%", textAlign: "left",
+          padding: compact ? "9px 10px" : "11px 12px",
+          background: "rgba(255,255,255,.06)",
+          border: `1px solid rgba(255,255,255,.1)`,
+          borderRadius: 8,
+          color: "#fff", fontFamily: "inherit", fontSize: 12,
+          cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 10,
+          transition: "background .15s",
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.1)"}
+        onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.06)"}
+      >
+        <div style={{ flex: 1, overflow: "hidden" }}>
+          <div style={{
+            fontSize: 9, color: "#8C92AC",
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            fontWeight: 600, marginBottom: 2,
+          }}>Engagement</div>
+          <div style={{
+            fontSize: 12, fontWeight: 600,
+            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+          }}>
+            {current.name}
+          </div>
+        </div>
+        <div style={{
+          padding: "2px 6px", borderRadius: 4,
+          background: "rgba(124,92,255,.25)",
+          color: "#C4B5FD", fontSize: 10, fontWeight: 700,
+        }}>{current.currency}</div>
+        <div style={{
+          color: "#8C92AC", fontSize: 11,
+          transform: open ? "rotate(180deg)" : "none",
+          transition: "transform .15s",
+        }}>▾</div>
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", bottom: "calc(100% + 6px)", left: 0, right: 0,
+          background: "#1A1D2E",
+          border: "1px solid rgba(255,255,255,.12)",
+          borderRadius: 8,
+          boxShadow: "0 8px 30px rgba(0,0,0,.4)",
+          overflow: "hidden",
+          zIndex: 100,
+          maxHeight: 320, overflowY: "auto",
+        }}>
+          <div style={{
+            padding: "8px 12px",
+            fontSize: 9, color: "#8C92AC",
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            fontWeight: 600,
+            borderBottom: "1px solid rgba(255,255,255,.06)",
+          }}>
+            {engagements.length} engagement{engagements.length === 1 ? "" : "s"} · Switch to
+          </div>
+
+          {error && (
+            <div style={{ padding: 12, color: "#F87171", fontSize: 11 }}>
+              Couldn't load engagements: {error}
+            </div>
+          )}
+
+          {engagements.map(e => {
+            const active = e.id === engagementId;
+            return (
+              <div
+                key={e.id}
+                onClick={() => handlePick(e.id)}
+                style={{
+                  padding: "10px 12px",
+                  color: "#fff", fontSize: 12,
+                  display: "flex", alignItems: "center", gap: 10,
+                  cursor: "pointer",
+                  background: active ? "rgba(124,92,255,.18)" : "transparent",
+                  borderLeft: active ? `3px solid ${tok.accent}` : "3px solid transparent",
+                  transition: "background .1s",
+                }}
+                onMouseEnter={ev => {
+                  if (!active) ev.currentTarget.style.background = "rgba(255,255,255,.05)";
+                }}
+                onMouseLeave={ev => {
+                  if (!active) ev.currentTarget.style.background = "transparent";
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600 }}>{e.name}</div>
+                  <div style={{ color: "#8C92AC", fontSize: 10, marginTop: 2 }}>
+                    {e.id} · {e.locale}
+                  </div>
+                </div>
+                <div style={{
+                  padding: "2px 6px", borderRadius: 4,
+                  background: "rgba(255,255,255,.08)",
+                  fontSize: 10, fontWeight: 700,
+                }}>{e.currency}</div>
+              </div>
+            );
+          })}
+
+          <div style={{
+            padding: "8px 12px",
+            fontSize: 10, color: "#8C92AC",
+            borderTop: "1px solid rgba(255,255,255,.06)",
+          }}>
+            Supported: {currencies.join(", ") || "USD, INR, EUR, GBP"}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 /**
  * KpiStrip — row of KPI cards.
@@ -605,6 +863,7 @@ function KpiStrip({ kpis = [] }) {
     </div>
   );
 }
+
 
 /**
  * BridgeCard — the purple-bordered transition card at the bottom of
@@ -662,6 +921,7 @@ function BridgeCard({ toScreenNum, text, onClick }) {
     </div>
   );
 }
+
 
 /**
  * Donut — renders a donut chart from allocation slices.
@@ -734,6 +994,7 @@ function Donut({
     </div>
   );
 }
+
 
 /**
  * ChannelSummaryTable — the per-channel KPI breakdown table.
@@ -835,6 +1096,7 @@ function ChannelSummaryTable({ rows = [] }) {
   );
 }
 
+
 /**
  * RevenueContributionCard — right-column card on Screen 03.
  *
@@ -930,6 +1192,7 @@ function RevenueContributionCard({ contribution, topInsight }) {
     </div>
   );
 }
+
 
 /**
  * ChannelShiftPanel — the Channel Shift visualization added in plan v2.
@@ -1151,6 +1414,19 @@ function ChannelShiftPanel({ shift }) {
 
 function App() {
   const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  
+  const mainContent = (<>
+    <TopBar number="03" title="Channel Performance" subtitle="Understand what's driving results"
+            right={<><Pill>May 1 – May 31, 2024 ▾</Pill><Pill>Compare: Apr ▾</Pill><Pill primary>Export</Pill></>}/>
+    {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE.atlas}/>}
+    <KpiStrip kpis={SAMPLE.kpis}/>
+    <div style={{display:"grid",gridTemplateColumns:"1.6fr 1fr",gap:14,marginBottom:18}}>
+      <ChannelSummaryTable rows={SAMPLE.summary}/>
+      <RevenueContributionCard contribution={SAMPLE.contribution} topInsight={SAMPLE.top_insight}/>
+    </div>
+    <ChannelShiftPanel shift={SAMPLE.channel_shift}/>
+    <BridgeCard toScreenNum="04" text="Now let's go one level deeper — which specific campaigns drove these channel numbers?"/>
+  </>);
   return (
     <div style={{
       display: "grid",
@@ -1159,30 +1435,16 @@ function App() {
       fontFamily: tok.fontUi, fontSize: 13, lineHeight: 1.5,
       transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
     }}>
-      <Sidebar activeScreen={3} clientName="Acme Consumer Co." clientPeriod="Quarterly review · Q2 2024"/>
-      <main style={{padding:"28px 36px 80px"}}>
-        <TopBar
-          number="03"
-          title="Channel Performance"
-          subtitle="Understand what's driving results"
-          right={<>
-            <Pill>May 1 – May 31, 2024 ▾</Pill>
-            <Pill>Compare: Apr ▾</Pill>
-            <Pill primary>Export</Pill>
-          </>}
-        />
-        {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE.atlas}/>}
-        <KpiStrip kpis={SAMPLE.kpis}/>
-        <div style={{display:"grid",gridTemplateColumns:"1.6fr 1fr",gap:14,marginBottom:18}}>
-          <ChannelSummaryTable rows={SAMPLE.summary}/>
-          <RevenueContributionCard contribution={SAMPLE.contribution} topInsight={SAMPLE.top_insight}/>
-        </div>
-        <ChannelShiftPanel shift={SAMPLE.channel_shift}/>
-        <BridgeCard toScreenNum="04" text="Now let's go one level deeper — which specific campaigns drove these channel numbers?"/>
-      </main>
+      <Sidebar activeScreen={3}
+               clientName={SAMPLE.engagement.name}
+               clientPeriod={`Engagement · ${SAMPLE.engagement.currency} · ${SAMPLE.engagement.locale}`}
+               engagementId={SAMPLE.engagement.id}
+               onEngagementChange={() => {}}/>
+      <main style={{padding:"28px 36px 80px"}}>{mainContent}</main>
       <AtlasRail narration={SAMPLE.atlas} collapsed={atlasCollapsed} onToggle={() => setAtlasCollapsed(c => !c)}/>
     </div>
   );
+
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>

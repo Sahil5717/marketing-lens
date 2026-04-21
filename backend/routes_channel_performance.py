@@ -24,6 +24,9 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Query
 
+from currency import format_money, format_rate, format_count
+from engagements import get_engagement, DEFAULT_ENGAGEMENT_ID
+
 router = APIRouter(prefix="/api", tags=["channel-performance"])
 
 
@@ -54,7 +57,7 @@ def _color_for(channel: str) -> str:
 
 # ─── KPI strip ────────────────────────────────────────────────────────────
 
-def _compute_kpis(channels: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _compute_kpis(channels: List[Dict[str, Any]], currency: str) -> List[Dict[str, Any]]:
     if not channels:
         return _empty_kpis()
 
@@ -64,12 +67,14 @@ def _compute_kpis(channels: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     roi = total_revenue / total_spend if total_spend else 0
     cac = total_spend / total_conv if total_conv else 0
 
+    cac_display = format_money(cac, currency) if cac else "—"
+
     return [
-        _kpi("Total Spend",   _fmt_cr(total_spend), _delta(8.7, "up")),
-        _kpi("Revenue",       _fmt_cr(total_revenue), _delta(12.4, "up")),
-        _kpi("ROI",           f"{roi:.2f}x" if roi else "—", _delta(0.46, "up", absolute=True)),
-        _kpi("Conversions",   _fmt_count(total_conv), _delta(9.2, "up")),
-        _kpi("CAC",           f"₹{cac:,.0f}" if cac else "—", _delta(-6.3, "down")),
+        _kpi("Total Spend",   format_money(total_spend, currency), _delta(8.7, "up")),
+        _kpi("Revenue",       format_money(total_revenue, currency), _delta(12.4, "up")),
+        _kpi("ROI",           format_rate(roi), _delta(0.46, "up", absolute=True)),
+        _kpi("Conversions",   format_count(total_conv), _delta(9.2, "up")),
+        _kpi("CAC",           cac_display, _delta(-6.3, "down")),
     ]
 
 def _empty_kpis() -> List[Dict[str, Any]]:
@@ -90,7 +95,7 @@ def _delta(pct: float, direction: str, absolute: bool = False) -> str:
 
 # ─── Channel summary table ────────────────────────────────────────────────
 
-def _compute_summary(channels: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _compute_summary(channels: List[Dict[str, Any]], currency: str) -> List[Dict[str, Any]]:
     """Rows for the Channel Summary table."""
     rows: List[Dict[str, Any]] = []
     for c in channels:
@@ -103,13 +108,13 @@ def _compute_summary(channels: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "channel": c.get("channel") or c.get("name") or "Channel",
             "color": _color_for(c.get("channel") or ""),
             "spend": spend,
-            "spend_display": _fmt_cr(spend),
+            "spend_display": format_money(spend, currency),
             "revenue": revenue,
-            "revenue_display": _fmt_cr(revenue),
+            "revenue_display": format_money(revenue, currency),
             "roi": round(roi, 2),
-            "roi_display": f"{roi:.2f}x" if roi else "—",
+            "roi_display": format_rate(roi),
             "conversions": conv,
-            "conversions_display": _fmt_count(conv),
+            "conversions_display": format_count(conv),
             "trend_pct": trend,
             "trend_direction": "up" if trend > 0 else "down" if trend < 0 else "flat",
         })
@@ -120,10 +125,10 @@ def _compute_summary(channels: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 # ─── Revenue contribution donut ───────────────────────────────────────────
 
-def _compute_contribution(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _compute_contribution(channels: List[Dict[str, Any]], currency: str) -> Dict[str, Any]:
     total_revenue = sum(c.get("revenue", 0) for c in channels)
     if total_revenue <= 0:
-        return {"total": 0, "total_display": "₹0 Cr", "slices": []}
+        return {"total": 0, "total_display": format_money(0, currency), "slices": []}
 
     slices: List[Dict[str, Any]] = []
     for c in sorted(channels, key=lambda x: x.get("revenue", 0), reverse=True):
@@ -134,11 +139,11 @@ def _compute_contribution(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
             "color": _color_for(c.get("channel") or ""),
             "percentage": round(pct, 1),
             "revenue": rev,
-            "revenue_display": _fmt_cr(rev),
+            "revenue_display": format_money(rev, currency),
         })
     return {
         "total": total_revenue,
-        "total_display": _fmt_cr(total_revenue),
+        "total_display": format_money(total_revenue, currency),
         "slices": slices,
     }
 
@@ -330,26 +335,24 @@ def _compose_atlas(
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────
-
-def _fmt_cr(value: float) -> str:
-    if value is None or value == 0: return "₹0 Cr"
-    value = float(value)
-    cr = value / 1e7
-    if abs(cr) >= 100: return f"₹{cr:.0f} Cr"
-    if abs(cr) >= 1:   return f"₹{cr:.1f} Cr"
-    return f"₹{value/1e5:.1f} L"
-
-def _fmt_count(value: float) -> str:
-    if value is None or value == 0: return "—"
-    if value >= 1e6: return f"{value/1e6:.1f}M"
-    if value >= 1e3: return f"{value/1e3:.0f}K"
-    return f"{int(value)}"
+# All money formatting goes through currency.format_money now. The local
+# _fmt_cr and _fmt_count helpers are gone; format_count is imported from
+# currency and is currency-agnostic so it still works.
 
 
 # ─── Route ────────────────────────────────────────────────────────────────
 
 @router.get("/channel-performance")
-def get_channel_performance(lookback_months: int = Query(24, ge=3, le=60)):
+def get_channel_performance(
+    lookback_months: int = Query(24, ge=3, le=60),
+    engagement_id: str = Query(
+        DEFAULT_ENGAGEMENT_ID,
+        description="Engagement to report against — drives currency and locale.",
+    ),
+):
+    engagement = get_engagement(engagement_id)
+    currency = engagement.currency
+
     state = _read_state()
     # Pull channels from the engine output; fall back to optimization's
     # channels list which has spend/revenue aggregates.
@@ -361,14 +364,15 @@ def get_channel_performance(lookback_months: int = Query(24, ge=3, le=60)):
 
     monthly = state.get("channel_monthly_history")
 
-    kpis = _compute_kpis(channels)
-    summary = _compute_summary(channels)
-    contribution = _compute_contribution(channels)
+    kpis = _compute_kpis(channels, currency)
+    summary = _compute_summary(channels, currency)
+    contribution = _compute_contribution(channels, currency)
     top_insight = _compose_top_insight(contribution)
     shift = _compute_channel_shift(channels, monthly, lookback_months=lookback_months)
     atlas = _compose_atlas(summary, contribution, shift)
 
     return {
+        "engagement": engagement.as_dict(),
         "kpis": kpis,
         "summary": summary,
         "contribution": contribution,

@@ -81,6 +81,11 @@ def get_market_context(
     lookahead_days: int = Query(90, ge=1, le=365),
     lookback_months: int = Query(4, ge=1, le=24),
     peak_limit: int = Query(5, ge=1, le=20),
+    engagement_id: str = Query(
+        "default",
+        description="Engagement to report against. No money is reported here, "
+                    "but engagement metadata is returned for frontend consistency.",
+    ),
 ):
     """
     Combined macro-context payload for Screen 01's bottom row.
@@ -91,7 +96,17 @@ def get_market_context(
           lookahead_days, filtered for the given regions
         - atlas_narration: a short, source-attributed narration the frontend
           can drop directly into the Atlas rail (template-driven, no LLM)
+        - engagement: metadata for the selected engagement (for consistent
+          frontend handling across all screen endpoints)
     """
+    # Lazy import so this module stays independently testable if engagements
+    # persistence isn't available.
+    try:
+        from engagements import get_engagement
+        engagement_meta = get_engagement(engagement_id).as_dict()
+    except Exception:
+        engagement_meta = {"id": engagement_id, "currency": "USD", "locale": "en-US"}
+
     ref_date = _parse_as_of(as_of)
     region_list = _parse_regions(regions)
     loader = get_loader()
@@ -119,6 +134,7 @@ def get_market_context(
     )
 
     return {
+        "engagement": engagement_meta,
         "as_of": ref_date.isoformat(),
         "category": category,
         "regions": region_list,

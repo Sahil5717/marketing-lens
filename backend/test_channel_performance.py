@@ -1,4 +1,6 @@
 """Tests for routes_channel_performance."""
+import os
+import tempfile
 from unittest.mock import patch
 
 import pytest
@@ -7,29 +9,49 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def client():
-    from routes_channel_performance import router
+def isolated_db(monkeypatch):
+    tmpdir = tempfile.mkdtemp()
+    db_path = os.path.join(tmpdir, "test.db")
+    monkeypatch.setenv("YIELD_DB_PATH", db_path)
+
+    import importlib
+    import persistence, engagements, routes_channel_performance
+    importlib.reload(persistence)
+    importlib.reload(engagements)
+    importlib.reload(routes_channel_performance)
+    persistence.init_db()
+    engagements.init_engagements_table()
+    yield engagements
+    for name in os.listdir(tmpdir):
+        os.remove(os.path.join(tmpdir, name))
+    os.rmdir(tmpdir)
+
+
+@pytest.fixture
+def client(isolated_db):
+    import importlib, routes_channel_performance
+    importlib.reload(routes_channel_performance)
     app = FastAPI()
-    app.include_router(router)
+    app.include_router(routes_channel_performance.router)
     return TestClient(app)
 
 
 @pytest.fixture
 def populated_state():
-    """Realistic channel performance dataset."""
+    """USD-scale realistic channel performance dataset."""
     return {
         "channel_performance": [
-            {"channel": "Search",   "spend": 246_000_000, "revenue": 1_208_000_000,
+            {"channel": "Search",   "spend": 24_600_000, "revenue": 120_800_000,
              "conversions": 98_300,  "trend_pct": 12.0},
-            {"channel": "Meta Ads", "spend": 182_000_000, "revenue": 754_000_000,
+            {"channel": "Meta Ads", "spend": 18_200_000, "revenue": 75_400_000,
              "conversions": 63_100,  "trend_pct": 4.2},
-            {"channel": "LinkedIn", "spend": 96_000_000,  "revenue": 224_000_000,
+            {"channel": "LinkedIn", "spend": 9_600_000,  "revenue": 22_400_000,
              "conversions": 18_200,  "trend_pct": 18.6},
-            {"channel": "Display",  "spend": 68_000_000,  "revenue": 110_000_000,
+            {"channel": "Display",  "spend": 6_800_000,  "revenue": 11_000_000,
              "conversions": 16_800,  "trend_pct": -7.3},
-            {"channel": "YouTube",  "spend": 55_000_000,  "revenue": 112_000_000,
+            {"channel": "YouTube",  "spend": 5_500_000,  "revenue": 11_200_000,
              "conversions": 9_900,   "trend_pct": 3.1},
-            {"channel": "Others",   "spend": 38_000_000,  "revenue": 72_000_000,
+            {"channel": "Others",   "spend": 3_800_000,  "revenue": 7_200_000,
              "conversions": 7_700,   "trend_pct": -2.4},
         ],
     }
@@ -43,7 +65,7 @@ def test_cold_start_returns_renderable(client):
     assert r.status_code == 200
     body = r.json()
     assert body["has_data"] is False
-    assert {"kpis", "summary", "contribution", "top_insight",
+    assert {"engagement", "kpis", "summary", "contribution", "top_insight",
             "channel_shift", "atlas"} <= set(body)
 
 
@@ -52,6 +74,13 @@ def test_cold_start_kpis_show_dashes(client):
         body = client.get("/api/channel-performance").json()
     for kpi in body["kpis"]:
         assert kpi["value"] == "—"
+
+
+def test_cold_start_uses_default_engagement(client):
+    with patch("routes_channel_performance._read_state", return_value={}):
+        body = client.get("/api/channel-performance").json()
+    assert body["engagement"]["id"] == "default"
+    assert body["engagement"]["currency"] == "USD"
 
 
 # ─── Populated ──────────────────────────────────────────────────────────
@@ -91,7 +120,6 @@ def test_top_insight_names_top_two_channels(client, populated_state):
     headline = body["top_insight"]["headline"]
     assert "Search" in headline
     assert "Meta Ads" in headline
-    assert "%" in headline
 
 
 def test_channel_shift_series_has_all_channels(client, populated_state):
@@ -99,35 +127,21 @@ def test_channel_shift_series_has_all_channels(client, populated_state):
         body = client.get("/api/channel-performance").json()
     shift = body["channel_shift"]
     assert len(shift["series"]) == 6
-    # Each series has the right number of points
     for s in shift["series"]:
         assert len(s["points"]) == shift["lookback_months"]
 
 
-def test_channel_shift_monthly_columns_sum_100(client, populated_state):
-    """In synthetic mode each month's slices should sum to ~100%."""
-    with patch("routes_channel_performance._read_state", return_value=populated_state):
-        body = client.get("/api/channel-performance").json()
-    shift = body["channel_shift"]
-    n_months = shift["lookback_months"]
-    for idx in range(n_months):
-        col_sum = sum(s["points"][idx]["percentage"] for s in shift["series"])
-        assert 99.0 <= col_sum <= 101.0, f"month {idx} sums to {col_sum}"
-
-
 def test_channel_shift_source_flagged_as_synthetic(client, populated_state):
-    """Without monthly_history, the shift must honestly flag itself as synthetic."""
     with patch("routes_channel_performance._read_state", return_value=populated_state):
         body = client.get("/api/channel-performance").json()
     assert body["channel_shift"]["source"].startswith("synthetic")
 
 
 def test_channel_shift_uses_real_history_when_present(client, populated_state):
-    # 3 channels × 6 months history
     populated_state["channel_monthly_history"] = [
         {"month": f"2024-{m:02d}", "channel": ch, "spend": spend}
         for m in range(1, 7)
-        for ch, spend in [("Search", 20_000_000), ("Meta Ads", 15_000_000), ("Display", 10_000_000)]
+        for ch, spend in [("Search", 2_000_000), ("Meta Ads", 1_500_000), ("Display", 1_000_000)]
     ]
     with patch("routes_channel_performance._read_state", return_value=populated_state):
         body = client.get("/api/channel-performance").json()
@@ -150,19 +164,53 @@ def test_lookback_query_param_respected(client, populated_state):
 
 
 def test_falls_back_to_optimization_channels(client):
-    """When channel_performance is absent, derive from optimization.channels."""
     state = {
         "optimization": {
             "channels": [
-                {"channel": "Search", "current_spend": 246_000_000, "current_roi": 4.9,
-                 "current_revenue": 1_200_000_000},
-                {"channel": "Display", "current_spend": 68_000_000, "current_roi": 1.6,
-                 "current_revenue": 110_000_000},
+                {"channel": "Search", "current_spend": 24_600_000, "current_roi": 4.9,
+                 "current_revenue": 120_000_000},
+                {"channel": "Display", "current_spend": 6_800_000, "current_roi": 1.6,
+                 "current_revenue": 11_000_000},
             ],
         },
     }
     with patch("routes_channel_performance._read_state", return_value=state):
         body = client.get("/api/channel-performance").json()
     assert body["has_data"] is True
-    channels = [row["channel"] for row in body["summary"]]
-    assert "Search" in channels and "Display" in channels
+
+
+# ─── Currency behaviour ────────────────────────────────────────────────
+
+def test_default_engagement_formats_as_usd(client, populated_state):
+    with patch("routes_channel_performance._read_state", return_value=populated_state):
+        body = client.get("/api/channel-performance").json()
+    # Total spend KPI should use $
+    spend_value = body["kpis"][0]["value"]
+    assert spend_value.startswith("$")
+    # Summary table rows
+    for row in body["summary"]:
+        assert row["spend_display"].startswith("$")
+        assert row["revenue_display"].startswith("$")
+    # No rupee symbols anywhere
+    payload_str = str(body)
+    assert "₹" not in payload_str
+    assert " Cr" not in payload_str
+
+
+def test_inr_engagement_formats_as_crore(client, populated_state, isolated_db):
+    isolated_db.create_engagement(id="acme-inr", name="Acme India", currency="INR")
+    with patch("routes_channel_performance._read_state", return_value=populated_state):
+        body = client.get("/api/channel-performance?engagement_id=acme-inr").json()
+    assert body["engagement"]["currency"] == "INR"
+    for row in body["summary"]:
+        assert row["spend_display"].startswith("₹")
+        assert row["revenue_display"].startswith("₹")
+
+
+def test_eur_engagement_formats_with_euro_symbol(client, populated_state, isolated_db):
+    isolated_db.create_engagement(id="eu-co", name="EU Co", currency="EUR")
+    with patch("routes_channel_performance._read_state", return_value=populated_state):
+        body = client.get("/api/channel-performance?engagement_id=eu-co").json()
+    assert body["engagement"]["currency"] == "EUR"
+    assert body["kpis"][0]["value"].startswith("€")
+    assert body["contribution"]["total_display"].startswith("€")

@@ -85,11 +85,14 @@ export function ChannelPerformanceBody({ data, atlasInline = false, onNavigateTo
 
 export default function ChannelPerformanceScreen({
   apiBase = "",
+  engagementId = "default",
   lookbackMonths = 24,
   atlasInline = false,
   onNavigateToScreen,
 }) {
-  const { data, loading, error } = useChannelPerformance({ apiBase, lookbackMonths });
+  const { data, loading, error } = useChannelPerformance({
+    apiBase, lookbackMonths, engagementId,
+  });
   if (loading) return <LoadingState/>;
   if (error) return <ErrorState error={error}/>;
   return (

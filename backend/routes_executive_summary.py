@@ -10,22 +10,31 @@ that have already run (on upload / analyst action). That keeps the
 screen fast for walkthrough demos.
 
 Route:
-    GET /api/executive-summary
+    GET /api/executive-summary?engagement_id={id}
         Full payload: hero, KPIs, three pillars, opportunities, top
         actions, and an Atlas narration for the rail.
 
+Currency
+--------
+Formatting (dollar/rupee/euro/pound amounts) is driven by the engagement's
+currency setting. Pass ?engagement_id=... to target a specific one;
+without it, reads the 'default' engagement (USD).
+
 Design notes
 ------------
-During the five-data-type refactor (plan §2A), this will accept an
-engagement_id. For now it reads from the legacy single-tenant _state
-dict via a small adapter, so the endpoint contract is stable across
-the refactor.
+During the five-data-type refactor (plan §2A), this will accept full
+per-engagement state. For now it reads from the legacy single-tenant
+_state dict via a small adapter, so the endpoint contract is stable
+across the refactor.
 """
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
+
+from currency import format_money, format_delta, format_rate
+from engagements import EngagementConfig, get_engagement, DEFAULT_ENGAGEMENT_ID
 
 router = APIRouter(prefix="/api", tags=["executive-summary"])
 
@@ -49,7 +58,7 @@ def _read_state() -> Dict[str, Any]:
 
 # ─── KPIs ─────────────────────────────────────────────────────────────────
 
-def _compute_kpis(state: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _compute_kpis(state: Dict[str, Any], currency: str) -> List[Dict[str, Any]]:
     """
     Build the 5-cell KPI strip. Pulls from reporting_data (last 12 mo) if
     present, falling back to computed placeholders so the screen renders
@@ -78,12 +87,16 @@ def _compute_kpis(state: Dict[str, Any]) -> List[Dict[str, Any]]:
     # this when funnel_analysis is wired.
     pipeline_influence = total_revenue * 1.4 if total_revenue else 0.0
 
+    # CAC is always a small per-unit amount — use format_money at its
+    # sub-scale tier so it respects the currency symbol.
+    cac_display = format_money(cac, currency) if cac else "—"
+
     return [
-        _kpi("Total Revenue", _fmt_cr(total_revenue), ""),
-        _kpi("ROI",           f"{roi:.2f}x" if roi else "—", ""),
-        _kpi("Marketing Spend", _fmt_cr(total_spend), ""),
-        _kpi("CAC",           f"₹{cac:,.0f}" if cac else "—", ""),
-        _kpi("Pipeline Influence", _fmt_cr(pipeline_influence), ""),
+        _kpi("Total Revenue", format_money(total_revenue, currency), ""),
+        _kpi("ROI",           format_rate(roi), ""),
+        _kpi("Marketing Spend", format_money(total_spend, currency), ""),
+        _kpi("CAC",           cac_display, ""),
+        _kpi("Pipeline Influence", format_money(pipeline_influence, currency), ""),
     ]
 
 
@@ -109,7 +122,7 @@ _PILLAR_TAGS = {
 }
 
 
-def _compute_pillars(state: Dict[str, Any]) -> Dict[str, Any]:
+def _compute_pillars(state: Dict[str, Any], currency: str) -> Dict[str, Any]:
     """
     Shape the existing three-pillar engine output into the HTML's panel.
     Gracefully handles the pre-upload state by returning zeroed pillars
@@ -125,25 +138,25 @@ def _compute_pillars(state: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "total_cost": {
             "amount": total,
-            "display": _fmt_cr(total),
+            "display": format_money(total, currency),
             "label": "Total cost · This month",
         },
         "pillars": [
             {
                 "id": "leak", "roman": "i.", "name": "Revenue Leakage",
-                "amount": leak_amt, "display": _fmt_cr(leak_amt),
+                "amount": leak_amt, "display": format_money(leak_amt, currency),
                 "description": _PILLAR_DESCRIPTIONS["leak"],
                 "tag": _PILLAR_TAGS["leak"],
             },
             {
                 "id": "drop", "roman": "ii.", "name": "Experience Drop",
-                "amount": drop_amt, "display": _fmt_cr(drop_amt),
+                "amount": drop_amt, "display": format_money(drop_amt, currency),
                 "description": _PILLAR_DESCRIPTIONS["drop"],
                 "tag": _PILLAR_TAGS["drop"],
             },
             {
                 "id": "avoid", "roman": "iii.", "name": "Avoidable Cost",
-                "amount": avoid_amt, "display": _fmt_cr(avoid_amt),
+                "amount": avoid_amt, "display": format_money(avoid_amt, currency),
                 "description": _PILLAR_DESCRIPTIONS["avoid"],
                 "tag": _PILLAR_TAGS["avoid"],
             },
@@ -153,7 +166,11 @@ def _compute_pillars(state: Dict[str, Any]) -> Dict[str, Any]:
 
 # ─── Recovery opportunities ───────────────────────────────────────────────
 
-def _compute_opportunities(state: Dict[str, Any], pillars: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _compute_opportunities(
+    state: Dict[str, Any],
+    pillars: Dict[str, Any],
+    currency: str,
+) -> List[Dict[str, Any]]:
     """
     Build the 3-card "Recovery Opportunities" panel. The numbers here
     are derived from the correction_potential the engine already computes,
@@ -169,19 +186,22 @@ def _compute_opportunities(state: Dict[str, Any], pillars: Dict[str, Any]) -> Li
     return [
         {
             "icon": "↑",
-            "amount": reallocation, "display": f"+{_fmt_cr(reallocation)}",
+            "amount": reallocation,
+            "display": format_delta(reallocation, currency),
             "name": "Reallocate spend",
             "detail": "Shift under-performing channels into higher-marginal-ROI ones",
         },
         {
             "icon": "×",
-            "amount": -cost_savings, "display": f"−{_fmt_cr(cost_savings)}",
+            "amount": -cost_savings,
+            "display": format_delta(-cost_savings, currency),
             "name": "Cut waste",
             "detail": "Pause channels past their saturation point",
         },
         {
             "icon": "↗",
-            "amount": cx_recovery, "display": f"+{_fmt_cr(cx_recovery)}",
+            "amount": cx_recovery,
+            "display": format_delta(cx_recovery, currency),
             "name": "Fix conversion",
             "detail": "Address mobile funnel drop and landing-page friction",
         },
@@ -190,7 +210,7 @@ def _compute_opportunities(state: Dict[str, Any], pillars: Dict[str, Any]) -> Li
 
 # ─── Top actions ──────────────────────────────────────────────────────────
 
-def _compute_top_actions(state: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _compute_top_actions(state: Dict[str, Any], currency: str) -> List[Dict[str, Any]]:
     """
     Top prioritized actions with inline "Why?" reasoning. Sourced from
     the automated-recs engine if available; falls back to derived actions
@@ -202,10 +222,13 @@ def _compute_top_actions(state: Dict[str, Any]) -> List[Dict[str, Any]]:
         # smart_recs can be a list or a dict with items
         items = recs if isinstance(recs, list) else recs.get("items", [])
         for i, rec in enumerate(items[:3]):
+            # Prefer pre-rendered impact_display so callers can force a
+            # specific format. Otherwise derive with the engagement currency.
+            impact = rec.get("impact_display") or format_delta(rec.get("impact", 0), currency)
             actions.append({
                 "num": i + 1,
                 "text": rec.get("title") or rec.get("action") or "Untitled action",
-                "impact": rec.get("impact_display") or _fmt_impact(rec.get("impact", 0)),
+                "impact": impact,
                 "why": {
                     "who": "Atlas · Reasoning",
                     "text": rec.get("reasoning") or rec.get("rationale")
@@ -217,10 +240,10 @@ def _compute_top_actions(state: Dict[str, Any]) -> List[Dict[str, Any]]:
 
     # Fallback: derive from optimization output
     optimization = state.get("optimization") or {}
-    return _fallback_actions(optimization)
+    return _fallback_actions(optimization, currency)
 
 
-def _fallback_actions(optimization: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _fallback_actions(optimization: Dict[str, Any], currency: str) -> List[Dict[str, Any]]:
     """Construct plausible top actions from optimizer output alone."""
     channels = (optimization or {}).get("channels") or []
     if not channels:
@@ -240,7 +263,7 @@ def _fallback_actions(optimization: Dict[str, Any]) -> List[Dict[str, Any]]:
             actions.append({
                 "num": 1,
                 "text": f"Shift spend into {lead.get('channel', 'top channel')}",
-                "impact": _fmt_impact(delta),
+                "impact": format_delta(delta, currency),
                 "why": {
                     "who": "Atlas · Reasoning",
                     "text": f"{lead.get('channel', 'This channel')} is the highest "
@@ -255,7 +278,7 @@ def _fallback_actions(optimization: Dict[str, Any]) -> List[Dict[str, Any]]:
             actions.append({
                 "num": len(actions) + 1,
                 "text": f"Pull spend from {worst.get('channel', 'a saturated channel')}",
-                "impact": _fmt_impact(-delta),
+                "impact": format_delta(-delta, currency),
                 "why": {
                     "who": "Atlas · Reasoning",
                     "text": f"{worst.get('channel', 'This channel')} has crossed its "
@@ -267,7 +290,11 @@ def _fallback_actions(optimization: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 # ─── Hero insight + Atlas narration ───────────────────────────────────────
 
-def _compose_hero(pillars: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
+def _compose_hero(
+    pillars: Dict[str, Any],
+    state: Dict[str, Any],
+    currency: str,
+) -> Dict[str, Any]:
     """
     Build the dark gradient hero card. Headline is data-driven:
     'You're leaving [total] on the table — but [recoverable] is recoverable'.
@@ -282,9 +309,9 @@ def _compose_hero(pillars: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, A
     if total > 0:
         headline = {
             "prefix": "You're leaving",
-            "loss": _fmt_cr(total),
+            "loss": format_money(total, currency),
             "middle": "on the table this month — but",
-            "gain": f"{_fmt_cr(recoverable)} is recoverable",
+            "gain": f"{format_money(recoverable, currency)} is recoverable",
             "suffix": ".",
         }
         sub = (
@@ -313,6 +340,7 @@ def _compose_atlas(
     pillars: Dict[str, Any],
     opportunities: List[Dict[str, Any]],
     state: Dict[str, Any],
+    currency: str,
 ) -> Dict[str, Any]:
     """
     Template-driven Atlas rail narration. Follows the §5.1 pattern: names
@@ -336,11 +364,11 @@ def _compose_atlas(
 
     paragraphs = [
         {
-            "text": f"The headline number — {_fmt_cr(total)} — is the one most clients "
+            "text": f"The headline number — {format_money(total, currency)} — is the one most clients "
                     f"fixate on. But the interesting thing isn't the size. It's the shape.",
         },
         {
-            "text": f"About {_fmt_cr(recoverable)} of it is recoverable within this quarter. "
+            "text": f"About {format_money(recoverable, currency)} of it is recoverable within this quarter. "
                     f"That's a {recovery_ratio:.0f}% recovery ratio — most engagements I've "
                     f"reviewed see 60–70%.",
         },
@@ -351,7 +379,7 @@ def _compose_atlas(
         "Why is the recovery ratio this high?" if recovery_ratio > 80
             else "Why is the recovery ratio this modest?",
         "Which channel is leaking the most?",
-        f"How confident are you in {_fmt_cr(pillars['pillars'][0]['amount'])}?",
+        f"How confident are you in {format_money(pillars['pillars'][0]['amount'], currency)}?",
         "What would the CFO push back on?",
     ]
 
@@ -363,28 +391,8 @@ def _compose_atlas(
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────
-
-def _fmt_cr(value: float) -> str:
-    """Format a rupee amount in crore notation (₹24.3 Cr style)."""
-    if value is None or value == 0:
-        return "₹0 Cr"
-    value = float(value)
-    cr = value / 1e7
-    if abs(cr) >= 100:
-        return f"₹{cr:.0f} Cr"
-    if abs(cr) >= 1:
-        return f"₹{cr:.1f} Cr"
-    # Sub-crore — show in lakhs
-    lakh = value / 1e5
-    return f"₹{lakh:.1f} L"
-
-
-def _fmt_impact(value: float) -> str:
-    if value is None:
-        return "—"
-    sign = "+" if value >= 0 else "−"
-    return f"{sign}{_fmt_cr(abs(value))}"
-
+# Money formatting goes through currency.format_money() so it respects
+# the engagement's configured currency. Non-currency helpers remain local.
 
 def _derive_confidence(state: Dict[str, Any]) -> int:
     """
@@ -407,22 +415,32 @@ def _derive_confidence(state: Dict[str, Any]) -> int:
 # ─── Route ────────────────────────────────────────────────────────────────
 
 @router.get("/executive-summary")
-def get_executive_summary():
+def get_executive_summary(
+    engagement_id: str = Query(
+        DEFAULT_ENGAGEMENT_ID,
+        description="Engagement to report against — drives currency and locale.",
+    ),
+):
     """
     Full payload for Screen 01. Composed from already-computed engine
     results. Never 500s on missing data — returns zeroed structures the
     frontend renders as empty states.
+
+    Currency and locale come from the named engagement's config.
     """
+    engagement = get_engagement(engagement_id)
+    currency = engagement.currency
     state = _read_state()
 
-    pillars = _compute_pillars(state)
-    kpis = _compute_kpis(state)
-    opportunities = _compute_opportunities(state, pillars)
-    top_actions = _compute_top_actions(state)
-    hero = _compose_hero(pillars, state)
-    atlas = _compose_atlas(pillars, opportunities, state)
+    pillars = _compute_pillars(state, currency)
+    kpis = _compute_kpis(state, currency)
+    opportunities = _compute_opportunities(state, pillars, currency)
+    top_actions = _compute_top_actions(state, currency)
+    hero = _compose_hero(pillars, state, currency)
+    atlas = _compose_atlas(pillars, opportunities, state, currency)
 
     return {
+        "engagement": engagement.as_dict(),
         "hero": hero,
         "kpis": kpis,
         "pillars": pillars,

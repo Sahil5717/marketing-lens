@@ -16,6 +16,7 @@ export function useMarketContext({
   lookbackMonths = 4,
   peakLimit = 5,
   apiBase = "",   // blank when same-origin; set to e.g. "http://localhost:8000" for dev
+  engagementId = "default",
 } = {}) {
   const [state, setState] = useState({ data: null, loading: true, error: null });
 
@@ -30,6 +31,7 @@ export function useMarketContext({
     qs.set("lookahead_days", String(lookaheadDays));
     qs.set("lookback_months", String(lookbackMonths));
     qs.set("peak_limit", String(peakLimit));
+    qs.set("engagement_id", engagementId);
 
     fetch(`${apiBase}/api/market-context?${qs.toString()}`)
       .then(r => {
@@ -44,7 +46,7 @@ export function useMarketContext({
       });
 
     return () => { cancelled = true; };
-  }, [asOf, category, regions?.join(","), lookaheadDays, lookbackMonths, peakLimit, apiBase]);
+  }, [asOf, category, regions?.join(","), lookaheadDays, lookbackMonths, peakLimit, apiBase, engagementId]);
 
   return state;
 }

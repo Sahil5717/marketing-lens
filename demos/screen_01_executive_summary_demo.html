@@ -1,31 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>YI · Screen 01 Executive Summary — Visual Demo</title>
+<html lang="en"><head>
+<meta charset="UTF-8"><title>YI · Screen 01 Executive Summary — Visual Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
 <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
-  #root{min-height:100vh}
-</style>
-</head>
-<body>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}</style>
+</head><body>
 <div id="root"></div>
-
 <script type="text/babel" data-presets="env,react">
-// React hooks aliased so the inlined JSX (which normally imports them)
-// resolves them as locals.
 const { useState, useEffect, useMemo, useRef, useCallback, Fragment } = React;
 
-// ─── Baked-in sample data (from real backend endpoints) ───────────────
-const SAMPLE_EXEC = {"hero": {"eyebrow": "Where you stand this quarter", "headline": {"prefix": "You're leaving", "loss": "₹35.8 Cr", "middle": "on the table this month — but", "gain": "₹35.6 Cr is recoverable", "suffix": "."}, "sub": "Three pillars — revenue leakage, experience drop, and avoidable cost — explain where the value is sitting. Each has a recommended move below.", "cta": {"label": "Take the tour →", "meta": "87% confidence"}}, "kpis": [{"label": "Total Revenue", "value": "₹248 Cr", "delta": ""}, {"label": "ROI", "value": "3.62x", "delta": ""}, {"label": "Marketing Spend", "value": "₹68.5 Cr", "delta": ""}, {"label": "CAC", "value": "—", "delta": ""}, {"label": "Pipeline Influence", "value": "₹347 Cr", "delta": ""}], "pillars": {"total_cost": {"amount": 358000000, "display": "₹35.8 Cr", "label": "Total cost · This month"}, "pillars": [{"id": "leak", "roman": "i.", "name": "Revenue Leakage", "amount": 243000000, "display": "₹24.3 Cr", "description": "Spend that produced revenue, but less than it could have. Saturated channels held while under-saturated ones starve.", "tag": "Recoverable"}, {"id": "drop", "roman": "ii.", "name": "Experience Drop", "amount": 83000000, "display": "₹8.3 Cr", "description": "Funnel friction — primarily mobile — converting fewer of the leads your spend already paid to acquire.", "tag": "Mostly fixable"}, {"id": "avoid", "roman": "iii.", "name": "Avoidable Cost", "amount": 32000000, "display": "₹3.2 Cr", "description": "Spend on channels past their saturation point or with negative marginal ROI. Money that came back as nothing.", "tag": "Cuttable today"}]}, "opportunities": [{"icon": "↑", "amount": 241000000, "display": "+₹24.1 Cr", "name": "Reallocate spend", "detail": "Shift under-performing channels into higher-marginal-ROI ones"}, {"icon": "×", "amount": -32000000, "display": "−₹3.2 Cr", "name": "Cut waste", "detail": "Pause channels past their saturation point"}, {"icon": "↗", "amount": 83000000, "display": "+₹8.3 Cr", "name": "Fix conversion", "detail": "Address mobile funnel drop and landing-page friction"}], "top_actions": [{"num": 1, "text": "Shift 15% budget to Search", "impact": "+₹5.2 Cr", "why": {"who": "Atlas · Reasoning", "text": "Search is your highest marginal-ROI channel and well below saturation. Each additional rupee returns ₹3.6 in revenue today. The risk is operational — your team has to actually deploy the +₹3.7 Cr of incremental Search spend in 30 days."}}, {"num": 2, "text": "Fix mobile funnel drop", "impact": "+12% CVR", "why": {"who": "Atlas · Reasoning", "text": "Mobile users have a 4.5× drop-off vs desktop on checkout. You are paying full CAC to acquire these users, then losing them at conversion. A 50% improvement unlocks ₹4 Cr with zero incremental spend."}}, {"num": 3, "text": "Scale top-performing campaigns", "impact": "+₹2.1 Cr", "why": {"who": "Atlas · Reasoning", "text": "Three campaigns (Brand_Search_May, NB_Gen_Search_May, LinkedIn_B2B_May) are converting 40%+ above your portfolio median with headroom to absorb 2× current spend before saturation. Lower-risk alternative to channel-level reallocation."}}], "atlas": {"paragraphs": [{"text": "The headline number — ₹35.8 Cr — is the one most clients fixate on. But the interesting thing isn't the size. It's the shape."}, {"text": "About ₹35.6 Cr of it is recoverable within this quarter. That's a 99% recovery ratio — most engagements I've reviewed see 60–70%."}], "suggested_questions": ["Why is the recovery ratio this high?", "Which channel is leaking the most?", "How confident are you in ₹24.3 Cr?", "What would the CFO push back on?"], "source": "executive_summary_template"}, "has_data": true};
-const SAMPLE_MC   = {"as_of": "2024-08-01", "category": "FMCG", "regions": ["Mumbai", "Delhi"], "demand_trend": {"lookback_months": 4, "points": [{"month": "2024-05", "value": 99.4, "label": "May"}, {"month": "2024-06", "value": 98.9, "label": "Jun"}, {"month": "2024-07", "value": 99.6, "label": "Jul"}, {"month": "2024-08", "value": 100.9, "label": "Aug"}]}, "upcoming_peaks": [{"start_date": "2024-08-15", "end_date": "2024-08-15", "name": "Independence Day", "kind": "public_holiday", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Brand campaigns and patriotic retail promotions", "days_away": 14}, {"start_date": "2024-08-19", "end_date": "2024-08-19", "name": "Raksha Bandhan", "kind": "festival", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Gifting, confectionery and quick-commerce uplift", "days_away": 18}, {"start_date": "2024-10-03", "end_date": "2024-10-12", "name": "Navratri", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Pre-Diwali ramp in apparel, beauty and jewelry", "days_away": 63}, {"start_date": "2024-10-29", "end_date": "2024-11-03", "name": "Diwali", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Peak all-India demand period for apparel, jewelry, electronics and gifting", "days_away": 89}], "atlas_narration": {"headline": "Demand for FMCG has been broadly flat over the last 4 months, per the macro baseline.", "detail": "The next major peak is Navratri in 63 days — historically a high-impact window.", "follow_up": "Want me to overlay the last three years of this same period?", "source": "macro_baseline", "confidence": "medium"}, "source": "macro_baseline (YI-curated, per plan v2 §2A.1)"};
+const SAMPLE = {"engagement": {"id": "default", "name": "Default Engagement", "currency": "USD", "locale": "en-US", "created_at": 1776784929.0, "updated_at": 1776784929.0}, "hero": {"eyebrow": "Where you stand this quarter", "headline": {"prefix": "You're leaving", "loss": "$35.8M", "middle": "on the table this month — but", "gain": "$20.1M is recoverable", "suffix": "."}, "sub": "Three pillars — revenue leakage, experience drop, and avoidable cost — explain where the value is sitting. Each has a recommended move below.", "cta": {"label": "Take the tour →", "meta": "87% confidence"}}, "kpis": [{"label": "Total Revenue", "value": "$248M", "delta": ""}, {"label": "ROI", "value": "3.62x", "delta": ""}, {"label": "Marketing Spend", "value": "$68.5M", "delta": ""}, {"label": "CAC", "value": "—", "delta": ""}, {"label": "Pipeline Influence", "value": "$347M", "delta": ""}], "pillars": {"total_cost": {"amount": 35800000, "display": "$35.8M", "label": "Total cost · This month"}, "pillars": [{"id": "leak", "roman": "i.", "name": "Revenue Leakage", "amount": 24300000, "display": "$24.3M", "description": "Spend that produced revenue, but less than it could have. Saturated channels held while under-saturated ones starve.", "tag": "Recoverable"}, {"id": "drop", "roman": "ii.", "name": "Experience Drop", "amount": 8300000, "display": "$8.3M", "description": "Funnel friction — primarily mobile — converting fewer of the leads your spend already paid to acquire.", "tag": "Mostly fixable"}, {"id": "avoid", "roman": "iii.", "name": "Avoidable Cost", "amount": 3200000, "display": "$3.2M", "description": "Spend on channels past their saturation point or with negative marginal ROI. Money that came back as nothing.", "tag": "Cuttable today"}]}, "opportunities": [{"icon": "↑", "amount": 14580000, "display": "+$14.6M", "name": "Reallocate spend", "detail": "Shift under-performing channels into higher-marginal-ROI ones"}, {"icon": "×", "amount": -2240000, "display": "−$2.2M", "name": "Cut waste", "detail": "Pause channels past their saturation point"}, {"icon": "↗", "amount": 3320000, "display": "+$3.3M", "name": "Fix conversion", "detail": "Address mobile funnel drop and landing-page friction"}], "top_actions": [{"num": 1, "text": "Shift 15% budget to Search", "impact": "+$5.2M", "why": {"who": "Atlas · Reasoning", "text": "Search is your highest marginal-ROI channel and well below saturation. Each additional dollar returns $3.60 in revenue today. The risk is operational — your team has to actually deploy the +$3.7M of incremental Search spend in 30 days."}}, {"num": 2, "text": "Fix mobile funnel drop", "impact": "+12% CVR", "why": {"who": "Atlas · Reasoning", "text": "Mobile users have a 4.5× drop-off vs desktop on checkout. You are paying full CAC to acquire these users, then losing them at conversion. A 50% improvement unlocks $4M with zero incremental spend."}}, {"num": 3, "text": "Scale top-performing campaigns", "impact": "+$2.1M", "why": {"who": "Atlas · Reasoning", "text": "Three campaigns (Brand_Search_May, NB_Gen_Search_May, LinkedIn_B2B_May) are converting 40%+ above your portfolio median with headroom to absorb 2× current spend before saturation. Lower-risk alternative to channel-level reallocation."}}], "atlas": {"paragraphs": [{"text": "The headline number — $35.8M — is the one most clients fixate on. But the interesting thing isn't the size. It's the shape."}, {"text": "About $20.1M of it is recoverable within this quarter. That's a 56% recovery ratio — most engagements I've reviewed see 60–70%."}], "suggested_questions": ["Why is the recovery ratio this modest?", "Which channel is leaking the most?", "How confident are you in $24.3M?", "What would the CFO push back on?"], "source": "executive_summary_template"}, "has_data": true};
 
-// ─── tokens ───────────────────────────────────────────────────────────
 /**
  * Shared design tokens for the Yield Intelligence frontend.
  *
@@ -126,11 +113,6 @@ const FONTS_HREF =
   "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
 
 
-// Market-context panels use their own tok object — but it's defined
-// identically, so we just alias it here instead of including twice.
-const mc_tok = tok;
-
-// ─── Design-system components ─────────────────────────────────────────
 /**
  * TopBar — sits at the top of every screen's main column.
  *
@@ -174,163 +156,6 @@ function TopBar({ number, title, subtitle, right }) {
           {right}
         </div>
       )}
-    </div>
-  );
-}
-
-
-// AppShell (trimmed to just Sidebar; the app wires its own layout)
-/**
- * AppShell — the 3-column Yield Intelligence frame.
- *
- * Layout:
- *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
- *
- * Usage:
- *   <AppShell
- *     activeScreen={1}
- *     clientName="Acme Consumer Co."
- *     clientPeriod="Quarterly review · Q2 2024"
- *     atlas={<AtlasRail narration={...} />}
- *   >
- *     <ExecutiveSummaryScreen ... />
- *   </AppShell>
- *
- * The sidebar and atlas rail are separate components in this file so
- * each can be imported without dragging the whole shell in.
- */
-
-
-const NAV = [
-  { num: "01", label: "Executive Summary" },
-  { num: "02", label: "Data Foundation" },
-  { num: "03", label: "Channel Performance" },
-  { num: "04", label: "Campaign Deep Dive" },
-  { num: "05", label: "Attribution" },
-  { num: "06", label: "Optimization" },
-  { num: "07", label: "Simulation" },
-  { num: "08", label: "Plan Builder" },
-  { num: "09", label: "Track & Monitor" },
-  { num: "10", label: "Executive Report" },
-];
-
-function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
-  return (
-    <aside style={{
-      background: tok.sidebar,
-      color: "#fff",
-      padding: "24px 14px",
-      position: "sticky",
-      top: 0,
-      height: "100vh",
-      overflowY: "auto",
-      fontFamily: tok.fontUi,
-    }}>
-      {/* Logo */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
-      }}>
-        <div style={{
-          width: 28, height: 28, borderRadius: 8,
-          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 13,
-        }}>YI</div>
-        Yield Intelligence
-      </div>
-
-      {/* Nav items */}
-      {NAV.map((item, idx) => {
-        const num = idx + 1;
-        const active = num === activeScreen;
-        return (
-          <div
-            key={item.num}
-            onClick={() => onNavigate && onNavigate(num)}
-            style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "10px 12px", borderRadius: 8,
-              color: active ? "#fff" : "#A8AEC9",
-              background: active ? tok.accent : "transparent",
-              cursor: "pointer", fontSize: 13,
-              fontWeight: active ? 600 : 500,
-              marginBottom: 2,
-              transition: "all .15s",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) e.currentTarget.style.background = tok.sidebarHover;
-              if (!active) e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              if (!active) e.currentTarget.style.background = "transparent";
-              if (!active) e.currentTarget.style.color = "#A8AEC9";
-            }}
-          >
-            <span style={{
-              display: "inline-block", width: 22, height: 22, borderRadius: 5,
-              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
-              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
-              flexShrink: 0,
-            }}>{item.num}</span>
-            {item.label}
-          </div>
-        );
-      })}
-
-      {/* Footer */}
-      {clientName && (
-        <div style={{
-          marginTop: 24, padding: 12, borderRadius: 10,
-          background: "rgba(255,255,255,.04)",
-          fontSize: 11, color: "#A8AEC9",
-        }}>
-          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
-            {clientName}
-          </strong>
-          {clientPeriod}
-        </div>
-      )}
-    </aside>
-  );
-}
-
-function AppShell({
-  activeScreen,
-  clientName,
-  clientPeriod,
-  atlas,
-  onNavigate,
-  children,
-}) {
-  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
-
-  return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
-      minHeight: "100vh",
-      background: tok.bg,
-      color: tok.text,
-      fontFamily: tok.fontUi,
-      fontSize: 13,
-      lineHeight: 1.5,
-      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
-      WebkitFontSmoothing: "antialiased",
-    }}>
-      <Sidebar
-        activeScreen={activeScreen}
-        clientName={clientName}
-        clientPeriod={clientPeriod}
-        onNavigate={onNavigate}
-      />
-      <main style={{ padding: "28px 36px 80px" }}>
-        {children}
-      </main>
-      {atlas && React.cloneElement(atlas, {
-        collapsed: atlasCollapsed,
-        onToggle: () => setAtlasCollapsed(c => !c),
-      })}
     </div>
   );
 }
@@ -568,10 +393,16 @@ function AtlasInlineCallout({ narration }) {
 /** Bold monetary figures in Atlas narration text so they stand out. */
 function renderNarrationHighlights(text) {
   if (!text) return null;
-  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
-  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  // Match currency-formatted money across all supported currencies:
+  //   USD/EUR/GBP: $/€/£ + digits + B/M/K suffix (or just digits for small amounts)
+  //   INR:         ₹ + digits + Cr/L suffix
+  // Also matches signed deltas (+$5.2M, −₹3.1 Cr) at word boundaries.
+  const moneyRegex = /([+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?)/g;
+  const parts = text.split(moneyRegex);
   return parts.map((part, i) => {
-    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+    // A part is a match if it starts with a currency symbol (possibly
+    // after a + or − sign) and contains digits.
+    if (/^[+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?$/.test(part)) {
       return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
     }
     return <React.Fragment key={i}>{part}</React.Fragment>;
@@ -579,7 +410,410 @@ function renderNarrationHighlights(text) {
 }
 
 
-// ─── Screen 01 components ─────────────────────────────────────────────
+/**
+ * AppShell — the 3-column Yield Intelligence frame.
+ *
+ * Layout:
+ *   sidebar  (240px, dark) | main (flex) | atlas rail (360px, collapsible to 56px)
+ *
+ * Usage:
+ *   <AppShell
+ *     activeScreen={1}
+ *     clientName="Acme Consumer Co."
+ *     clientPeriod="Quarterly review · Q2 2024"
+ *     atlas={<AtlasRail narration={...} />}
+ *   >
+ *     <ExecutiveSummaryScreen ... />
+ *   </AppShell>
+ *
+ * The sidebar and atlas rail are separate components in this file so
+ * each can be imported without dragging the whole shell in.
+ */
+
+
+
+const NAV = [
+  { num: "01", label: "Executive Summary" },
+  { num: "02", label: "Data Foundation" },
+  { num: "03", label: "Channel Performance" },
+  { num: "04", label: "Campaign Deep Dive" },
+  { num: "05", label: "Attribution" },
+  { num: "06", label: "Optimization" },
+  { num: "07", label: "Simulation" },
+  { num: "08", label: "Plan Builder" },
+  { num: "09", label: "Track & Monitor" },
+  { num: "10", label: "Executive Report" },
+];
+
+function Sidebar({
+  activeScreen = 1,
+  clientName,
+  clientPeriod,
+  onNavigate,
+  apiBase,
+  engagementId,
+  onEngagementChange,
+}) {
+  return (
+    <aside style={{
+      background: tok.sidebar,
+      color: "#fff",
+      padding: "24px 14px",
+      position: "sticky",
+      top: 0,
+      height: "100vh",
+      overflowY: "auto",
+      fontFamily: tok.fontUi,
+    }}>
+      {/* Logo */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "0 10px 28px", fontWeight: 800, fontSize: 16, letterSpacing: "-.01em",
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: `linear-gradient(135deg, ${tok.accent}, #9D7DFF)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 13,
+        }}>YI</div>
+        Yield Intelligence
+      </div>
+
+      {/* Nav items */}
+      {NAV.map((item, idx) => {
+        const num = idx + 1;
+        const active = num === activeScreen;
+        return (
+          <div
+            key={item.num}
+            onClick={() => onNavigate && onNavigate(num)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8,
+              color: active ? "#fff" : "#A8AEC9",
+              background: active ? tok.accent : "transparent",
+              cursor: "pointer", fontSize: 13,
+              fontWeight: active ? 600 : 500,
+              marginBottom: 2,
+              transition: "all .15s",
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = tok.sidebarHover;
+              if (!active) e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+              if (!active) e.currentTarget.style.color = "#A8AEC9";
+            }}
+          >
+            <span style={{
+              display: "inline-block", width: 22, height: 22, borderRadius: 5,
+              background: active ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.08)",
+              fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: "22px",
+              flexShrink: 0,
+            }}>{item.num}</span>
+            {item.label}
+          </div>
+        );
+      })}
+
+      {/* Footer: engagement selector + client footer */}
+      {(engagementId !== undefined || clientName) && (
+        <div style={{ marginTop: 24 }}>
+          {engagementId !== undefined && (
+            <div style={{ marginBottom: clientName ? 10 : 0 }}>
+              <EngagementSelector
+                apiBase={apiBase}
+                engagementId={engagementId}
+                onChange={onEngagementChange}
+                compact
+              />
+            </div>
+          )}
+          {clientName && (
+            <div style={{
+              padding: 12, borderRadius: 10,
+              background: "rgba(255,255,255,.04)",
+              fontSize: 11, color: "#A8AEC9",
+            }}>
+              <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+                {clientName}
+              </strong>
+              {clientPeriod}
+            </div>
+          )}
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function AppShell({
+  activeScreen,
+  clientName,
+  clientPeriod,
+  atlas,
+  onNavigate,
+  children,
+  apiBase = "",
+  engagementId: controlledEngagementId,
+  onEngagementChange,
+}) {
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  // If no controlled engagementId is passed, manage it internally via localStorage
+  const [internalEngagementId, setInternalEngagementId] = useState(getStoredEngagementId);
+  const engagementId = controlledEngagementId ?? internalEngagementId;
+  const handleEngagementChange = (id) => {
+    setStoredEngagementId(id);
+    setInternalEngagementId(id);
+    if (onEngagementChange) onEngagementChange(id);
+  };
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: atlasCollapsed ? "240px 1fr 56px" : "240px 1fr 360px",
+      minHeight: "100vh",
+      background: tok.bg,
+      color: tok.text,
+      fontFamily: tok.fontUi,
+      fontSize: 13,
+      lineHeight: 1.5,
+      transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
+      WebkitFontSmoothing: "antialiased",
+    }}>
+      <Sidebar
+        activeScreen={activeScreen}
+        clientName={clientName}
+        clientPeriod={clientPeriod}
+        onNavigate={onNavigate}
+        apiBase={apiBase}
+        engagementId={engagementId}
+        onEngagementChange={handleEngagementChange}
+      />
+      <main style={{ padding: "28px 36px 80px" }}>
+        {typeof children === "function" ? children({ engagementId }) : children}
+      </main>
+      {atlas && React.cloneElement(atlas, {
+        collapsed: atlasCollapsed,
+        onToggle: () => setAtlasCollapsed(c => !c),
+      })}
+    </div>
+  );
+}
+
+
+/**
+ * EngagementSelector — dropdown for picking the active engagement.
+ *
+ * Fetches the engagement list from /api/engagements once on mount, persists
+ * the current selection in localStorage under "yi.engagementId", and fires
+ * onChange(engagementId) when the user picks a different one.
+ *
+ * Rendered inside the Sidebar footer so the current engagement is visible
+ * at all times (sets the context for every number on the screen).
+ *
+ * Props
+ * -----
+ *   apiBase         blank for same-origin; "http://localhost:8000" in dev
+ *   engagementId    currently-selected id (controlled)
+ *   onChange        (newId) => void
+ *   compact         true for a tighter footer look
+ */
+
+
+const STORAGE_KEY = "yi.engagementId";
+
+function getStoredEngagementId() {
+  try {
+    return localStorage.getItem(STORAGE_KEY) || "default";
+  } catch {
+    return "default";
+  }
+}
+
+function setStoredEngagementId(id) {
+  try {
+    localStorage.setItem(STORAGE_KEY, id);
+  } catch {
+    /* no-op if storage is disabled */
+  }
+}
+
+function EngagementSelector({
+  apiBase = "",
+  engagementId = "default",
+  onChange,
+  compact = false,
+}) {
+  const [engagements, setEngagements] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
+  const rootRef = useRef(null);
+
+  // Load engagements once
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${apiBase}/api/engagements`)
+      .then(r => {
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        if (cancelled) return;
+        setEngagements(data.engagements || []);
+        setCurrencies(data.supported_currencies || []);
+        setError(null);
+      })
+      .catch(err => {
+        if (!cancelled) setError(err.message);
+      });
+    return () => { cancelled = true; };
+  }, [apiBase]);
+
+  // Close when clicking outside
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  const current = engagements.find(e => e.id === engagementId)
+    || { id: engagementId, name: engagementId === "default" ? "Default" : engagementId, currency: "USD" };
+
+  const handlePick = (id) => {
+    setStoredEngagementId(id);
+    setOpen(false);
+    if (onChange) onChange(id);
+  };
+
+  return (
+    <div ref={rootRef} style={{ position: "relative", fontFamily: tok.fontUi }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%", textAlign: "left",
+          padding: compact ? "9px 10px" : "11px 12px",
+          background: "rgba(255,255,255,.06)",
+          border: `1px solid rgba(255,255,255,.1)`,
+          borderRadius: 8,
+          color: "#fff", fontFamily: "inherit", fontSize: 12,
+          cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 10,
+          transition: "background .15s",
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.1)"}
+        onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.06)"}
+      >
+        <div style={{ flex: 1, overflow: "hidden" }}>
+          <div style={{
+            fontSize: 9, color: "#8C92AC",
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            fontWeight: 600, marginBottom: 2,
+          }}>Engagement</div>
+          <div style={{
+            fontSize: 12, fontWeight: 600,
+            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+          }}>
+            {current.name}
+          </div>
+        </div>
+        <div style={{
+          padding: "2px 6px", borderRadius: 4,
+          background: "rgba(124,92,255,.25)",
+          color: "#C4B5FD", fontSize: 10, fontWeight: 700,
+        }}>{current.currency}</div>
+        <div style={{
+          color: "#8C92AC", fontSize: 11,
+          transform: open ? "rotate(180deg)" : "none",
+          transition: "transform .15s",
+        }}>▾</div>
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", bottom: "calc(100% + 6px)", left: 0, right: 0,
+          background: "#1A1D2E",
+          border: "1px solid rgba(255,255,255,.12)",
+          borderRadius: 8,
+          boxShadow: "0 8px 30px rgba(0,0,0,.4)",
+          overflow: "hidden",
+          zIndex: 100,
+          maxHeight: 320, overflowY: "auto",
+        }}>
+          <div style={{
+            padding: "8px 12px",
+            fontSize: 9, color: "#8C92AC",
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            fontWeight: 600,
+            borderBottom: "1px solid rgba(255,255,255,.06)",
+          }}>
+            {engagements.length} engagement{engagements.length === 1 ? "" : "s"} · Switch to
+          </div>
+
+          {error && (
+            <div style={{ padding: 12, color: "#F87171", fontSize: 11 }}>
+              Couldn't load engagements: {error}
+            </div>
+          )}
+
+          {engagements.map(e => {
+            const active = e.id === engagementId;
+            return (
+              <div
+                key={e.id}
+                onClick={() => handlePick(e.id)}
+                style={{
+                  padding: "10px 12px",
+                  color: "#fff", fontSize: 12,
+                  display: "flex", alignItems: "center", gap: 10,
+                  cursor: "pointer",
+                  background: active ? "rgba(124,92,255,.18)" : "transparent",
+                  borderLeft: active ? `3px solid ${tok.accent}` : "3px solid transparent",
+                  transition: "background .1s",
+                }}
+                onMouseEnter={ev => {
+                  if (!active) ev.currentTarget.style.background = "rgba(255,255,255,.05)";
+                }}
+                onMouseLeave={ev => {
+                  if (!active) ev.currentTarget.style.background = "transparent";
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600 }}>{e.name}</div>
+                  <div style={{ color: "#8C92AC", fontSize: 10, marginTop: 2 }}>
+                    {e.id} · {e.locale}
+                  </div>
+                </div>
+                <div style={{
+                  padding: "2px 6px", borderRadius: 4,
+                  background: "rgba(255,255,255,.08)",
+                  fontSize: 10, fontWeight: 700,
+                }}>{e.currency}</div>
+              </div>
+            );
+          })}
+
+          <div style={{
+            padding: "8px 12px",
+            fontSize: 10, color: "#8C92AC",
+            borderTop: "1px solid rgba(255,255,255,.06)",
+          }}>
+            Supported: {currencies.join(", ") || "USD, INR, EUR, GBP"}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 /**
  * HeroInsight — dark gradient card that frames the screen's single
  * most important number. Used at the top of Screen 01 and 06.
@@ -1124,11 +1358,7 @@ function BridgeCard({ toScreenNum, text, onClick }) {
 }
 
 
-// ─── Bottom-row market-context panels ─────────────────────────────────
-// Replace the imported panelStyle refs with local ones since we have tok
-const panelStyleLocal = panelStyle;
-const panelHeadingStyleLocal = panelHeadingStyle;
-const panelTagStyleLocal = panelTagStyle;
+const mc_tok = tok;
 
 /**
  * MarketContextPanel
@@ -1255,7 +1485,7 @@ function DemandTrendChart({ points }) {
 function MarketContextPanel({ data, loading, error }) {
   if (loading) {
     return (
-      <div style={panelStyleLocal}>
+      <div style={panelStyle}>
         <div style={panelHeadingStyle}>Market Context</div>
         <div style={panelTagStyle}>Demand Trend</div>
         <div style={{ height: CHART_H, ...centeredStyle, color: tok.text3 }}>Loading…</div>
@@ -1265,7 +1495,7 @@ function MarketContextPanel({ data, loading, error }) {
 
   if (error) {
     return (
-      <div style={panelStyleLocal}>
+      <div style={panelStyle}>
         <div style={panelHeadingStyle}>Market Context</div>
         <div style={panelTagStyle}>Demand Trend</div>
         <div style={{ height: CHART_H, ...centeredStyle, color: tok.red, fontSize: 12 }}>
@@ -1282,7 +1512,7 @@ function MarketContextPanel({ data, loading, error }) {
     : "Demand trend";
 
   return (
-    <div style={panelStyleLocal}>
+    <div style={panelStyle}>
       <div style={panelHeadingStyle}>Market Context</div>
       <div style={panelTagStyle}>{tag}</div>
       <DemandTrendChart points={points} />
@@ -1433,45 +1663,26 @@ function UpcomingPeakWindowsPanel({ data, loading, error }) {
 }
 
 
-// ─── App composition ──────────────────────────────────────────────────
+const SAMPLE_MC = {"engagement": {"id": "default", "name": "Default Engagement", "currency": "USD", "locale": "en-US", "created_at": 1776784929.0, "updated_at": 1776784929.0}, "as_of": "2024-08-01", "category": "FMCG", "regions": ["Mumbai", "Delhi"], "demand_trend": {"lookback_months": 4, "points": [{"month": "2024-05", "value": 99.4, "label": "May"}, {"month": "2024-06", "value": 98.9, "label": "Jun"}, {"month": "2024-07", "value": 99.6, "label": "Jul"}, {"month": "2024-08", "value": 100.9, "label": "Aug"}]}, "upcoming_peaks": [{"start_date": "2024-08-15", "end_date": "2024-08-15", "name": "Independence Day", "kind": "public_holiday", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Brand campaigns and patriotic retail promotions", "days_away": 14}, {"start_date": "2024-08-19", "end_date": "2024-08-19", "name": "Raksha Bandhan", "kind": "festival", "significance": "Medium", "significance_score": 2, "regions": ["ALL"], "notes": "Gifting, confectionery and quick-commerce uplift", "days_away": 18}, {"start_date": "2024-10-03", "end_date": "2024-10-12", "name": "Navratri", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Pre-Diwali ramp in apparel, beauty and jewelry", "days_away": 63}, {"start_date": "2024-10-29", "end_date": "2024-11-03", "name": "Diwali", "kind": "festival", "significance": "High", "significance_score": 3, "regions": ["ALL"], "notes": "Peak all-India demand period for apparel, jewelry, electronics and gifting", "days_away": 89}], "atlas_narration": {"headline": "Demand for FMCG has been broadly flat over the last 4 months, per the macro baseline.", "detail": "The next major peak is Navratri in 63 days — historically a high-impact window.", "follow_up": "Want me to overlay the last three years of this same period?", "source": "macro_baseline", "confidence": "medium"}, "source": "macro_baseline (YI-curated, per plan v2 §2A.1)"};
+
 function App() {
-  const [atlasCollapsed, setAtlasCollapsed] = React.useState(false);
-
+  const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  
   const mcState = { data: SAMPLE_MC, loading: false, error: null };
-
   const mainContent = (<>
-    <TopBar
-      number="01"
-      title="Executive Summary"
-      subtitle="Decision Command Center"
-      right={<>
-        <Pill>May 1 – May 31, 2024 ▾</Pill>
-        <Pill>⇪ Share</Pill>
-      </>}
-    />
-    <HeroInsight
-      eyebrow={SAMPLE_EXEC.hero.eyebrow}
-      headline={SAMPLE_EXEC.hero.headline}
-      sub={SAMPLE_EXEC.hero.sub}
-      cta={SAMPLE_EXEC.hero.cta}
-    />
-    {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE_EXEC.atlas}/>}
-    <KpiStrip kpis={SAMPLE_EXEC.kpis}/>
-    <PillarsPanel data={SAMPLE_EXEC.pillars}/>
-    <OpportunitiesAndActions
-      opportunities={SAMPLE_EXEC.opportunities}
-      topActions={SAMPLE_EXEC.top_actions}
-    />
+    <TopBar number="01" title="Executive Summary" subtitle="Decision Command Center"
+            right={<><Pill>May 1 – May 31, 2024 ▾</Pill><Pill>⇪ Share</Pill></>}/>
+    <HeroInsight {...SAMPLE.hero}/>
+    {atlasCollapsed && <AtlasInlineCallout narration={SAMPLE.atlas}/>}
+    <KpiStrip kpis={SAMPLE.kpis}/>
+    <PillarsPanel data={SAMPLE.pillars}/>
+    <OpportunitiesAndActions opportunities={SAMPLE.opportunities} topActions={SAMPLE.top_actions}/>
     <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:14,marginBottom:18}}>
       <MarketContextPanel {...mcState}/>
       <UpcomingPeakWindowsPanel {...mcState}/>
     </div>
-    <BridgeCard
-      toScreenNum="02"
-      text="Before we tell you how — let's check whether the data underneath this is trustworthy."
-    />
+    <BridgeCard toScreenNum="02" text="Before we tell you how — let's check whether the data underneath this is trustworthy."/>
   </>);
-
   return (
     <div style={{
       display: "grid",
@@ -1480,22 +1691,17 @@ function App() {
       fontFamily: tok.fontUi, fontSize: 13, lineHeight: 1.5,
       transition: "grid-template-columns .35s cubic-bezier(.4,0,.2,1)",
     }}>
-      <Sidebar
-        activeScreen={1}
-        clientName="Acme Consumer Co."
-        clientPeriod="Quarterly review · Q2 2024"
-      />
+      <Sidebar activeScreen={1}
+               clientName={SAMPLE.engagement.name}
+               clientPeriod={`Engagement · ${SAMPLE.engagement.currency} · ${SAMPLE.engagement.locale}`}
+               engagementId={SAMPLE.engagement.id}
+               onEngagementChange={() => {}}/>
       <main style={{padding:"28px 36px 80px"}}>{mainContent}</main>
-      <AtlasRail
-        narration={SAMPLE_EXEC.atlas}
-        collapsed={atlasCollapsed}
-        onToggle={() => setAtlasCollapsed(c => !c)}
-      />
+      <AtlasRail narration={SAMPLE.atlas} collapsed={atlasCollapsed} onToggle={() => setAtlasCollapsed(c => !c)}/>
     </div>
   );
-}
 
+}
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
-</body>
-</html>
+</body></html>

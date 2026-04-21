@@ -3,17 +3,20 @@
  *
  * Same shape as useMarketContext: returns { data, loading, error }.
  * No library, no retries — swap in real query layer later.
+ *
+ * Pass `engagementId` to target a non-default engagement.
  */
 import { useEffect, useState } from "react";
 
-export function useExecutiveSummary({ apiBase = "" } = {}) {
+export function useExecutiveSummary({ apiBase = "", engagementId = "default" } = {}) {
   const [state, setState] = useState({ data: null, loading: true, error: null });
 
   useEffect(() => {
     let cancelled = false;
     setState({ data: null, loading: true, error: null });
 
-    fetch(`${apiBase}/api/executive-summary`)
+    const url = `${apiBase}/api/executive-summary?engagement_id=${encodeURIComponent(engagementId)}`;
+    fetch(url)
       .then(r => {
         if (!r.ok) throw new Error(`Executive summary request failed: ${r.status}`);
         return r.json();
@@ -26,7 +29,7 @@ export function useExecutiveSummary({ apiBase = "" } = {}) {
       });
 
     return () => { cancelled = true; };
-  }, [apiBase]);
+  }, [apiBase, engagementId]);
 
   return state;
 }

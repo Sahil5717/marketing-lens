@@ -231,10 +231,16 @@ export function AtlasInlineCallout({ narration }) {
 /** Bold monetary figures in Atlas narration text so they stand out. */
 function renderNarrationHighlights(text) {
   if (!text) return null;
-  // Split on ₹X Cr / ₹X.Y Cr / ₹X L patterns and wrap them
-  const parts = text.split(/(₹[\d,]+(?:\.\d+)?\s*(?:Cr|L))/g);
+  // Match currency-formatted money across all supported currencies:
+  //   USD/EUR/GBP: $/€/£ + digits + B/M/K suffix (or just digits for small amounts)
+  //   INR:         ₹ + digits + Cr/L suffix
+  // Also matches signed deltas (+$5.2M, −₹3.1 Cr) at word boundaries.
+  const moneyRegex = /([+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?)/g;
+  const parts = text.split(moneyRegex);
   return parts.map((part, i) => {
-    if (/^₹[\d,]+(?:\.\d+)?\s*(?:Cr|L)$/.test(part)) {
+    // A part is a match if it starts with a currency symbol (possibly
+    // after a + or − sign) and contains digits.
+    if (/^[+\u2212]?[$€£₹][\d,]+(?:\.\d+)?\s*(?:B|M|K|Cr|L)?$/.test(part)) {
       return <strong key={i} style={{ color: tok.atlasDeep, fontWeight: 600 }}>{part}</strong>;
     }
     return <React.Fragment key={i}>{part}</React.Fragment>;

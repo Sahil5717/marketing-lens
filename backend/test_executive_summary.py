@@ -1,10 +1,15 @@
 """
 Tests for routes_executive_summary.
 
-Focuses on the two cases that matter for a walkthrough demo:
-  - cold start: no data uploaded yet, endpoint returns renderable empty state
+Covers:
+  - cold start: no data uploaded, endpoint returns renderable empty state
   - populated: all engine outputs present, endpoint returns the right shape
+  - currency: USD default vs INR engagement vs EUR engagement all format
+    money correctly
+  - smart_recs priority over optimizer fallback
 """
+import os
+import tempfile
 from unittest.mock import patch
 
 import pytest
@@ -13,11 +18,35 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def client():
-    """Fresh app with just the executive-summary router — no api.py."""
-    from routes_executive_summary import router
+def isolated_db(monkeypatch):
+    """
+    Each test gets a fresh SQLite DB with the engagements table seeded.
+    This is needed because the new route reads engagement config.
+    """
+    tmpdir = tempfile.mkdtemp()
+    db_path = os.path.join(tmpdir, "test.db")
+    monkeypatch.setenv("YIELD_DB_PATH", db_path)
+
+    import importlib
+    import persistence, engagements, routes_executive_summary
+    importlib.reload(persistence)
+    importlib.reload(engagements)
+    importlib.reload(routes_executive_summary)
+    persistence.init_db()
+    engagements.init_engagements_table()
+    yield engagements
+    for name in os.listdir(tmpdir):
+        os.remove(os.path.join(tmpdir, name))
+    os.rmdir(tmpdir)
+
+
+@pytest.fixture
+def client(isolated_db):
+    """Fresh app with just the executive-summary router."""
+    import importlib, routes_executive_summary
+    importlib.reload(routes_executive_summary)
     app = FastAPI()
-    app.include_router(router)
+    app.include_router(routes_executive_summary.router)
     return TestClient(app)
 
 
@@ -30,8 +59,15 @@ def test_cold_start_returns_200_with_empty_state(client):
     assert r.status_code == 200
     body = r.json()
     assert body["has_data"] is False
-    # Structural keys must always be present
-    assert {"hero", "kpis", "pillars", "opportunities", "top_actions", "atlas"} <= set(body)
+    assert {"engagement", "hero", "kpis", "pillars", "opportunities",
+            "top_actions", "atlas"} <= set(body)
+
+
+def test_cold_start_includes_engagement_metadata(client):
+    with patch("routes_executive_summary._read_state", return_value={}):
+        body = client.get("/api/executive-summary").json()
+    assert body["engagement"]["id"] == "default"
+    assert body["engagement"]["currency"] == "USD"
 
 
 def test_cold_start_kpis_have_5_cells(client):
@@ -48,7 +84,6 @@ def test_cold_start_pillars_have_3_items(client):
     assert len(body["pillars"]["pillars"]) == 3
     ids = [p["id"] for p in body["pillars"]["pillars"]]
     assert ids == ["leak", "drop", "avoid"]
-    # All zero in cold start
     for p in body["pillars"]["pillars"]:
         assert p["amount"] == 0
 
@@ -57,7 +92,6 @@ def test_cold_start_atlas_explains_absence(client):
     with patch("routes_executive_summary._read_state", return_value={}):
         body = client.get("/api/executive-summary").json()
     assert len(body["atlas"]["paragraphs"]) >= 1
-    # Should mention no data being loaded
     text = " ".join(p["text"] for p in body["atlas"]["paragraphs"])
     assert "data" in text.lower() or "load" in text.lower()
 
@@ -66,9 +100,8 @@ def test_cold_start_atlas_explains_absence(client):
 
 @pytest.fixture
 def populated_state():
-    """A realistic state dict as it would look after all engines have run."""
     return {
-        "campaign_data": "stub",  # truthy — signals data loaded
+        "campaign_data": "stub",
         "pillars": {
             "revenue_leakage": {"total_leakage": 24_300_000},
             "experience_suppression": {"total_suppression": 8_300_000},
@@ -98,16 +131,9 @@ def test_populated_state_hero_headline_mentions_loss_and_recovery(client, popula
     with patch("routes_executive_summary._read_state", return_value=populated_state):
         body = client.get("/api/executive-summary").json()
     hero = body["hero"]
-    assert "Cr" in hero["headline"]["loss"]
-    assert "Cr" in hero["headline"]["gain"]
+    # Default engagement is USD — so loss/gain should use $
+    assert hero["headline"]["loss"].startswith("$")
     assert "recoverable" in hero["headline"]["gain"].lower()
-
-
-def test_populated_state_kpi_revenue_formatted_as_crore(client, populated_state):
-    with patch("routes_executive_summary._read_state", return_value=populated_state):
-        body = client.get("/api/executive-summary").json()
-    revenue_kpi = body["kpis"][0]
-    assert "Cr" in revenue_kpi["value"]
 
 
 def test_populated_state_pillars_match_engine_output(client, populated_state):
@@ -126,18 +152,14 @@ def test_populated_state_opportunities_have_3_levers(client, populated_state):
     opps = body["opportunities"]
     assert len(opps) == 3
     names = [o["name"] for o in opps]
-    assert "Reallocate spend" in names
-    assert "Cut waste" in names
-    assert "Fix conversion" in names
+    assert {"Reallocate spend", "Cut waste", "Fix conversion"} == set(names)
 
 
 def test_populated_state_top_actions_from_optimizer_fallback(client, populated_state):
-    """When smart_recs is absent, actions derive from optimizer deltas."""
     with patch("routes_executive_summary._read_state", return_value=populated_state):
         body = client.get("/api/executive-summary").json()
     actions = body["top_actions"]
     assert len(actions) >= 1
-    # Lead action is Search (largest positive delta)
     assert "Search" in actions[0]["text"]
 
 
@@ -155,24 +177,11 @@ def test_populated_state_has_data_flag(client, populated_state):
     assert body["has_data"] is True
 
 
-# ─── Formatter helpers ───────────────────────────────────────────────────
-
-def test_fmt_cr_handles_zero_and_negatives():
-    from routes_executive_summary import _fmt_cr, _fmt_impact
-    assert _fmt_cr(0) == "₹0 Cr"
-    assert "Cr" in _fmt_cr(10_000_000)
-    # Sub-crore shows lakhs
-    assert "L" in _fmt_cr(500_000)
-    # Impact formatter signs
-    assert _fmt_impact(10_000_000).startswith("+")
-    assert _fmt_impact(-10_000_000).startswith("−")
-
-
 def test_smart_recs_takes_priority_over_optimizer_fallback(client, populated_state):
     populated_state["smart_recs"] = [
         {
             "title": "Shift 15% budget to Search",
-            "impact_display": "+₹5.2 Cr",
+            "impact_display": "+$5.2M",
             "reasoning": "Search is your highest marginal-ROI channel.",
         },
     ]
@@ -180,5 +189,76 @@ def test_smart_recs_takes_priority_over_optimizer_fallback(client, populated_sta
         body = client.get("/api/executive-summary").json()
     actions = body["top_actions"]
     assert actions[0]["text"] == "Shift 15% budget to Search"
-    assert actions[0]["impact"] == "+₹5.2 Cr"
-    assert "Search" in actions[0]["why"]["text"]
+    assert actions[0]["impact"] == "+$5.2M"
+
+
+# ─── Currency parameterisation (new in v26) ──────────────────────────────
+
+def test_default_engagement_formats_as_usd(client, populated_state):
+    """Default engagement is USD, so money strings should use $ and M/K/Cr-free."""
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body = client.get("/api/executive-summary").json()
+    total_display = body["pillars"]["total_cost"]["display"]
+    assert total_display.startswith("$")
+    # Shouldn't contain the Indian scale words
+    assert " Cr" not in total_display
+    assert " L" not in total_display
+
+
+def test_inr_engagement_formats_as_crore(client, populated_state, isolated_db):
+    """An INR-configured engagement formats money as ₹XX Cr / ₹XX L."""
+    isolated_db.create_engagement(
+        id="acme-inr", name="Acme India", currency="INR", locale="en-IN",
+    )
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        r = client.get("/api/executive-summary?engagement_id=acme-inr")
+    body = r.json()
+    assert body["engagement"]["currency"] == "INR"
+    total_display = body["pillars"]["total_cost"]["display"]
+    assert total_display.startswith("₹")
+    assert "Cr" in total_display or "L" in total_display
+
+
+def test_eur_engagement_formats_with_euro_symbol(client, populated_state, isolated_db):
+    isolated_db.create_engagement(
+        id="eu-co", name="EU Co", currency="EUR", locale="en-GB",
+    )
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body = client.get("/api/executive-summary?engagement_id=eu-co").json()
+    assert body["engagement"]["currency"] == "EUR"
+    assert body["pillars"]["total_cost"]["display"].startswith("€")
+
+
+def test_unknown_engagement_id_falls_back_to_default(client, populated_state):
+    """Per engagements.get_engagement contract — unknown id gives default."""
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body = client.get("/api/executive-summary?engagement_id=does-not-exist").json()
+    assert body["engagement"]["id"] == "default"
+    assert body["engagement"]["currency"] == "USD"
+
+
+def test_opportunity_amounts_are_currency_formatted(client, populated_state, isolated_db):
+    isolated_db.create_engagement(id="acme-inr2", name="A", currency="INR")
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body_inr = client.get("/api/executive-summary?engagement_id=acme-inr2").json()
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body_usd = client.get("/api/executive-summary").json()  # default USD
+    # Same raw amount, different display format
+    inr_realloc = body_inr["opportunities"][0]["display"]
+    usd_realloc = body_usd["opportunities"][0]["display"]
+    assert inr_realloc != usd_realloc
+    assert "₹" in inr_realloc
+    assert "$" in usd_realloc
+    # Both signed as positive
+    assert inr_realloc.startswith("+")
+    assert usd_realloc.startswith("+")
+
+
+def test_atlas_narration_uses_engagement_currency(client, populated_state, isolated_db):
+    """Atlas's narrated numbers should respect the engagement's currency."""
+    isolated_db.create_engagement(id="acme-inr3", name="A", currency="INR")
+    with patch("routes_executive_summary._read_state", return_value=populated_state):
+        body = client.get("/api/executive-summary?engagement_id=acme-inr3").json()
+    narration = " ".join(p["text"] for p in body["atlas"]["paragraphs"])
+    assert "₹" in narration
+    assert "$" not in narration

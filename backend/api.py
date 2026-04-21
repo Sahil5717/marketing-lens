@@ -62,6 +62,20 @@ app.include_router(budget_optimization_router)
 from routes_channel_performance import router as channel_performance_router
 app.include_router(channel_performance_router)
 
+from routes_engagements import router as engagements_router
+app.include_router(engagements_router)
+
+# Initialize engagements table on import — idempotent, seeds 'default'
+from engagements import init_engagements_table as _init_engagements
+try:
+    _init_engagements()
+except Exception as _e:
+    import logging
+    logging.getLogger(__name__).warning(
+        "Engagements table init failed at import: %s — first request may "
+        "still work if DB is writable then.", _e,
+    )
+
 
 @app.on_event("startup")
 def _startup_seed_demo_users():

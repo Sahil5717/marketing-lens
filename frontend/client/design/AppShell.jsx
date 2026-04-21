@@ -17,8 +17,11 @@
  * The sidebar and atlas rail are separate components in this file so
  * each can be imported without dragging the whole shell in.
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { tok } from "../design/tokens.js";
+import EngagementSelector, {
+  getStoredEngagementId, setStoredEngagementId,
+} from "./EngagementSelector.jsx";
 
 const NAV = [
   { num: "01", label: "Executive Summary" },
@@ -33,7 +36,15 @@ const NAV = [
   { num: "10", label: "Executive Report" },
 ];
 
-export function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate }) {
+export function Sidebar({
+  activeScreen = 1,
+  clientName,
+  clientPeriod,
+  onNavigate,
+  apiBase,
+  engagementId,
+  onEngagementChange,
+}) {
   return (
     <aside style={{
       background: tok.sidebar,
@@ -97,17 +108,31 @@ export function Sidebar({ activeScreen = 1, clientName, clientPeriod, onNavigate
         );
       })}
 
-      {/* Footer */}
-      {clientName && (
-        <div style={{
-          marginTop: 24, padding: 12, borderRadius: 10,
-          background: "rgba(255,255,255,.04)",
-          fontSize: 11, color: "#A8AEC9",
-        }}>
-          <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
-            {clientName}
-          </strong>
-          {clientPeriod}
+      {/* Footer: engagement selector + client footer */}
+      {(engagementId !== undefined || clientName) && (
+        <div style={{ marginTop: 24 }}>
+          {engagementId !== undefined && (
+            <div style={{ marginBottom: clientName ? 10 : 0 }}>
+              <EngagementSelector
+                apiBase={apiBase}
+                engagementId={engagementId}
+                onChange={onEngagementChange}
+                compact
+              />
+            </div>
+          )}
+          {clientName && (
+            <div style={{
+              padding: 12, borderRadius: 10,
+              background: "rgba(255,255,255,.04)",
+              fontSize: 11, color: "#A8AEC9",
+            }}>
+              <strong style={{ color: "#fff", display: "block", marginBottom: 2, fontSize: 12 }}>
+                {clientName}
+              </strong>
+              {clientPeriod}
+            </div>
+          )}
         </div>
       )}
     </aside>
@@ -121,8 +146,19 @@ export default function AppShell({
   atlas,
   onNavigate,
   children,
+  apiBase = "",
+  engagementId: controlledEngagementId,
+  onEngagementChange,
 }) {
   const [atlasCollapsed, setAtlasCollapsed] = useState(false);
+  // If no controlled engagementId is passed, manage it internally via localStorage
+  const [internalEngagementId, setInternalEngagementId] = useState(getStoredEngagementId);
+  const engagementId = controlledEngagementId ?? internalEngagementId;
+  const handleEngagementChange = (id) => {
+    setStoredEngagementId(id);
+    setInternalEngagementId(id);
+    if (onEngagementChange) onEngagementChange(id);
+  };
 
   return (
     <div style={{
@@ -142,9 +178,12 @@ export default function AppShell({
         clientName={clientName}
         clientPeriod={clientPeriod}
         onNavigate={onNavigate}
+        apiBase={apiBase}
+        engagementId={engagementId}
+        onEngagementChange={handleEngagementChange}
       />
       <main style={{ padding: "28px 36px 80px" }}>
-        {children}
+        {typeof children === "function" ? children({ engagementId }) : children}
       </main>
       {atlas && React.cloneElement(atlas, {
         collapsed: atlasCollapsed,

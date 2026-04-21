@@ -27,7 +27,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, Query
+
+from currency import format_money, format_delta, format_rate
+from engagements import get_engagement, DEFAULT_ENGAGEMENT_ID
 
 router = APIRouter(prefix="/api", tags=["budget-optimization"])
 
@@ -66,7 +69,7 @@ def _color_for(channel: str) -> str:
 
 # ─── Allocation donuts ────────────────────────────────────────────────────
 
-def _compose_allocation(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _compose_allocation(channels: List[Dict[str, Any]], currency: str) -> Dict[str, Any]:
     """
     Build the current vs recommended donut data. Each donut is a list of
     slices with colour, percentage, amount, and delta-direction flag.
@@ -88,7 +91,7 @@ def _compose_allocation(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
             "color": _color_for(name),
             "percentage": round(pct, 1),
             "amount": spend,
-            "display_amount": _fmt_cr(spend),
+            "display_amount": format_money(spend, currency),
             "direction": direction if side == "recommended" else None,
         }
 
@@ -104,7 +107,7 @@ def _compose_allocation(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
 
     return {
         "total_budget": current_total,
-        "total_budget_display": _fmt_cr(current_total),
+        "total_budget_display": format_money(current_total, currency),
         "current": current,
         "recommended": recommended,
     }
@@ -112,7 +115,11 @@ def _compose_allocation(channels: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 # ─── Four moves ───────────────────────────────────────────────────────────
 
-def _compose_moves(channels: List[Dict[str, Any]], optimization: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _compose_moves(
+    channels: List[Dict[str, Any]],
+    optimization: Dict[str, Any],
+    currency: str,
+) -> List[Dict[str, Any]]:
     """
     The "four moves" — top 4 directional changes ranked by absolute spend
     shift. Each comes with an Atlas reasoning paragraph that mentions the
@@ -140,33 +147,40 @@ def _compose_moves(channels: List[Dict[str, Any]], optimization: Dict[str, Any])
     composed: List[Dict[str, Any]] = []
     for i, m in enumerate(moves_raw):
         is_up = m["delta_spend"] > 0
+        delta_display = format_money(abs(m["delta_spend"]), currency)
         composed.append({
             "num": f"{i+1:02d}.",
             "direction": "up" if is_up else "down",
-            "action": f"{'Move' if is_up else 'Pull'} {_fmt_cr(abs(m['delta_spend']))} "
+            "action": f"{'Move' if is_up else 'Pull'} {delta_display} "
                       f"{'into' if is_up else 'from'} {m['channel']}",
             "channel": m["channel"],
             "delta_spend": m["delta_spend"],
-            "delta_spend_display": _fmt_cr(abs(m["delta_spend"])),
+            "delta_spend_display": delta_display,
             "revenue_lift": m["rev_lift"],
-            "revenue_lift_display": (f"+{_fmt_cr(m['rev_lift'])}" if m["rev_lift"] >= 0
-                                     else f"−{_fmt_cr(abs(m['rev_lift']))}"),
+            "revenue_lift_display": format_delta(m["rev_lift"], currency),
             "revenue_lift_kind": "gain" if m["rev_lift"] >= 0 else "cut",
             "confidence": m["confidence"],
             "confidence_display": f"{m['confidence']}%",
             "why": {
                 "who": "Atlas · Reasoning",
-                "text": _move_reasoning(m, is_up),
+                "text": _move_reasoning(m, is_up, currency),
             },
         })
     return composed
 
 
-def _move_reasoning(m: Dict[str, Any], is_up: bool) -> str:
+def _move_reasoning(m: Dict[str, Any], is_up: bool, currency: str) -> str:
     """Template-driven reasoning for a single move."""
     channel = m["channel"]
     marginal = m.get("marginal_roi")
     ci = m.get("credible_interval")
+    # Currency-aware "unit" word for marginal ROI narration
+    spec_symbol = {"USD": "dollar", "EUR": "euro", "GBP": "pound", "INR": "rupee"}.get(
+        currency.upper(), "currency unit",
+    )
+    spec_sym_short = {"USD": "$", "EUR": "€", "GBP": "£", "INR": "₹"}.get(
+        currency.upper(), "",
+    )
 
     if is_up:
         base = (
@@ -174,11 +188,15 @@ def _move_reasoning(m: Dict[str, Any], is_up: bool) -> str:
             f"destination in the current response curve."
         )
         if marginal:
-            base += f" Each additional rupee returns ₹{marginal:.2f} in revenue today."
-        if ci:
             base += (
-                f" The 80% Bayesian credible interval is "
-                f"[₹{ci[0]/1e7:.1f} Cr, ₹{ci[1]/1e7:.1f} Cr] — "
+                f" Each additional {spec_symbol} returns "
+                f"{spec_sym_short}{marginal:.2f} in revenue today."
+            )
+        if ci:
+            lo = format_money(ci[0], currency)
+            hi = format_money(ci[1], currency)
+            base += (
+                f" The 80% Bayesian credible interval is [{lo}, {hi}] — "
                 f"even the floor case supports the move."
             )
         return base
@@ -204,7 +222,7 @@ def _derive_confidence(channel: Dict[str, Any]) -> int:
 
 # ─── Impact strip ─────────────────────────────────────────────────────────
 
-def _compose_impact(optimization: Dict[str, Any]) -> Dict[str, Any]:
+def _compose_impact(optimization: Dict[str, Any], currency: str) -> Dict[str, Any]:
     """Build the 4-cell impact strip (Projected ROI, Incremental Revenue, CAC, Payback)."""
     summary = (optimization or {}).get("summary") or {}
     current_roi = summary.get("current_roi", 0)
@@ -222,16 +240,16 @@ def _compose_impact(optimization: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "projected_roi": {
-            "value": f"{optimized_roi:.2f}x" if optimized_roi else "—",
+            "value": format_rate(optimized_roi) if optimized_roi else "—",
             "delta": f"▲ {uplift_pct:.1f}%" if uplift_pct else None,
         },
         "incremental_revenue": {
-            "value": f"+{_fmt_cr(uplift)}" if uplift else "—",
+            "value": format_delta(uplift, currency) if uplift else "—",
             "delta": "vs current",
         },
         "cac_improvement": {
             "value": f"−{cac_improvement_pct:.1f}%" if cac_improvement_pct else "—",
-            "delta": f"to ₹{optimized_cac:.0f}" if optimized_cac else None,
+            "delta": f"to {format_money(optimized_cac, currency)}" if optimized_cac else None,
         },
         "payback_period": {
             "value": f"{payback_months:.1f} mo" if payback_months else "—",
@@ -279,6 +297,7 @@ def _compose_hero(allocation: Dict[str, Any], impact: Dict[str, Any]) -> Dict[st
 def _compose_atlas(
     moves: List[Dict[str, Any]],
     impact: Dict[str, Any],
+    currency: str,
 ) -> Dict[str, Any]:
     uplift_display = impact["incremental_revenue"]["value"]
     if not moves:
@@ -291,9 +310,12 @@ def _compose_atlas(
         }
 
     strongest = max(moves, key=lambda m: m.get("confidence", 0))
+    # uplift_display is a signed string like "+$24.1M"; strip the sign for
+    # the "Four moves net to X" sentence.
+    net_value = uplift_display.lstrip("+").lstrip("−") if uplift_display and uplift_display != "—" else "—"
     paragraphs = [
         {
-            "text": f"Four moves net to {uplift_display}. The strongest individually "
+            "text": f"Four moves net to {net_value}. The strongest individually "
                     f"is Move #{strongest['num'].rstrip('.')}, "
                     f"{strongest['action'].lower()} — {strongest['confidence']}% confidence, "
                     f"near-zero downside.",
@@ -316,37 +338,31 @@ def _compose_atlas(
     }
 
 
-# ─── Helpers ──────────────────────────────────────────────────────────────
-
-def _fmt_cr(value: float) -> str:
-    if value is None or value == 0:
-        return "₹0 Cr"
-    value = float(value)
-    cr = value / 1e7
-    if abs(cr) >= 100:
-        return f"₹{cr:.0f} Cr"
-    if abs(cr) >= 1:
-        return f"₹{cr:.1f} Cr"
-    lakh = value / 1e5
-    return f"₹{lakh:.1f} L"
-
-
 # ─── Route ────────────────────────────────────────────────────────────────
 
 @router.get("/budget-optimization")
-def get_budget_optimization():
+def get_budget_optimization(
+    engagement_id: str = Query(
+        DEFAULT_ENGAGEMENT_ID,
+        description="Engagement to report against — drives currency and locale.",
+    ),
+):
     """Full payload for Screen 06."""
+    engagement = get_engagement(engagement_id)
+    currency = engagement.currency
+
     state = _read_state()
     optimization = state.get("optimization") or {}
     channels = optimization.get("channels") or []
 
-    allocation = _compose_allocation(channels)
-    moves = _compose_moves(channels, optimization)
-    impact = _compose_impact(optimization)
+    allocation = _compose_allocation(channels, currency)
+    moves = _compose_moves(channels, optimization, currency)
+    impact = _compose_impact(optimization, currency)
     hero = _compose_hero(allocation, impact)
-    atlas = _compose_atlas(moves, impact)
+    atlas = _compose_atlas(moves, impact, currency)
 
     return {
+        "engagement": engagement.as_dict(),
         "hero": hero,
         "allocation": allocation,
         "moves": moves,
@@ -357,18 +373,28 @@ def get_budget_optimization():
 
 
 @router.post("/budget-optimization/override")
-def score_override(payload: Dict[str, Any] = Body(...)):
+def score_override(
+    payload: Dict[str, Any] = Body(...),
+    engagement_id: str = Query(
+        DEFAULT_ENGAGEMENT_ID,
+        description="Engagement to score against — drives display currency.",
+    ),
+):
     """
     Score a user-authored allocation against the Atlas plan.
 
     Request:
-      { allocation: { Search: 30.1, "Meta Ads": 16.4, ... } }   (in Crore)
+      { allocation: { Search: 30100000, "Meta Ads": 16400000, ... } }
+         — values are in the engagement's currency base unit (dollars,
+           rupees, euros, pounds). The frontend sends native amounts,
+           not scaled values.
 
     Response:
       {
-        delta_vs_atlas_cr: float,  # signed; negative means override is worse
-        delta_vs_current_cr: float,
-        projected_roi: float,
+        delta_vs_atlas:           float,   # signed native units
+        delta_vs_atlas_display:   str,     # formatted with engagement currency
+        delta_vs_current:         float,
+        projected_roi:            float,
         pushback: null | { headline, detail }
       }
     """
@@ -376,59 +402,75 @@ def score_override(payload: Dict[str, Any] = Body(...)):
     if not user_alloc:
         raise HTTPException(400, "allocation is required")
 
+    engagement = get_engagement(engagement_id)
+    currency = engagement.currency
+
     state = _read_state()
     optimization = state.get("optimization") or {}
     channels = optimization.get("channels") or []
     if not channels:
         raise HTTPException(409, "No optimizer run available to score against.")
 
-    atlas_total = sum(c.get("optimized_spend", 0) for c in channels) / 1e7
-    current_total = sum(c.get("current_spend", 0) for c in channels) / 1e7
+    atlas_total = sum(c.get("optimized_spend", 0) for c in channels)
+    current_total = sum(c.get("current_spend", 0) for c in channels)
     user_total = sum(user_alloc.values())
 
-    # Linear proxy: each 1 Cr diverted away from Atlas's pick costs the
-    # marginal_roi of that channel. This is an approximation the real
-    # engine would replace with response-curve evaluation.
-    penalty_cr = 0.0
+    # Linear proxy: each unit diverted away from Atlas's pick costs the
+    # marginal_roi of that channel × half (conservative estimate). This
+    # is a stand-in for the real response-curve re-evaluation.
+    penalty = 0.0
     big_shifts: List[Dict[str, Any]] = []
+    # Threshold for "big shift" = 1% of budget, currency-agnostic
+    big_shift_threshold = max(atlas_total * 0.01, 1)
     for ch in channels:
         name = ch.get("channel") or ch.get("name")
-        atlas_cr = ch.get("optimized_spend", 0) / 1e7
-        user_cr = float(user_alloc.get(name, atlas_cr))
-        diff = user_cr - atlas_cr
+        atlas_amt = ch.get("optimized_spend", 0)
+        user_amt = float(user_alloc.get(name, atlas_amt))
+        diff = user_amt - atlas_amt
         marginal = ch.get("marginal_roi", 1.5)
-        # Diverting *from* Atlas's plan costs you the marginal uplift
-        # the optimizer found. We use half-marginal as a conservative estimate.
-        penalty_cr += abs(diff) * marginal * 0.5
-        if abs(diff) > 1:
-            big_shifts.append({"channel": name, "diff_cr": diff, "marginal_roi": marginal})
+        penalty += abs(diff) * marginal * 0.5
+        if abs(diff) > big_shift_threshold:
+            big_shifts.append({"channel": name, "diff": diff, "marginal_roi": marginal})
 
-    atlas_uplift = (optimization.get("summary") or {}).get("revenue_uplift", 0) / 1e7
-    user_uplift = atlas_uplift - penalty_cr
+    atlas_uplift = (optimization.get("summary") or {}).get("revenue_uplift", 0)
+    user_uplift = atlas_uplift - penalty
 
     delta_vs_atlas = user_uplift - atlas_uplift  # always <= 0 with this proxy
     delta_vs_current = user_uplift
 
     pushback = None
-    if delta_vs_atlas < -1 and big_shifts:
-        worst = max(big_shifts, key=lambda b: abs(b["diff_cr"]) * b["marginal_roi"])
+    # Flag as pushback if delta > 1% of budget
+    if delta_vs_atlas < -big_shift_threshold and big_shifts:
+        worst = max(big_shifts, key=lambda b: abs(b["diff"]) * b["marginal_roi"])
         pushback = {
-            "headline": f"Heads up — that override hurts the plan by ~₹{abs(delta_vs_atlas):.1f} Cr.",
-            "detail": f"{worst['channel']} moved by ₹{abs(worst['diff_cr']):.1f} Cr. "
-                      f"Its marginal ROI is {worst['marginal_roi']:.2f}x, so the lost lift compounds.",
+            "headline": (
+                f"Heads up — that override hurts the plan by "
+                f"~{format_money(abs(delta_vs_atlas), currency)}."
+            ),
+            "detail": (
+                f"{worst['channel']} moved by "
+                f"{format_money(abs(worst['diff']), currency)}. "
+                f"Its marginal ROI is {worst['marginal_roi']:.2f}x, "
+                f"so the lost lift compounds."
+            ),
         }
 
     # Projected ROI — proportional to revenue / spend
-    total_spend_cr = user_total or atlas_total
-    # Current revenue from optimization summary, scaled by user vs atlas uplift
-    current_rev_cr = (optimization.get("summary") or {}).get("current_revenue", 0) / 1e7
-    projected_roi = (current_rev_cr + user_uplift) / total_spend_cr if total_spend_cr else 0
+    total_spend = user_total or atlas_total
+    current_rev = (optimization.get("summary") or {}).get("current_revenue", 0)
+    projected_roi = (current_rev + user_uplift) / total_spend if total_spend else 0
 
     return {
-        "delta_vs_atlas_cr": round(delta_vs_atlas, 2),
-        "delta_vs_current_cr": round(delta_vs_current, 2),
+        "engagement": engagement.as_dict(),
+        "delta_vs_atlas": round(delta_vs_atlas, 2),
+        "delta_vs_atlas_display": format_delta(delta_vs_atlas, currency),
+        "delta_vs_current": round(delta_vs_current, 2),
+        "delta_vs_current_display": format_delta(delta_vs_current, currency),
         "projected_roi": round(projected_roi, 2),
+        "projected_roi_display": format_rate(projected_roi),
         "pushback": pushback,
-        "user_total_cr": round(user_total, 2),
-        "budget_total_cr": round(atlas_total, 2),
+        "user_total": round(user_total, 2),
+        "user_total_display": format_money(user_total, currency),
+        "budget_total": round(atlas_total, 2),
+        "budget_total_display": format_money(atlas_total, currency),
     }
